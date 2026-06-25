@@ -1,25 +1,25 @@
-import { CIAudioEngine, getVisualizationBandCenters } from './audioGraph.js?v=26';
-import { VocoderDiagnostic } from './vocoderDiagnostic.js?v=26';
+import { CIAudioEngine, getVisualizationBandCenters } from './audioGraph.js?v=28';
+import { VocoderDiagnostic } from './vocoderDiagnostic.js?v=28';
 import {
   getProfileList,
   getProfileById,
   parseMapProfileJson,
   exportMapProfileJson
-} from './mapProfiles.js?v=26';
-import { optimizeForCI } from './autoTuner.js?v=26';
-import { initHelpUi, openModal } from './help.js?v=26';
-import { buildDemoBuffer, getDemoMeta } from './demoTrack.js?v=26';
-import { Visualizer, countSaturatedChannels, updateCompVu } from './visualizer.js?v=26';
-import { estimateCompressorGr, computePreviewDelta, estimateBandEnergies } from './processingPreview.js?v=26';
-import { exportProcessedWav, downloadBlob } from './exportAudio.js?v=26';
-import { Playlist } from './playlist.js?v=26';
-import { ParamHistory } from './paramHistory.js?v=26';
-import { buildPresetDiffHtml } from './presetDiff.js?v=26';
+} from './mapProfiles.js?v=28';
+import { optimizeForCI } from './autoTuner.js?v=28';
+import { initHelpUi, openModal } from './help.js?v=28';
+import { buildDemoBuffer, getDemoMeta } from './demoTrack.js?v=28';
+import { Visualizer, countSaturatedChannels, updateCompVu } from './visualizer.js?v=28';
+import { estimateCompressorGr, computePreviewDelta, estimateBandEnergies } from './processingPreview.js?v=28';
+import { exportProcessedWav, downloadBlob } from './exportAudio.js?v=28';
+import { Playlist } from './playlist.js?v=28';
+import { ParamHistory } from './paramHistory.js?v=28';
+import { buildPresetDiffHtml } from './presetDiff.js?v=28';
 import {
   buildSessionSnapshot,
   parseSessionSnapshot,
   downloadSessionJson
-} from './sessionSnapshot.js?v=26';
+} from './sessionSnapshot.js?v=28';
 import {
   getBuiltinPresetList,
   getPresetById,
@@ -28,7 +28,7 @@ import {
   captureCurrentParams,
   exportPresetJson,
   parsePresetJson
-} from './presets.js?v=26';
+} from './presets.js?v=28';
 
 const CHANNEL_COUNT = 16;
 const VIZ_MIN_HZ = 250;
@@ -143,7 +143,7 @@ const exportVocoderCheckbox = document.getElementById('exportVocoderCheckbox');
 const speechModeBtn = document.getElementById('speechModeBtn');
 const musicModeBtn = document.getElementById('musicModeBtn');
 const listenEnhancedBtn = document.getElementById('listenEnhancedBtn');
-const listenRawBtn = document.getElementById('listenRawBtn');
+const listenOriginalBtn = document.getElementById('listenOriginalBtn');
 const stereoWidthSlider = document.getElementById('stereoWidth');
 const stereoWidthValue = document.getElementById('stereoWidthValue');
 const exportSessionBtn = document.getElementById('exportSessionBtn');
@@ -1514,7 +1514,7 @@ paramSliders.forEach((slider) => {
 function updateListenAbButtons() {
   const bypassed = enhancementBypassCheckbox?.checked ?? false;
   listenEnhancedBtn?.classList.toggle('active', !bypassed);
-  listenRawBtn?.classList.toggle('active', bypassed);
+  listenOriginalBtn?.classList.toggle('active', bypassed);
 }
 
 function setEnhancementBypassState(bypassed, { recordHistory = false } = {}) {
@@ -1550,7 +1550,7 @@ listenEnhancedBtn?.addEventListener('click', () => {
   setEnhancementBypassState(false, { recordHistory: true });
 });
 
-listenRawBtn?.addEventListener('click', () => {
+listenOriginalBtn?.addEventListener('click', () => {
   if (enhancementBypassCheckbox?.checked) {
     return;
   }
@@ -1841,7 +1841,7 @@ optimizeBtn.addEventListener('click', async () => {
     updateUndoRedoButtons();
     updateMetricsDisplay(result);
     optimizeProgress.textContent =
-      `Done. Tested ${result.candidatesEvaluated} combinations. Composite +${result.deltas.composite.toFixed(1)}% vs raw-through-vocoder baseline.`;
+      `Done. Tested ${result.candidatesEvaluated} combinations. Composite +${result.deltas.composite.toFixed(1)}% vs original-through-vocoder baseline.`;
     setStatus(`Optimized for CI map: ${currentMapProfile.name}`);
   } catch (error) {
     console.error(error);

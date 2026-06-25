@@ -204,7 +204,7 @@ export class Visualizer {
     if (isPlaying) {
       this.spectrumCtx.fillText('Gray = input · Blue = enhanced (narrow bars)', 8, 12);
     } else {
-      this.spectrumCtx.fillText('Gray = bypass preview · Gold = enhanced preview', 8, 12);
+      this.spectrumCtx.fillText('Gray = original preview · Gold = enhanced preview', 8, 12);
     }
   }
 

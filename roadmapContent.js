@@ -327,13 +327,13 @@ export const ROADMAP_ITEMS = [
     id: 'loudness-matched-ab',
     priority: 'medium',
     status: 'available',
-    title: 'Loudness-matched A/B',
-    summary: 'Auto-adjust volume when toggling Bypass Enhancement so raw and enhanced are similar loudness for fair comparison.',
+    title: 'Match loudness (A/B)',
+    summary: 'Auto-adjust level when switching to Original so it matches Enhanced for a fair comparison — checkbox in the transport bar next to Hear: Enhanced / Original.',
     requirements: [
       '✓ Short-term RMS measure on pre/post analyzers',
-      '✓ Temporary makeup gain on raw bypass path',
-      '✓ User checkbox to enable/disable',
-      '✓ Documented in bypass help topic'
+      '✓ Temporary makeup gain on original bypass path',
+      '✓ Match loudness checkbox in transport bar',
+      '✓ Documented in Original vs Enhanced and loudness-matched-ab help topics'
     ]
   },
   {

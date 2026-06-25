@@ -13,7 +13,7 @@ export const INFO_TOPICS = {
         <li><strong>Export Processed WAV</strong> — offline render; check <strong>Include diagnostic vocoder</strong> for vocoded WAV (<code>-vocoded.wav</code>) vs enhancement-only (<code>-processed.wav</code>).</li>
         <li><strong>Playlist</strong> — <strong>Add files to queue…</strong> (multi-select), click rows to switch, auto-advance when Loop is off.</li>
         <li><strong>Play / Pause</strong> — resume from the current scrubber position.</li>
-        <li><strong>Raw / Enhanced</strong> — in the transport bar next to Loop: hear the <strong>unprocessed</strong> demo or upload vs the <strong>CI music enhancement</strong> chain while playback continues. Same as <strong>Bypass Enhancement</strong> in Enhancement Controls. Use with <strong>Loudness-match when bypassing</strong> (default on) for a fair level-matched A/B.</li>
+        <li><strong>Original / Enhanced</strong> — in the transport bar next to Loop: hear the <strong>unchanged</strong> demo or upload vs the <strong>CI music enhancement</strong> chain while playback continues. Same as <strong>Bypass Enhancement</strong> in Enhancement Controls. Use with <strong>Match loudness</strong> (default on) for a fair level-matched A/B.</li>
         <li><strong>Stop</strong> — stops playback and returns to the start.</li>
         <li><strong>⏮ / −5s / +5s</strong> — jump to start, rewind, or fast-forward five seconds.</li>
         <li><strong>Scrubber</strong> — seek to any point; elapsed and total time appear at the sides.</li>
@@ -52,7 +52,7 @@ export const INFO_TOPICS = {
   'enhancement-profile': {
     title: 'Enhancement Profile (% vs Input)',
     body: `
-      <p>Percent change per channel: how much louder (green) or quieter (red) the enhanced signal is vs the raw input on each electrode.</p>
+      <p>Percent change per channel: how much louder (green) or quieter (red) the enhanced signal is vs the original input on each electrode.</p>
       <ul>
         <li><strong>Fixed ±35% scale</strong> — bars do not auto-zoom, so you can compare settings at a glance.</li>
         <li><strong>When paused</strong> — instant gold preview from current slider values.</li>
@@ -93,7 +93,7 @@ export const INFO_TOPICS = {
         <li><strong>F0 est.</strong> — rough fundamental estimate from low-channel energy (heuristic, not a pitch tracker).</li>
         <li><strong>Peak channel</strong> — electrode with the strongest enhanced level (E1–E16).</li>
         <li><strong>Saturated bins</strong> — count of full-scale FFT bins (clipping indicator on the wide-band analyser).</li>
-        <li><strong>Harmonic gen</strong> — ON when harmonic drive &gt; 0 and enhancement is not bypassed.</li>
+        <li><strong>Harmonic gen</strong> — ON when harmonic drive &gt; 0 and you are on <strong>Enhanced</strong> (not Original).</li>
       </ul>
     `
   },
@@ -139,7 +139,7 @@ export const INFO_TOPICS = {
     body: `
       <p>Turns on the diagnostic 16-channel noise-band vocoder path. When unchecked, you hear only the enhancement chain (default).</p>
       <p>When checked, the <strong>Vocoder Blend</strong> slider mixes between enhanced audio (dry) and vocoded output (wet). Status pill reads <strong>VOCODER</strong> during playback.</p>
-      <p>For normal listening and CI-user demos, leave this off. Use 100% simulated blend with <strong>Bypass Enhancement</strong> for developer A/B testing through the codec surrogate.</p>
+      <p>For normal listening and CI-user demos, leave this off. Use 100% simulated blend with <strong>Original</strong> / <strong>Enhanced</strong> (or <strong>Bypass Enhancement</strong>) for developer A/B testing through the codec surrogate.</p>
       <p>WAV export can optionally include the vocoder pass (checkbox in Transport).</p>
     `
   },
@@ -148,7 +148,7 @@ export const INFO_TOPICS = {
     body: `
       <p>This app targets <strong>music streaming to cochlear implants</strong> — bass salience, melody contour, harmony, timbre, rhythm, and separability after CI re-coding. Manufacturer apps already optimise speech; this demo battery exists to test <strong>music preprocessing</strong> without uploading copyrighted files.</p>
       <p>All demos are <strong>synthetic, deterministic, license-free, and generated in the browser</strong>. They are not meant to be beautiful songs; each one foregrounds a specific CI music problem so engineers can hear the A/B and watch the meters respond.</p>
-      <p><strong>Raw vs Enhanced:</strong> load any demo, press <strong>Play</strong> with <strong>Loop</strong> on, then tap <strong>Raw</strong> / <strong>Enhanced</strong> in the transport bar to hear the unprocessed synthetic file vs the CI music enhancement chain. Normal-hearing listeners can use this to understand what the processing changes.</p>
+      <p><strong>Original vs Enhanced:</strong> load any demo, press <strong>Play</strong> with <strong>Loop</strong> on, then tap <strong>Original</strong> / <strong>Enhanced</strong> in the transport bar to hear the unchanged synthetic file vs the CI music enhancement chain. Normal-hearing listeners can use this to understand what the processing changes.</p>
       <h4>DSP Check (4 s, mono)</h4>
       <p><strong>What it is:</strong> A minimal synthetic fixture — 60 Hz sub-bass square, C-major arpeggio (one note per second), kick, and hi-hat. Both channels are identical.</p>
       <p><strong>Why those sounds:</strong> Each layer hits a specific processing stage: sub-bass → harmonic excitation; melody → mid-band clarity and MAP shaping; hi-hat → high-band compression and transposition; kick → low-band GR meters and rhythm metrics.</p>
@@ -156,7 +156,7 @@ export const INFO_TOPICS = {
       <h4>Bass Focus (8 s, stereo)</h4>
       <p><strong>What it is:</strong> A sparse groove with fundamentals around 41–73 Hz, kick, light hat, and upper harmonic structure.</p>
       <p><strong>Why those sounds:</strong> Low fundamentals are often weak or ambiguous through CI processing. The enhancement should make bass <em>identity</em> and rhythmic foundation easier to follow through harmonic excitation, not simply louder.</p>
-      <p><strong>Use it to:</strong> Toggle <strong>Bypass Enhancement</strong> while listening for bass pitch/contour, kick definition, and whether low-mid harmonic cues become more usable. Watch low-band energy and harmonic generation readouts.</p>
+      <p><strong>Use it to:</strong> Toggle <strong>Original</strong> / <strong>Enhanced</strong> while listening for bass pitch/contour, kick definition, and whether low-mid harmonic cues become more usable. Watch low-band energy and harmonic generation readouts.</p>
       <h4>Melody / Harmony (8 s, stereo)</h4>
       <p><strong>What it is:</strong> A cleaner musical passage with sustained chords, long stable lead tones, clean note attacks, bass roots, and upper harmonics.</p>
       <p><strong>Why those sounds:</strong> Melody contour, chord quality, and timbre are major music-listening pain points for CI users. This probe foregrounds clarity lift, MAP shaping, and high-frequency transposition without hiding the result behind a dense drum bed.</p>
@@ -164,13 +164,13 @@ export const INFO_TOPICS = {
       <h4>Full Mix (8 s, stereo, 120 BPM)</h4>
       <p><strong>What it is:</strong> A short Am–F–C–G groove — bass, chords (panned left), stable held lead tones (panned right), kick/snare/hi-hat, crash, stereo width, and richer attacks. Loops cleanly for hands-free A/B.</p>
       <p><strong>Why those sounds:</strong> Tests the whole chain together: bass foundation, chord/lead separation, stereo-to-mono width handling, sustained mids, HF transients, compression, and transposition.</p>
-      <p><strong>Use it to:</strong> Demonstrate the overall music experience: <strong>Music mode</strong> vs <strong>Bypass Enhancement</strong>, loudness-matched A/B, stereo width at 0% vs 50%, and optional diagnostic vocoder blend.</p>
+      <p><strong>Use it to:</strong> Demonstrate the overall music experience: <strong>Music mode</strong> with <strong>Original</strong> / <strong>Enhanced</strong> (and <strong>Match loudness</strong> on), stereo width at 0% vs 50%, and optional diagnostic vocoder blend.</p>
       <h4>Suggested test flow</h4>
       <ol>
         <li><strong>DSP Check</strong> → Play → confirm meters and spectrum respond → run <strong>Optimize for CI</strong> once.</li>
-        <li><strong>Bass Focus</strong> → <strong>Music mode</strong> → toggle <strong>Bypass Enhancement</strong>; listen for bass pitch/contour and kick definition.</li>
-        <li><strong>Melody / Harmony</strong> → toggle bypass; listen for stable lead tone, chord separation, and upper-harmonic clarity.</li>
-        <li><strong>Full Mix</strong> → Play with Loop on → loudness-matched bypass A/B for the whole-chain music demo.</li>
+        <li><strong>Bass Focus</strong> → <strong>Music mode</strong> → tap <strong>Original</strong> / <strong>Enhanced</strong>; listen for bass pitch/contour and kick definition.</li>
+        <li><strong>Melody / Harmony</strong> → Original / Enhanced; listen for stable lead tone, chord separation, and upper-harmonic clarity.</li>
+        <li><strong>Full Mix</strong> → Play with Loop on → <strong>Match loudness</strong> + Original / Enhanced for the whole-chain music demo.</li>
         <li>Optional: enable diagnostic vocoder at 50–100% simulated blend to hear CI-like smearing (developer tool, not clinical proof).</li>
         <li>Load your own library files for genre-specific tuning — demos are starting points only.</li>
       </ol>
@@ -207,7 +207,7 @@ export const INFO_TOPICS = {
         <li><strong>Add files to queue…</strong> — multi-select to build a set without stopping playback.</li>
         <li>Set <strong>Optimize region</strong> In/Out markers on a chorus or verse, then <strong>Optimize for CI</strong>.</li>
         <li>Try <strong>Music mode</strong> (or genre presets), then fine-tune sliders; use <strong>Undo</strong> / <strong>Redo</strong> while exploring.</li>
-        <li>Toggle <strong>Bypass Enhancement</strong> with <strong>Loudness-match when bypassing</strong> on for a fair A/B.</li>
+        <li>Tap <strong>Original</strong> / <strong>Enhanced</strong> in the transport bar with <strong>Match loudness</strong> on for a fair A/B.</li>
         <li><strong>Export Processed WAV</strong> and <strong>Export session JSON</strong> per study reproducibility.</li>
       </ol>
       <h4>After a page reload</h4>
@@ -217,7 +217,7 @@ export const INFO_TOPICS = {
         <li><strong>DSP Check</strong> — verify meters, auto-tune, and visualizations (engineering).</li>
         <li><strong>Bass Focus</strong> — test bass restoration and missing-fundamental cues.</li>
         <li><strong>Melody / Harmony</strong> — test pitch contour, chords, timbre, and high-frequency clarity.</li>
-        <li><strong>Full Mix</strong> — hear the complete music-processing chain with Music mode vs bypass.</li>
+        <li><strong>Full Mix</strong> — hear the complete music-processing chain with Music mode and Original / Enhanced A/B.</li>
         <li><strong>Your files</strong> — real tuning and export for listening on implant hardware or standard streaming chains.</li>
       </ul>
     `
@@ -235,15 +235,15 @@ export const INFO_TOPICS = {
     `
   },
   'loudness-matched-ab': {
-    title: 'Loudness-Matched A/B',
+    title: 'Match Loudness (A/B)',
     body: `
-      <p>The <strong>Match loudness</strong> checkbox (next to <strong>Hear: Enhanced / Raw</strong> in the transport bar, default on) makes the raw path match the enhanced path's perceived level when you switch to <strong>Raw</strong> — fairer for judging quality, not just loudness.</p>
+      <p>The <strong>Match loudness</strong> checkbox (next to <strong>Hear: Enhanced / Original</strong> in the transport bar, default on) makes the original path match the enhanced path's perceived level when you switch to <strong>Original</strong> — fairer for judging quality, not just loudness.</p>
       <ul>
         <li>Uses short-term energy from the 16-channel input vs enhanced analyzers.</li>
-        <li>Makeup gain is clamped (0.25×–4×) and resets when bypass is turned off.</li>
+        <li>Makeup gain is clamped (0.25×–4×) and resets when you switch back to <strong>Enhanced</strong>.</li>
         <li>Your <strong>Volume</strong> slider still controls overall output; loudness match is an A/B aid only.</li>
       </ul>
-      <p>Uncheck for level-accurate raw vs enhanced comparison (raw may sound quieter because enhancement adds makeup gain).</p>
+      <p>Uncheck for level-accurate original vs enhanced comparison (original may sound quieter because enhancement adds makeup gain).</p>
     `
   },
   'stereo-width': {
@@ -300,14 +300,14 @@ export const INFO_TOPICS = {
       <ul>
         <li><strong>🔊 Start Audio Engine</strong> — on Safari and iPhone/iPad, tap this button (top of the Transport panel) once before playing. iOS only unlocks sound from a direct tap; the button hides itself afterward.</li>
         <li><strong>☰ Menu button</strong> — the top menus collapse into a single <strong>☰ Menu</strong> button. Tap it to open the menu list, tap a section (Using the App, Science, For Industry, Roadmap, Tools) to expand it, then pick an item. Tapping a choice or anywhere outside closes the menu.</li>
-        <li><strong>Single-column stack</strong> — panels stack vertically and fill the width.</li>
+        <li><strong>Single-column stack</strong> — panels stack vertically in workflow order: Transport → Enhancement Controls → Visualizer → (collapsed by default) Auto-Tune, Electrode Map, Diagnostic Vocoder.</li>
         <li><strong>Sticky transport bar</strong> — playback controls stay reachable while scrolling.</li>
         <li><strong>44px touch targets</strong> — buttons and sliders are finger-sized; the small ⓘ icons keep a 44px tappable area even though they look small.</li>
         <li><strong>PWA manifest</strong> — add to home screen on iOS/Android for a standalone app icon (<code>manifest.json</code>).</li>
       </ul>
       <h4>On wide screens (laptop / desktop)</h4>
       <ul>
-        <li><strong>Two-column dashboard</strong> — at about 1100px and wider, the transport and the 16-channel visualizer span the full width, and the control panels arrange into two columns to use the space and cut scrolling.</li>
+        <li><strong>Two-column dashboard</strong> — at about 1100px and wider, Transport and Enhancement Controls span full width (sliders sit above the visualizer so you tune while listening), then the 16-channel visualizer spans full width; Auto-Tune, Electrode Map, and Diagnostic Vocoder arrange in two columns below.</li>
         <li><strong>Full menu bar</strong> — the dropdown menus appear inline instead of behind the ☰ button.</li>
       </ul>
       <h4>Everywhere</h4>
@@ -326,7 +326,8 @@ export const INFO_TOPICS = {
       <p><strong>Speech / Music mode</strong> — quick-switch buttons apply built-in profiles; choice is remembered between sessions. For this music-focused demo, use <strong>Full Mix</strong>, <strong>Bass Focus</strong>, or <strong>Melody / Harmony</strong> with <strong>Music mode</strong> for A/B. Speech mode remains available as a contrast/reference preset, not the main product goal.</p>
       <p><strong>Preset dropdown</strong> — Default, Speech, Music, Classical, Rock, Jazz + saved custom presets (localStorage / JSON import).</p>
       <p><strong>Stereo width</strong> — collapses stereo toward mono before processing (default 0% for unilateral CI).</p>
-      <p><strong>Optimize for CI</strong> runs a 625-combination offline search on the <strong>Optimize region</strong> (or center 12 s). <strong>Compare presets</strong>, <strong>Undo</strong>/<strong>Redo</strong>, and <strong>Loudness-match when bypassing</strong> support tuning workflow.</p>
+      <p><strong>Original / Enhanced A/B</strong> — in the transport bar next to Loop, with <strong>Match loudness</strong> (default on). The <strong>Bypass Enhancement</strong> checkbox below mirrors the same setting.</p>
+      <p><strong>Optimize for CI</strong> runs a 625-combination offline search on the <strong>Optimize region</strong> (or center 12 s). <strong>Compare presets</strong> and <strong>Undo</strong>/<strong>Redo</strong> support tuning workflow.</p>
       <p>Live and planned features are listed under <strong>Roadmap ▾</strong>, with ✓ marks on completed requirements.</p>
     `
   },
@@ -371,16 +372,16 @@ export const INFO_TOPICS = {
     `
   },
   'enhancement-bypass': {
-    title: 'Raw vs Enhanced (A/B)',
+    title: 'Original vs Enhanced (A/B)',
     body: `
       <p>Hear the same demo or uploaded file <strong>with</strong> or <strong>without</strong> the CI music enhancement chain — useful for normal-hearing listeners comparing what changes.</p>
       <h4>Transport bar (easiest)</h4>
-      <p>Next to <strong>Loop</strong>, tap <strong>Hear: Enhanced</strong> or <strong>Raw</strong> while a demo or file is playing. Switch back and forth on a looped passage to compare bass salience, melody clarity, and overall musical organization.</p>
+      <p>Next to <strong>Loop</strong>, tap <strong>Hear: Enhanced</strong> or <strong>Original</strong> while a demo or file is playing. Switch back and forth on a looped passage to compare bass salience, melody clarity, and overall musical organization.</p>
       <h4>Enhancement Controls (same setting)</h4>
-      <p><strong>Bypass Enhancement</strong> checkbox — identical to the transport <strong>Raw</strong> button. When checked, audio routes around compression, harmonic excitation, clarity lift, and transposition (optional diagnostic vocoder still applies if enabled). The gold processing preview collapses to a flat bypass shape when enabled.</p>
+      <p><strong>Bypass Enhancement</strong> checkbox — identical to the transport <strong>Original</strong> button. When checked, audio routes around compression, harmonic excitation, clarity lift, and transposition (optional diagnostic vocoder still applies if enabled). The gold processing preview collapses to a flat bypass shape when enabled.</p>
       <h4>Fair comparison</h4>
-      <p>With <strong>Loudness-match when bypassing</strong> enabled (default), toggling Raw/Enhanced adjusts the raw path so perceived level matches the enhanced path — you judge quality, not just loudness. Uncheck for level-accurate raw vs enhanced.</p>
-      <p><strong>Developer note:</strong> with diagnostic vocoder at 100% simulated blend, Raw/Enhanced compares through the same CI-like codec surrogate.</p>
+      <p>With <strong>Match loudness</strong> enabled (default), toggling Original/Enhanced adjusts the original path so perceived level matches the enhanced path — you judge quality, not just loudness. Uncheck for level-accurate original vs enhanced.</p>
+      <p><strong>Developer note:</strong> with diagnostic vocoder at 100% simulated blend, Original/Enhanced compares through the same CI-like codec surrogate.</p>
     `
   },
   'auto-tune': {
@@ -391,7 +392,7 @@ export const INFO_TOPICS = {
       <p><strong>On completion:</strong></p>
       <ul>
         <li>Metric cards display numeric scores (composite typically ~3–6 depending on material)</li>
-        <li>Delta rows show percentage change vs raw-through-vocoder baseline</li>
+        <li>Delta rows show percentage change vs original-through-vocoder baseline</li>
         <li>Enhancement sliders update to the winning combination</li>
       </ul>
       <p>During the search, the composite card shows the running best score; progress text shows the evaluation count.</p>
@@ -401,7 +402,7 @@ export const INFO_TOPICS = {
     title: 'Composite Score',
     body: `
       <p>Weighted combination of modulation depth, usable band energy, inter-band contrast, bass rhythm salience, speech band salience, and crest factor — measured on the <strong>vocoded</strong> signal after optimization.</p>
-      <p>Delta percentage compares optimized enhanced-through-vocoder output against a raw-through-vocoder baseline. Em-dashes (—) indicate a failed optimization run; refresh the page and retry.</p>
+      <p>Delta percentage compares optimized enhanced-through-vocoder output against an original-through-vocoder baseline. Em-dashes (—) indicate a failed optimization run; refresh the page and retry.</p>
     `
   },
   'metric-modulation': {
@@ -459,7 +460,7 @@ export const INFO_TOPICS = {
     body: `
       <p>At 0% simulated: fully enhanced pre-processed audio. At 100% simulated: fully vocoded output.</p>
       <p>The status pill reads <strong>VOCODER</strong> when simulation is enabled during playback.</p>
-      <p>At 100% simulated with Bypass Enhancement enabled, the comparison isolates raw versus enhanced material through the same CI-like codec.</p>
+      <p>At 100% simulated with Bypass Enhancement enabled, the comparison isolates original versus enhanced material through the same CI-like codec.</p>
     `
   }
 };
@@ -482,18 +483,18 @@ export const MENU_CONTENT = {
         </ul>
       </nav>
       <h3 id="help-new-here">New here?</h3>
-      <p>This is a <strong>music pre-processor</strong> for material you stream to a cochlear implant — not a speech-therapy or clinical MAP-fitting tool. The blue callout under the title shows the fastest path: <strong>Full Mix</strong> → <strong>Play</strong> → toggle <strong>Bypass Enhancement</strong> (with <strong>Loudness-match when bypassing</strong> on). Every panel and major control has a ⓘ icon; <strong>For Industry ▾</strong> links the overview, PDF, and technical paper. On wide screens the control panels arrange in two columns; on phones use the <strong>☰ Menu</strong> button for docs.</p>
+      <p>This is a <strong>music pre-processor</strong> for material you stream to a cochlear implant — not a speech-therapy or clinical MAP-fitting tool. The blue callout under the title shows the fastest path: <strong>Full Mix</strong> → <strong>Play</strong> → tap <strong>Original</strong> / <strong>Enhanced</strong> (with <strong>Match loudness</strong> on). Every panel and major control has a ⓘ icon; <strong>For Industry ▾</strong> links the overview, PDF, and technical paper. On wide screens the control panels arrange in two columns; on phones use the <strong>☰ Menu</strong> button for docs.</p>
       <h3 id="help-quick-start">Quick start (Full Mix demo)</h3>
       <ol>
         <li><strong>Full Mix</strong> — 8-second stereo groove; loop starts automatically; appears in the playlist as <em>Demo — Full Mix (8 s)</em>.</li>
         <li><strong>Play</strong> — enhancement is active by default.</li>
         <li><strong>Music mode</strong> — one-click preset tuned for rhythm, bass salience, melody clarity, and timbre.</li>
-        <li><strong>A/B</strong> — enable <strong>Loudness-match when bypassing</strong>, then toggle <strong>Bypass Enhancement</strong> with Loop on.</li>
-        <li>Optional: <strong>Optimize for CI</strong> on this clip, then re-compare bypass vs enhanced.</li>
+        <li><strong>A/B</strong> — with Loop on, tap <strong>Original</strong> / <strong>Enhanced</strong> in the transport bar (<strong>Match loudness</strong> on by default).</li>
+        <li>Optional: <strong>Optimize for CI</strong> on this clip, then re-compare Original vs Enhanced.</li>
       </ol>
       <h3 id="help-targeted-music">Targeted music probes</h3>
       <ol>
-        <li><strong>Bass Focus</strong> — listen for bass pitch/contour, kick definition, and low-mid harmonic cues with bypass on/off.</li>
+        <li><strong>Bass Focus</strong> — listen for bass pitch/contour, kick definition, and low-mid harmonic cues with Original / Enhanced.</li>
         <li><strong>Melody / Harmony</strong> — listen for stable lead tone, chord separation, note attacks, and upper-harmonic clarity.</li>
         <li><strong>Full Mix</strong> — use after the probes to judge whether the complete chain improves musical organization.</li>
       </ol>
@@ -517,7 +518,7 @@ export const MENU_CONTENT = {
         <li><strong>Electrode map</strong> — select a preset or import participant JSON.</li>
         <li><strong>Optimize for CI</strong> — ~30–90 s; metric cards should show numeric scores.</li>
         <li><strong>Compare presets</strong> — compare Music, Classical, Rock, Jazz, or saved profiles, then fine-tune; use <strong>Undo</strong> while exploring.</li>
-        <li><strong>A/B</strong> — <strong>Loudness-match when bypassing</strong> + Bypass Enhancement.</li>
+        <li><strong>A/B</strong> — <strong>Match loudness</strong> + <strong>Original</strong> / <strong>Enhanced</strong> in the transport bar (or <strong>Bypass Enhancement</strong> checkbox).</li>
         <li><strong>Export</strong> — WAV per track + session JSON for settings.</li>
       </ol>
       <h3 id="help-demos-only">Demos only (no upload yet)</h3>
@@ -532,14 +533,15 @@ export const MENU_CONTENT = {
         <li>Run Optimize on representative stimuli per genre; export map JSON, preset JSON, and session JSON.</li>
         <li>Export processed (and optionally vocoded) WAV per stimulus.</li>
         <li>Record metric deltas and winning parameter sets per track.</li>
-        <li>At 100% vocoder simulation, confirm bypass A/B results align with metric predictions.</li>
+        <li>At 100% vocoder simulation, confirm Original / Enhanced A/B results align with metric predictions.</li>
         <li>Clinical validation requires streaming processed audio to the participant's implant hardware; the vocoder is a development proxy only.</li>
       </ol>
       <h3 id="help-reference">Interface reference</h3>
       <ul>
         <li><strong>Quick-start callout</strong> — numbered steps under the title; tap <strong>Full instructions</strong> for this document.</li>
         <li><strong>☰ Menu</strong> (phones) / inline menus (desktop) — <strong>Using the App ▾</strong> (how-to, FAQ, help), <strong>Science ▾</strong>, <strong>For Industry ▾</strong> (partnership + developer guides, downloadable overview/PDF/paper), <strong>Roadmap ▾</strong>, <strong>Tools ▾</strong> (session JSON).</li>
-        <li><strong>Two-column layout</strong> — on screens about 1100px wide, control panels sit side-by-side; transport and the 16-channel visualizer stay full width.</li>
+        <li><strong>Panel order</strong> — Transport → Enhancement Controls → Visualizer → (collapsed by default) Auto-Tune, Electrode Map, Diagnostic Vocoder.</li>
+        <li><strong>Two-column layout</strong> — on screens about 1100px wide, Transport and Enhancement Controls span full width above the visualizer; lower panels sit side-by-side.</li>
         <li><strong>Collapsible panels</strong> — ▾ on section headings; Auto-Tune, Electrode Map, and Diagnostic Vocoder start collapsed on first visit. State is remembered.</li>
         <li><strong>⎙ Print / PDF</strong> — every in-app document modal has a print button for a clean, shareable copy.</li>
         <li><strong>☀ / 🌙</strong> — light/dark theme (localStorage).</li>
@@ -608,11 +610,11 @@ export const MENU_CONTENT = {
 
       <h3 id="help-faq-using">Using the app, demos &amp; A/B</h3>
       <div class="faq-item"><h4>Which demo should I use first?</h4>
-      <p>Start with <strong>Full Mix</strong> if you want the fastest whole-chain music A/B (Music mode vs bypass). Use <strong>Bass Focus</strong> for bass restoration, <strong>Melody / Harmony</strong> for pitch/chord/timbre clarity, and <strong>DSP Check</strong> for meters, auto-tune, or visualization behavior. Queue them in that order for a structured demo.</p></div>
+      <p>Start with <strong>Full Mix</strong> if you want the fastest whole-chain music A/B — tap <strong>Original</strong> / <strong>Enhanced</strong> in the transport bar. Use <strong>Bass Focus</strong> for bass restoration, <strong>Melody / Harmony</strong> for pitch/chord/timbre clarity, and <strong>DSP Check</strong> for meters, auto-tune, or visualization behavior. Queue them in that order for a structured demo.</p></div>
       <div class="faq-item"><h4>What is the difference between demo tracks and my uploaded files?</h4>
       <p>The built-in demos are synthetic, in-browser music fixtures — no upload, always available, regenerate after reload. <strong>DSP Check</strong> verifies the engineering path; <strong>Bass Focus</strong>, <strong>Melody / Harmony</strong>, and <strong>Full Mix</strong> demonstrate different music-processing problems. <strong>Your uploaded files</strong> are real library material for genre-specific tuning and WAV export; they stay in memory only until you reload the page. See ⓘ <strong>Built-in demo tracks</strong> and ⓘ <strong>Your uploaded audio</strong>.</p></div>
       <div class="faq-item"><h4>What are the built-in music demos?</h4>
-      <p><strong>DSP Check</strong> is an engineering fixture. <strong>Bass Focus</strong> isolates low fundamentals and missing-fundamental cues. <strong>Melody / Harmony</strong> foregrounds stable lead tone, chord separation, and timbre. <strong>Full Mix</strong> combines bass, drums, chords, lead, and stereo panning for a complete Music mode vs bypass A/B. See ⓘ <strong>Built-in demo tracks</strong> for the full how and why.</p></div>
+      <p><strong>DSP Check</strong> is an engineering fixture. <strong>Bass Focus</strong> isolates low fundamentals and missing-fundamental cues. <strong>Melody / Harmony</strong> foregrounds stable lead tone, chord separation, and timbre. <strong>Full Mix</strong> combines bass, drums, chords, lead, and stereo panning for a complete Original / Enhanced A/B. See ⓘ <strong>Built-in demo tracks</strong> for the full how and why.</p></div>
       <div class="faq-item"><h4>How do Speech mode and Music mode buttons work?</h4>
       <p>They apply the built-in Speech or Music presets in one click. Your choice is saved in localStorage. Moving any slider manually switches to Custom (current).</p></div>
       <div class="faq-item"><h4>What is the playlist for?</h4>
@@ -623,8 +625,8 @@ export const MENU_CONTENT = {
       <p>Yes — on phones the menus collapse into a single <strong>☰ Menu</strong> button, panels stack in one column, the transport bar stays sticky, and buttons/sliders use 44px touch targets. <strong>On Safari/iPhone, tap 🔊 Start Audio Engine once</strong> before playing (iOS only unlocks sound from a direct tap). On laptops and desktops the same page expands into a two-column dashboard. It works in Chrome, Safari, Firefox, and Edge on macOS, Windows, iOS, and Android. Add to home screen via the PWA manifest for a standalone icon. ES modules still require HTTP (local server or deployed URL), not <code>file://</code>.</p></div>
       <div class="faq-item"><h4>What is Optimize region (In / Out)?</h4>
       <p>Sliders under the transport scrubber bracket the section of your track that <strong>Optimize for CI</strong> analyzes (4–12 seconds). Default (full track) uses the center 12 seconds. Useful on long songs — set In/Out on a chorus before optimizing.</p></div>
-      <div class="faq-item"><h4>What is Loudness-match when bypassing?</h4>
-      <p>When checked (default), toggling <strong>Bypass Enhancement</strong> temporarily adjusts the raw path so level matches the enhanced path — a fairer A/B for quality, not just loudness. Uncheck for level-accurate raw vs enhanced.</p></div>
+      <div class="faq-item"><h4>What is Match loudness?</h4>
+      <p>The checkbox next to <strong>Hear: Enhanced / Original</strong> in the transport bar (on by default). When checked, switching to <strong>Original</strong> temporarily adjusts level so it matches <strong>Enhanced</strong> — a fairer A/B for quality, not just loudness. Uncheck for level-accurate original vs enhanced. Same setting as <strong>Bypass Enhancement</strong> in Enhancement Controls.</p></div>
       <div class="faq-item"><h4>What does Compare presets do?</h4>
       <p>Opens a table showing how harmonic drive, compression threshold, clarity lift, and transpose mix differ between any two presets. Use it to compare Music, Classical, Rock, Jazz, saved profiles, or the Speech reference preset before fine-tuning sliders.</p></div>
       <div class="faq-item"><h4>Can I undo slider changes?</h4>
@@ -632,7 +634,7 @@ export const MENU_CONTENT = {
       <div class="faq-item"><h4>Can I save or print the in-app guides?</h4>
       <p>Yes — every in-app document (Instructions, FAQ, Help, Background, Technical chain, Industry &amp; partnership guide, Cochlear platform developer guide) has a <strong>⎙ Print / PDF</strong> button in the modal header. It opens your browser’s print dialog so you can save a clean PDF or paper copy. The one-page overview and technical paper also have print buttons on their web pages; the overview PDF is additionally available under <strong>For Industry ▾</strong>.</p></div>
       <div class="faq-item"><h4>Why does the layout look different on my laptop vs my phone?</h4>
-      <p>By design. On phones, menus collapse behind <strong>☰ Menu</strong> and panels stack in one column with a sticky transport bar. On screens about 1100px wide, the same page expands into a <strong>two-column dashboard</strong> (transport + visualizer full width; control panels side-by-side). Collapsible sections remember whether you left them open. See ⓘ <strong>Layout, Mobile &amp; PWA</strong> in the quick-start callout.</p></div>
+      <p>By design. On phones, menus collapse behind <strong>☰ Menu</strong> and panels stack in workflow order (Transport → Enhancement Controls → Visualizer → optional lower panels) with a sticky transport bar. On screens about 1100px wide, the same page expands into a <strong>two-column dashboard</strong> — Transport and Enhancement Controls full width above the visualizer; Auto-Tune, Electrode Map, and Diagnostic Vocoder side-by-side below. Collapsible sections remember whether you left them open. See ⓘ <strong>Layout, Mobile &amp; PWA</strong> in the quick-start callout.</p></div>
       <div class="faq-item"><h4>What is session JSON export?</h4>
       <p>Under <strong>Tools ▾</strong>, exports all settings (sliders, MAP, vocoder, stereo width, viz) as one JSON file for study reproducibility. It does not include audio — pair with WAV export per track.</p></div>
 
@@ -685,7 +687,7 @@ export const MENU_CONTENT = {
       <p>Cochlear implants provide excellent speech perception for many users but music often suffers: weak bass, blurred timbre, poor pitch resolution above ~300–500 Hz, and limited dynamic range after envelope extraction.</p>
       <p>Commercial CI companion apps offer volume, programs, and sometimes coarse tone controls — not harmonic regeneration, transposition, vocoder-aware auto-tuning, MAP-personalized mastering, or researcher-facing diagnostics.</p>
       <p>Phone EQ assumes normal hearing with intact temporal fine structure. CI users receive ~16–22 channels of slowly varying envelopes — a fundamentally different representation.</p>
-      <p>This engine implements multi-band compression, harmonic bass excitation, clarity lift, ring-mod transposition, MAP shaping, profile-based visualizers, a synthetic music demo battery (<strong>DSP Check</strong>, <strong>Bass Focus</strong>, <strong>Melody / Harmony</strong>, <strong>Full Mix</strong>), playlist queue, session JSON, stereo width control, Speech/Music mode memory, optimize region, loudness-matched A/B, compare presets, undo/redo, microphone input, WAV export (optional vocoder), mobile collapsible UI, PWA manifest, and offline vocoder-in-the-loop optimization.</p>
+      <p>This engine implements multi-band compression, harmonic bass excitation, clarity lift, ring-mod transposition, MAP shaping, profile-based visualizers, a synthetic music demo battery (<strong>DSP Check</strong>, <strong>Bass Focus</strong>, <strong>Melody / Harmony</strong>, <strong>Full Mix</strong>), playlist queue, session JSON, stereo width control, Speech/Music mode memory, optimize region, Original / Enhanced A/B with Match loudness, compare presets, undo/redo, microphone input, WAV export (optional vocoder), mobile collapsible UI, PWA manifest, and offline vocoder-in-the-loop optimization.</p>
       <p><a href="paper.html" target="_blank"><strong>Technical paper →</strong></a> Signal-chain diagrams, overtone-series mechanism, double-compression theory, validation phases, and research collaboration guidelines. See <strong>For Industry ▾ → Industry &amp; partnership guide</strong> (commercial) and <strong>Cochlear platform developer guide</strong> (companion-app engineering).</p>
     `
   },
@@ -730,7 +732,7 @@ export const MENU_CONTENT = {
         <li>Open deployed demo URL or local server — confirm status line is ready (not an initialization error).</li>
         <li><strong>Full Mix</strong> → <strong>Play</strong> → <strong>Music mode</strong> — “This is the whole-chain music demo; rhythm, bass salience, melody, and separation are the design targets, not speaker fidelity.”</li>
         <li><strong>Bass Focus</strong> and <strong>Melody / Harmony</strong> — show targeted probes for the two hardest music questions: low-frequency foundation and pitch/chord clarity.</li>
-        <li>Enable <strong>Loudness-match when bypassing</strong> → toggle <strong>Bypass Enhancement</strong> with Loop on — fair A/B vs raw stream.</li>
+        <li>Tap <strong>Original</strong> / <strong>Enhanced</strong> in the transport bar with <strong>Match loudness</strong> and Loop on — fair A/B vs the unchanged stream.</li>
         <li><strong>Compare presets</strong> — show Music, Classical, Rock, Jazz, saved profiles, or the Speech reference preset in one table.</li>
         <li>Optional: <strong>Optimize for CI</strong> on Full Mix or Bass Focus (~30–90 s) — metric cards show vocoder-surrogate scores (engineering proxy, not clinical endpoints).</li>
         <li>Close with <strong>For Industry ▾ → Download overview (PDF)</strong> and <strong>Technical paper</strong> for R&amp;D follow-up.</li>
@@ -867,7 +869,7 @@ Media app (Spotify, Apple Music, etc.)
       <h3 id="help-dev-validation">Validation matrix (what you would run internally)</h3>
       <ol>
         <li><strong>Functional</strong> — bit-exact or bounded-diff parity: native live graph vs <code>offlinePipeline.js</code> on golden files (<code>npm test</code> parity script is a starting pattern).</li>
-        <li><strong>Hardware</strong> — blind A/B: raw vs enhanced media streamed to Nucleus / Kanso processors across SmartSound programs.</li>
+        <li><strong>Hardware</strong> — blind A/B: original vs enhanced media streamed to Nucleus / Kanso processors across SmartSound programs.</li>
         <li><strong>Coder interaction</strong> — confirm enhancement does not push levels that trigger unintended AGC / limiting on processor input.</li>
         <li><strong>Battery / thermal</strong> — auto-tune and continuous enhancement while streaming; Kanso 2 off-the-ear wearables are battery-sensitive.</li>
         <li><strong>Regression</strong> — pairing, ForwardFocus, accessory streaming, and firmware update flows unchanged.</li>
@@ -934,7 +936,7 @@ Source (file / mic / playlist queue)
       <h4>Offline auto-tune loop</h4>
       <pre class="chain-diagram">
 Extract up to 12 s from Optimize region (In/Out) or track center
-Baseline: raw → offline vocoder → score metrics
+Baseline: original (unenhanced) → offline vocoder → score metrics
 For each (harmonicDrive, compThreshold, clarityLift, transposeMix) in 5×5×5×5 grid:
   segment → offline enhancement (ring-mod transposition)
          → offline 16-ch vocoder → score metrics

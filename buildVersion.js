@@ -1,2 +1,2 @@
 /** Bump with index.html APP_VERSION when any JS module changes (cache-bust). */
-export const BUILD_VERSION = '26';
+export const BUILD_VERSION = '28';

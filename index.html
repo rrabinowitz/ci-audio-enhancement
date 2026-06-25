@@ -713,7 +713,7 @@
       font-weight: 600;
     }
 
-    .listen-ab-btn.listen-raw.active {
+    .listen-ab-btn.listen-original.active {
       border-color: #d29922;
       color: #e3b341;
       background: rgba(210, 153, 34, 0.12);
@@ -2085,7 +2085,7 @@
         <ol class="quickstart-steps">
           <li>Tap <strong>Full Mix</strong></li>
           <li>Press <strong>Play</strong></li>
-          <li>Tap <strong>Raw</strong> / <strong>Enhanced</strong> to compare</li>
+          <li>Tap <strong>Original</strong> / <strong>Enhanced</strong> to compare</li>
         </ol>
         <button type="button" class="quickstart-link" data-menu-content="instructions">Full instructions</button>
         <button type="button" class="info-btn" data-info-topic="mobile-layout" title="About mobile layout, two-column desktop view, and PWA" aria-label="About mobile layout and PWA">i</button>
@@ -2140,15 +2140,15 @@
             Loop
             <button type="button" class="info-btn" data-info-topic="transport" title="About loop and transport" aria-label="About loop and transport">i</button>
           </label>
-          <span class="listen-ab-group" id="listenAbGroup" aria-label="Listen to raw or enhanced audio">
+          <span class="listen-ab-group" id="listenAbGroup" aria-label="Listen to original or enhanced audio">
             <span class="listen-ab-label">Hear:</span>
             <button type="button" class="btn listen-ab-btn listen-enhanced active" id="listenEnhancedBtn" title="Hear the CI music enhancement chain (default)">Enhanced</button>
-            <button type="button" class="btn listen-ab-btn listen-raw" id="listenRawBtn" title="Hear the unprocessed demo or upload — same file, no enhancement">Raw</button>
-            <label class="loudness-match-inline" title="Match raw and enhanced loudness so you compare quality, not volume">
+            <button type="button" class="btn listen-ab-btn listen-original" id="listenOriginalBtn" title="Hear the original unchanged sound — same demo or upload, no enhancement">Original</button>
+            <label class="loudness-match-inline" title="Match original and enhanced loudness so you compare quality, not volume">
               <input type="checkbox" id="abLoudnessMatch" checked>
               Match loudness
             </label>
-            <button type="button" class="info-btn" data-info-topic="loudness-matched-ab" title="About raw vs enhanced A/B and loudness matching" aria-label="About raw vs enhanced A/B and loudness matching">i</button>
+            <button type="button" class="info-btn" data-info-topic="loudness-matched-ab" title="About Original vs Enhanced A/B and Match loudness" aria-label="About Original vs Enhanced A/B and Match loudness">i</button>
           </span>
         </div>
         <div class="transport-scrubber">
@@ -2341,8 +2341,8 @@
       <div class="toggle-row">
         <input type="checkbox" id="enhancementBypass">
         <label for="enhancementBypass" class="label-with-info">
-          Bypass Enhancement (same as Raw / Enhanced in the transport bar)
-          <button type="button" class="info-btn" data-info-topic="enhancement-bypass" title="About bypass enhancement" aria-label="About bypass enhancement">i</button>
+          Bypass Enhancement (same as Original / Enhanced in the transport bar)
+          <button type="button" class="info-btn" data-info-topic="enhancement-bypass" title="About Original vs Enhanced A/B" aria-label="About Original vs Enhanced A/B">i</button>
         </label>
       </div>
       <div class="comp-vu-row">
@@ -2479,7 +2479,7 @@
   </div>
 
   <script type="module">
-    const APP_VERSION = '26';
+    const APP_VERSION = '28';
     import(`./app.js?v=${APP_VERSION}`).catch((error) => {
       console.error('CI Audio Enhancement failed to load:', error);
       const banner = document.getElementById('appLoadError');

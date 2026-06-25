@@ -378,7 +378,7 @@ Frequency transposition:   Modulation patterns appear near ~4 kHz
       <li><strong>Session snapshot JSON</strong> — export/import all tuning settings (sliders, MAP, vocoder, viz) under Tools ▾; audio buffers are not included.</li>
       <li><strong>WAV export</strong> — offline render with optional diagnostic vocoder pass (<code>-processed.wav</code> vs <code>-vocoded.wav</code>).</li>
       <li><strong>Optimize region</strong> — In/Out markers under the scrubber select the passage analyzed by CI Auto-Tune (default: center 12 s of the track).</li>
-      <li><strong>Loudness-matched A/B</strong> — optional makeup gain when bypassing enhancement for fair raw vs enhanced comparison.</li>
+      <li><strong>Match loudness</strong> — optional makeup gain when switching to Original for fair original vs enhanced comparison (transport bar checkbox).</li>
       <li><strong>Compare presets</strong> — side-by-side table of slider values between any two profiles (Music, Classical, Rock, Jazz, saved profiles, or the Speech reference preset).</li>
       <li><strong>Undo / redo</strong> — step back through manual slider edits (⌘/Ctrl+Z); cleared on preset load or session import.</li>
       <li><strong>Mobile layout &amp; PWA</strong> — collapsible panels (auto-tune and vocoder collapsed on first visit), sticky transport, 44px touch targets, safe-area insets, and <code>manifest.json</code> for add-to-home-screen.</li>
@@ -402,7 +402,7 @@ Input (file / mic / playlist) ── Stereo width (M/S → mono bus)
                          │
                          └── Parallel analyser taps → 16-ch spectrum, band pre/post meters, GR (visualization only)
 
-Workflow: playlist queue · Speech/Music mode · optimize region · loudness-matched A/B · compare presets · undo/redo · session JSON · optional vocoder WAV export
+Workflow: playlist queue · Speech/Music mode · optimize region · Match loudness · Original / Enhanced A/B · compare presets · undo/redo · session JSON · optional vocoder WAV export
 
 Visualization (display-only): input vs enhanced spectrum · channel contrast · enhancement profile (fixed ±35%, time-averaged) · band energy bars · live GR meters
 
@@ -427,7 +427,7 @@ Offline auto-tune: ∀ parameter candidates (625 grid incl. transpose mix) → e
     <h2 id="sec-16">16. Validation Requirements</h2>
     <h3>Phase A — Engineering evaluation (current capability)</h3>
     <ul>
-      <li>A/B comparison: raw vs enhanced audio through diagnostic vocoder at 100% simulated blend.</li>
+      <li>A/B comparison: original vs enhanced audio through diagnostic vocoder at 100% simulated blend.</li>
       <li>Metric delta reporting after auto-tune optimization.</li>
       <li>Multi-genre stimulus sets across electrode-map presets.</li>
     </ul>
@@ -460,7 +460,7 @@ Offline auto-tune: ∀ parameter candidates (625 grid incl. transpose mix) → e
     <table>
       <tr><th>Data type</th><th>Application to development</th></tr>
       <tr><td>Electrode-map JSON (center Hz, deactivated contacts)</td><td>Validation of MAP-aware shaping</td></tr>
-      <tr><td>Listener ratings (raw vs processed)</td><td>Calibration of proxy metrics</td></tr>
+      <tr><td>Listener ratings (original vs processed)</td><td>Calibration of proxy metrics</td></tr>
       <tr><td>Genre × parameter interactions</td><td>Content-aware rule development</td></tr>
       <tr><td>Per-participant optimal parameters</td><td>Auto-tune grid refinement</td></tr>
       <tr><td>Qualitative descriptors (bass, vocals, separation)</td><td>Composite metric weighting</td></tr>

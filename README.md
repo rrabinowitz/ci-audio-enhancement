@@ -12,7 +12,7 @@ Browser-based music pre-processor for cochlear implant users. Runs entirely clie
 - **Visualizations** — 16-channel spectrum (live + preview), channel contrast, enhancement profile (fixed ±35%), band energy comparison, GR meters
 - **Presets** — Speech, Music, Classical, Rock, Jazz + save/import/export custom presets
 - **CI Auto-Tune** — 625-combo vocoder-in-the-loop offline optimization (includes transpose mix); **optimize region** In/Out markers
-- **Tuning workflow** — compare presets, undo/redo, loudness-matched A/B bypass
+- **Tuning workflow** — compare presets, undo/redo, Original / Enhanced A/B with Match loudness in transport
 - **Export WAV** — offline render; optional diagnostic vocoder pass
 - **Session JSON** — export/import full tuning session (**Tools ▾**)
 - **Microphone input** — live enhancement chain via getUserMedia
@@ -53,7 +53,7 @@ Vercel assigns a URL like `https://ci-audio-enhancement.vercel.app`.
 ## Tester notes
 
 - Use Chrome or Edge for development; **Safari** (macOS/iOS) is supported — tap Play if you see an `interrupted` audio error.
-- **Quick test:** **Full Mix** → Play → **Music mode** → loudness-matched bypass A/B; then try **Bass Focus** and **Melody / Harmony** for targeted music probes. Upload your own files for real tuning.
+- **Quick test:** **Full Mix** → Play → **Music mode** → tap **Original** / **Enhanced** (Match loudness on); then try **Bass Focus** and **Melody / Harmony** for targeted music probes. Upload your own files for real tuning.
 - Run `npm test` — validates help topics, module imports, and offline pipeline smoke test.
 - Hard-refresh (`Cmd+Shift+R`) after updates — the app shows a red banner if JavaScript fails to load.
 - All processing stays on the device; nothing is uploaded.

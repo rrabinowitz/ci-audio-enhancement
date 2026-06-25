@@ -115,7 +115,7 @@ def footer_block(pdf):
     pdf.set_font("Helvetica", "", 7.4)
     pdf.set_text_color(232, 241, 251)
     for step in [
-        "Live demo - browser reference app; Speech vs Music presets; bypass on/off.",
+        "Live demo - browser reference app; music demo battery; Original / Enhanced A/B with Match loudness.",
         "Listener study - stream processed audio to implant users vs baseline.",
         "Partnership - port DSP to native apps; MAP import; clinical validation.",
     ]:
@@ -204,11 +204,11 @@ def main():
             "Harmonic bass excitation - overtone correlates for envelope coding.",
             "High-frequency transposition - treble relocated to mid bands.",
             "CI Auto-Tune - 625 combinations scored via 16-channel vocoder surrogate (incl. transpose mix).",
-            "Built-in demos - DSP Check engineering fixture + Music Eval stereo groove for music A/B.",
+            "Built-in demos - DSP Check plus Bass Focus, Melody / Harmony, and Full Mix music probes.",
             "Playlist and session JSON - multi-track queue; full settings export/import.",
             "Speech/Music modes and stereo width - one-click presets; mono collapse default.",
             "Mobile PWA - collapsible panels, sticky transport, installable manifest.",
-            "Presets and A/B - Classical, Rock, Jazz; bypass; WAV and optional vocoder export.",
+            "Presets and A/B - Classical, Rock, Jazz; Original / Enhanced; WAV and optional vocoder export.",
         ],
         "Enhancement path",
         [
@@ -219,7 +219,7 @@ def main():
             "[Med] Export processed WAV - delivered: pre-process a personal library.",
             "[Med] Session snapshot JSON - delivered: full settings export/import.",
             "[Med] Optimize on loop region - auto-tune selected passage only.",
-            "[Med] Loudness-matched A/B - fair bypass comparison.",
+            "[Med] Match loudness (A/B) - fair Original / Enhanced comparison.",
             "[Low] Preset diff view - compare Speech vs Music sliders.",
             "[Low] Offline/live parity test - automated pipeline validation.",
         ],

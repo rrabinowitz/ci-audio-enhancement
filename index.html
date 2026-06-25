@@ -81,6 +81,11 @@
       gap: 0.35rem 0.75rem;
     }
 
+    .panel-grid {
+      display: flex;
+      flex-direction: column;
+    }
+
     @media (min-width: 1100px) {
       .top-nav-inner {
         max-width: 1380px;
@@ -1243,10 +1248,38 @@
         margin-bottom: 0;
       }
 
+      .panel-grid > [data-panel-id="enhancement-controls"] {
+        grid-column: 1 / -1;
+      }
+
       .panel-grid > .panel-transport,
       .panel-grid > .panel-visualizer {
         grid-column: 1 / -1;
       }
+    }
+
+    .panel-grid > [data-panel-id="transport"] {
+      order: 1;
+    }
+
+    .panel-grid > [data-panel-id="enhancement-controls"] {
+      order: 2;
+    }
+
+    .panel-grid > [data-panel-id="visualizer"] {
+      order: 3;
+    }
+
+    .panel-grid > [data-panel-id="auto-tune"] {
+      order: 4;
+    }
+
+    .panel-grid > [data-panel-id="electrode-map"] {
+      order: 5;
+    }
+
+    .panel-grid > [data-panel-id="diagnostic-vocoder"] {
+      order: 6;
     }
 
     .panel {
@@ -2446,7 +2479,7 @@
   </div>
 
   <script type="module">
-    const APP_VERSION = '25';
+    const APP_VERSION = '26';
     import(`./app.js?v=${APP_VERSION}`).catch((error) => {
       console.error('CI Audio Enhancement failed to load:', error);
       const banner = document.getElementById('appLoadError');

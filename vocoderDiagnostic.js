@@ -3,8 +3,8 @@
  * Band layout follows the active MAP profile when provided.
  */
 
-import { buildVocoderBandSpecs } from './vocoderBands.js?v=25';
-import { getProfileById } from './mapProfiles.js?v=25';
+import { buildVocoderBandSpecs } from './vocoderBands.js?v=26';
+import { getProfileById } from './mapProfiles.js?v=26';
 
 function makeAbsCurve() {
   const curve = new Float32Array(2048);

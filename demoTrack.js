@@ -119,7 +119,7 @@ function buildBassFocusBuffer(audioContext) {
 
 /**
  * 8 s musical probe focused on pitch contour and harmony: sustained chords,
- * moving lead, vibrato, attacks, and upper harmonics without a dense drum bed.
+ * long stable lead tones, clean attacks, and upper harmonics without a dense drum bed.
  */
 function buildMelodyHarmonyBuffer(audioContext) {
   const sampleRate = audioContext.sampleRate;
@@ -128,7 +128,7 @@ function buildMelodyHarmonyBuffer(audioContext) {
   const buffer = audioContext.createBuffer(2, length, sampleRate);
   const left = buffer.getChannelData(0);
   const right = buffer.getChannelData(1);
-  const noteSec = 0.5;
+  const noteSec = 2;
   const chordSec = 2;
   const chords = [
     [220.0, 261.63, 329.63],
@@ -136,12 +136,7 @@ function buildMelodyHarmonyBuffer(audioContext) {
     [174.61, 220.0, 293.66],
     [196.0, 246.94, 392.0]
   ];
-  const melody = [
-    440.0, 493.88, 523.25, 587.33,
-    659.25, 587.33, 523.25, 493.88,
-    440.0, 392.0, 440.0, 523.25,
-    587.33, 659.25, 587.33, 523.25
-  ];
+  const melody = [440.0, 523.25, 392.0, 493.88];
 
   for (let i = 0; i < length; i++) {
     const t = i / sampleRate;
@@ -149,9 +144,8 @@ function buildMelodyHarmonyBuffer(audioContext) {
     const chordPhase = t % chordSec;
     const noteIndex = Math.floor(t / noteSec) % melody.length;
     const notePhase = t % noteSec;
-    const vibrato = 1 + 0.006 * Math.sin(2 * Math.PI * 5.4 * t);
     const chordEnv = adsr(chordPhase, chordSec, 0.04, 0.18, 0.58, 0.35);
-    const leadEnv = adsr(notePhase, noteSec, 0.018, 0.08, 0.62, 0.08);
+    const leadEnv = adsr(notePhase, noteSec, 0.025, 0.12, 0.78, 0.18);
 
     let chord = 0;
     chords[chordIndex].forEach((freq, idx) => {
@@ -162,14 +156,14 @@ function buildMelodyHarmonyBuffer(audioContext) {
         0.025 * Math.sin(2 * Math.PI * freq * 3 * t);
     });
 
-    const leadFreq = melody[noteIndex] * vibrato;
+    const leadFreq = melody[noteIndex];
     const lead =
       0.22 * Math.sin(2 * Math.PI * leadFreq * t) +
       0.11 * Math.sin(2 * Math.PI * leadFreq * 2 * t) +
       0.055 * Math.sin(2 * Math.PI * leadFreq * 3 * t) +
       0.025 * Math.sin(2 * Math.PI * leadFreq * 5 * t);
 
-    const pick = notePhase < 0.045 ? 0.035 * Math.exp(-notePhase / 0.012) * hashNoise(i * 0.33) : 0;
+    const pick = notePhase < 0.055 ? 0.025 * Math.exp(-notePhase / 0.016) * hashNoise(i * 0.33) : 0;
     const bassRoot = chords[chordIndex][0] / 2;
     const bass = 0.075 * Math.sin(2 * Math.PI * bassRoot * t) + 0.035 * Math.sin(2 * Math.PI * bassRoot * 2 * t);
 
@@ -201,12 +195,9 @@ function buildMusicEvalBuffer(audioContext) {
   const barThirds = [130.81, 103.83, 82.41, 123.47];
   const barFifths = [164.81, 130.81, 98.0, 146.83];
 
-  const melodyHz = [
-    329.63, 392.0, 440.0, 392.0, 329.63, 293.66, 329.63, 392.0,
-    440.0, 493.88, 523.25, 493.88, 440.0, 392.0, 329.63, 392.0,
-    329.63, 392.0, 440.0, 392.0, 329.63, 293.66, 329.63, 392.0,
-    440.0, 523.25, 587.33, 523.25, 440.0, 392.0, 329.63, 392.0
-  ];
+  // Long, stable held notes. No vibrato/warble: a wavering melody can sound
+  // like processing damage to first-time listeners.
+  const melodyHz = [329.63, 440.0, 392.0, 493.88];
 
   for (let i = 0; i < length; i++) {
     const t = i / sampleRate;
@@ -253,15 +244,14 @@ function buildMusicEvalBuffer(audioContext) {
         0.07 * Math.sin(2 * Math.PI * fifth * 2 * t) +
         0.04 * Math.sin(2 * Math.PI * root * 4 * t));
 
-    const noteIdx = Math.min(melodyHz.length - 1, Math.floor(t / eighthSec));
-    const notePhase = (t % eighthSec) / eighthSec;
+    const noteIdx = bar;
+    const notePhaseSec = t % barSec;
     const melFreq = melodyHz[noteIdx];
-    const melEnv = 0.2 + 0.8 * Math.exp(-notePhase / 0.32);
-    const leadVibrato = 1 + 0.004 * Math.sin(2 * Math.PI * 5.8 * t);
+    const melEnv = adsr(notePhaseSec, barSec, 0.035, 0.2, 0.72, 0.25);
     const lead =
       melEnv *
       0.19 *
-      (Math.sin(2 * Math.PI * melFreq * leadVibrato * t) +
+      (Math.sin(2 * Math.PI * melFreq * t) +
         0.38 * Math.sin(2 * Math.PI * melFreq * 2 * t) +
         0.14 * Math.sin(2 * Math.PI * melFreq * 3 * t) +
         0.045 * Math.sin(2 * Math.PI * melFreq * 5 * t));

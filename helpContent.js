@@ -158,18 +158,18 @@ export const INFO_TOPICS = {
       <p><strong>Why those sounds:</strong> Low fundamentals are often weak or ambiguous through CI processing. The enhancement should make bass <em>identity</em> and rhythmic foundation easier to follow through harmonic excitation, not simply louder.</p>
       <p><strong>Use it to:</strong> Toggle <strong>Bypass Enhancement</strong> while listening for bass pitch/contour, kick definition, and whether low-mid harmonic cues become more usable. Watch low-band energy and harmonic generation readouts.</p>
       <h4>Melody / Harmony (8 s, stereo)</h4>
-      <p><strong>What it is:</strong> A cleaner musical passage with sustained chords, moving lead melody, vibrato, note attacks, bass roots, and upper harmonics.</p>
+      <p><strong>What it is:</strong> A cleaner musical passage with sustained chords, long stable lead tones, clean note attacks, bass roots, and upper harmonics.</p>
       <p><strong>Why those sounds:</strong> Melody contour, chord quality, and timbre are major music-listening pain points for CI users. This probe foregrounds clarity lift, MAP shaping, and high-frequency transposition without hiding the result behind a dense drum bed.</p>
-      <p><strong>Use it to:</strong> Listen for clearer lead contour, better chord separation, and less smeared upper detail. Try <strong>Music mode</strong>, then adjust <strong>Clarity Lift</strong> and <strong>Freq Transposition Mix</strong>.</p>
+      <p><strong>Use it to:</strong> Listen for whether the stable held lead tone and chords stay clear, separated, and free of smear. Try <strong>Music mode</strong>, then adjust <strong>Clarity Lift</strong> and <strong>Freq Transposition Mix</strong>.</p>
       <h4>Full Mix (8 s, stereo, 120 BPM)</h4>
-      <p><strong>What it is:</strong> A short Am–F–C–G groove — bass, chords (panned left), lead hook (panned right), kick/snare/hi-hat, crash, stereo width, vibrato, and richer attacks. Loops cleanly for hands-free A/B.</p>
+      <p><strong>What it is:</strong> A short Am–F–C–G groove — bass, chords (panned left), stable held lead tones (panned right), kick/snare/hi-hat, crash, stereo width, and richer attacks. Loops cleanly for hands-free A/B.</p>
       <p><strong>Why those sounds:</strong> Tests the whole chain together: bass foundation, chord/lead separation, stereo-to-mono width handling, sustained mids, HF transients, compression, and transposition.</p>
       <p><strong>Use it to:</strong> Demonstrate the overall music experience: <strong>Music mode</strong> vs <strong>Bypass Enhancement</strong>, loudness-matched A/B, stereo width at 0% vs 50%, and optional diagnostic vocoder blend.</p>
       <h4>Suggested test flow</h4>
       <ol>
         <li><strong>DSP Check</strong> → Play → confirm meters and spectrum respond → run <strong>Optimize for CI</strong> once.</li>
         <li><strong>Bass Focus</strong> → <strong>Music mode</strong> → toggle <strong>Bypass Enhancement</strong>; listen for bass pitch/contour and kick definition.</li>
-        <li><strong>Melody / Harmony</strong> → toggle bypass; listen for lead contour, chord separation, and upper-harmonic clarity.</li>
+        <li><strong>Melody / Harmony</strong> → toggle bypass; listen for stable lead tone, chord separation, and upper-harmonic clarity.</li>
         <li><strong>Full Mix</strong> → Play with Loop on → loudness-matched bypass A/B for the whole-chain music demo.</li>
         <li>Optional: enable diagnostic vocoder at 50–100% simulated blend to hear CI-like smearing (developer tool, not clinical proof).</li>
         <li>Load your own library files for genre-specific tuning — demos are starting points only.</li>
@@ -494,7 +494,7 @@ export const MENU_CONTENT = {
       <h3 id="help-targeted-music">Targeted music probes</h3>
       <ol>
         <li><strong>Bass Focus</strong> — listen for bass pitch/contour, kick definition, and low-mid harmonic cues with bypass on/off.</li>
-        <li><strong>Melody / Harmony</strong> — listen for lead contour, chord separation, note attacks, and upper-harmonic clarity.</li>
+        <li><strong>Melody / Harmony</strong> — listen for stable lead tone, chord separation, note attacks, and upper-harmonic clarity.</li>
         <li><strong>Full Mix</strong> — use after the probes to judge whether the complete chain improves musical organization.</li>
       </ol>
       <h3 id="help-eng-check">Engineering check (DSP Check demo)</h3>
@@ -612,7 +612,7 @@ export const MENU_CONTENT = {
       <div class="faq-item"><h4>What is the difference between demo tracks and my uploaded files?</h4>
       <p>The built-in demos are synthetic, in-browser music fixtures — no upload, always available, regenerate after reload. <strong>DSP Check</strong> verifies the engineering path; <strong>Bass Focus</strong>, <strong>Melody / Harmony</strong>, and <strong>Full Mix</strong> demonstrate different music-processing problems. <strong>Your uploaded files</strong> are real library material for genre-specific tuning and WAV export; they stay in memory only until you reload the page. See ⓘ <strong>Built-in demo tracks</strong> and ⓘ <strong>Your uploaded audio</strong>.</p></div>
       <div class="faq-item"><h4>What are the built-in music demos?</h4>
-      <p><strong>DSP Check</strong> is an engineering fixture. <strong>Bass Focus</strong> isolates low fundamentals and missing-fundamental cues. <strong>Melody / Harmony</strong> foregrounds lead contour, chord separation, and timbre. <strong>Full Mix</strong> combines bass, drums, chords, lead, and stereo panning for a complete Music mode vs bypass A/B. See ⓘ <strong>Built-in demo tracks</strong> for the full how and why.</p></div>
+      <p><strong>DSP Check</strong> is an engineering fixture. <strong>Bass Focus</strong> isolates low fundamentals and missing-fundamental cues. <strong>Melody / Harmony</strong> foregrounds stable lead tone, chord separation, and timbre. <strong>Full Mix</strong> combines bass, drums, chords, lead, and stereo panning for a complete Music mode vs bypass A/B. See ⓘ <strong>Built-in demo tracks</strong> for the full how and why.</p></div>
       <div class="faq-item"><h4>How do Speech mode and Music mode buttons work?</h4>
       <p>They apply the built-in Speech or Music presets in one click. Your choice is saved in localStorage. Moving any slider manually switches to Custom (current).</p></div>
       <div class="faq-item"><h4>What is the playlist for?</h4>

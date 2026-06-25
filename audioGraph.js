@@ -4,7 +4,7 @@
  * and high-frequency transposition. Visualizer uses a separate analyser tap.
  */
 
-import { getProfileById, redistributeDeadRegionWeights } from './mapProfiles.js?v=18';
+import { getProfileById, redistributeDeadRegionWeights } from './mapProfiles.js?v=19';
 
 function dbToLinear(db) {
   return Math.pow(10, db / 20);
@@ -102,6 +102,15 @@ export class CIAudioEngine {
   }
 
   async init() {
+    this._ensureContextAndGraph();
+  }
+
+  /**
+   * Synchronously create the AudioContext and build the node graph.
+   * Kept synchronous (no awaits) so it can run inside a user-gesture
+   * handler without yielding to a macrotask.
+   */
+  _ensureContextAndGraph() {
     if (this.audioContext) {
       return;
     }
@@ -168,6 +177,27 @@ export class CIAudioEngine {
 
     if (this.audioContext.state !== 'running') {
       throw new Error(`Audio output is blocked (context state: ${this.audioContext.state}). Tap Play or click the page, then try again.`);
+    }
+  }
+
+  /**
+   * Create (if needed) and resume the AudioContext from directly inside a
+   * user-gesture handler. MUST be called before any `await` in the handler:
+   * browsers only honor resume() while user activation is active, and a
+   * resume() issued after an await can hang (pending) until the *next*
+   * click — the "have to press the button twice" bug. This kicks off the
+   * resume synchronously; ensureContextRunning() then awaits/polls until the
+   * state is actually "running".
+   */
+  ensureContextForGesture() {
+    this._ensureContextAndGraph();
+    const state = this.audioContext.state;
+    if (state === 'suspended' || state === 'interrupted') {
+      // Fire-and-forget within the gesture; do not await here.
+      const resumePromise = this.audioContext.resume();
+      if (resumePromise && typeof resumePromise.catch === 'function') {
+        resumePromise.catch(() => {});
+      }
     }
   }
 

@@ -1,5 +1,5 @@
-import { INFO_TOPICS, MENU_CONTENT } from './helpContent.js?v=18';
-import { getRoadmapItem, formatRoadmapModalBody, getRoadmapByPriority, formatRoadmapDropdownItem } from './roadmapContent.js?v=18';
+import { INFO_TOPICS, MENU_CONTENT } from './helpContent.js?v=19';
+import { getRoadmapItem, formatRoadmapModalBody, getRoadmapByPriority, formatRoadmapDropdownItem } from './roadmapContent.js?v=19';
 
 let activeModal = null;
 

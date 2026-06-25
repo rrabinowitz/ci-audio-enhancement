@@ -1,25 +1,25 @@
-import { CIAudioEngine, getVisualizationBandCenters } from './audioGraph.js?v=18';
-import { VocoderDiagnostic } from './vocoderDiagnostic.js?v=18';
+import { CIAudioEngine, getVisualizationBandCenters } from './audioGraph.js?v=19';
+import { VocoderDiagnostic } from './vocoderDiagnostic.js?v=19';
 import {
   getProfileList,
   getProfileById,
   parseMapProfileJson,
   exportMapProfileJson
-} from './mapProfiles.js?v=18';
-import { optimizeForCI } from './autoTuner.js?v=18';
-import { initHelpUi, openModal } from './help.js?v=18';
-import { buildDemoBuffer, getDemoMeta } from './demoTrack.js?v=18';
-import { Visualizer, countSaturatedChannels, updateCompVu } from './visualizer.js?v=18';
-import { estimateCompressorGr, computePreviewDelta, estimateBandEnergies } from './processingPreview.js?v=18';
-import { exportProcessedWav, downloadBlob } from './exportAudio.js?v=18';
-import { Playlist } from './playlist.js?v=18';
-import { ParamHistory } from './paramHistory.js?v=18';
-import { buildPresetDiffHtml } from './presetDiff.js?v=18';
+} from './mapProfiles.js?v=19';
+import { optimizeForCI } from './autoTuner.js?v=19';
+import { initHelpUi, openModal } from './help.js?v=19';
+import { buildDemoBuffer, getDemoMeta } from './demoTrack.js?v=19';
+import { Visualizer, countSaturatedChannels, updateCompVu } from './visualizer.js?v=19';
+import { estimateCompressorGr, computePreviewDelta, estimateBandEnergies } from './processingPreview.js?v=19';
+import { exportProcessedWav, downloadBlob } from './exportAudio.js?v=19';
+import { Playlist } from './playlist.js?v=19';
+import { ParamHistory } from './paramHistory.js?v=19';
+import { buildPresetDiffHtml } from './presetDiff.js?v=19';
 import {
   buildSessionSnapshot,
   parseSessionSnapshot,
   downloadSessionJson
-} from './sessionSnapshot.js?v=18';
+} from './sessionSnapshot.js?v=19';
 import {
   getBuiltinPresetList,
   getPresetById,
@@ -28,7 +28,7 @@ import {
   captureCurrentParams,
   exportPresetJson,
   parsePresetJson
-} from './presets.js?v=18';
+} from './presets.js?v=19';
 
 const CHANNEL_COUNT = 16;
 const VIZ_MIN_HZ = 250;
@@ -170,10 +170,14 @@ let activePresetId = 'default';
 let audioReady = false;
 
 async function ensureAudioReady() {
+  // Resume the AudioContext synchronously, before any await, while the user
+  // gesture is still active. If we resume after an await the browser can
+  // leave resume() pending until the next click, which is the root cause of
+  // the "press the button twice before it works" bug.
+  engine.ensureContextForGesture();
+
   if (!audioReady) {
     await engine.init();
-    // Resume immediately after the context exists, while the user-gesture
-    // activation is still valid (Safari consumes it across later awaits).
     await engine.ensureContextRunning();
     await engine.setVocoder(vocoder);
     engine.setTransposeMix(Number(transposeMixSlider.value));

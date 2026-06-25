@@ -707,7 +707,6 @@ export const MENU_CONTENT = {
           <li><a href="#ind-evidence">Evidence package</a></li>
           <li><a href="#ind-privacy">Privacy &amp; data</a></li>
           <li><a href="#ind-questions">Commercial questions</a></li>
-          <li><a href="#ind-share">Sharing externally</a></li>
           <li><a href="#ind-docs">External documents</a></li>
         </ul>
       </nav>
@@ -738,23 +737,6 @@ export const MENU_CONTENT = {
         <li>Optional: <strong>Optimize for CI</strong> on Full Mix or Bass Focus (~30–90 s) — metric cards show vocoder-surrogate scores (engineering proxy, not clinical endpoints).</li>
         <li>Close with <strong>For Industry ▾ → Download overview (PDF)</strong> and <strong>Technical paper</strong> for R&amp;D follow-up.</li>
       </ol>
-      <h3 id="help-ind-share">Sharing this demo externally (e.g. Cochlear R&amp;D)</h3>
-      <p>Use this checklist before you send a link. The in-app banner and this guide use conservative language on purpose.</p>
-      <h4>Pre-send checklist</h4>
-      <ul>
-        <li>Confirm the live URL loads and <strong>Full Mix → Play → Original / Enhanced</strong> works.</li>
-        <li>On iPhone/Safari, confirm <strong>Start Audio Engine</strong> unlocks sound before Play.</li>
-        <li>Attach or link the <strong>overview PDF</strong> and <strong>technical paper</strong> — not the URL alone.</li>
-        <li>State clearly: evaluation POC, not clinical product, not manufacturer-affiliated.</li>
-        <li>Ask for technical feedback or a pilot conversation — not regulatory clearance.</li>
-      </ul>
-      <h4>Suggested email opening (copy/adapt)</h4>
-      <blockquote style="margin:0.5rem 0;padding:0.65rem 0.85rem;border-left:3px solid var(--accent);background:var(--bg-secondary);font-size:0.92em">
-        <p>I'm sharing a browser-based <strong>evaluation reference</strong> for upstream music pre-processing before CI streaming — harmonic bass excitation, MAP-aware shaping, multi-band compression, and transposition, with built-in music demos and an Original/Enhanced A/B.</p>
-        <p>This is <strong>not</strong> a medical device, not FDA/CE cleared, and <strong>not affiliated with Cochlear</strong>. It is an open R&amp;D demo for engineering review and internal listening — clinical benefit would require listener studies on implant hardware.</p>
-        <p><strong>Quick try:</strong> Full Mix → Play → Original / Enhanced (Match loudness on). On iPhone/Safari, tap Start Audio Engine first.</p>
-        <p>I'd welcome feedback on whether this approach is worth a technical review or pilot study discussion for companion-app integration.</p>
-      </blockquote>
       <h3 id="help-ind-eq">Why not “just add EQ” to the companion app?</h3>
       <p>Phone EQ optimizes timbre on speakers. CI users receive ~16–22 amplitude envelopes. This stack adds <strong>harmonic generation</strong> in usable bands, <strong>pre-compression</strong> before implant-side dynamics, <strong>frequency transposition</strong>, <strong>MAP-aware 16-channel shaping</strong>, and <strong>vocoder-in-the-loop parameter search</strong> — mechanisms a parametric EQ cannot replicate. See comparison table in the one-page overview.</p>
       <h3 id="help-ind-path">Partnership path (typical manufacturer integration)</h3>

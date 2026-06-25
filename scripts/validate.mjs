@@ -13,6 +13,7 @@ const html = readFileSync(join(root, 'index.html'), 'utf8');
 
 const infoTopics = [...new Set([...html.matchAll(/data-info-topic="([^"]+)"/g)].map((m) => m[1]))];
 const missingTopics = infoTopics.filter((t) => !INFO_TOPICS[t]);
+const orphanTopics = Object.keys(INFO_TOPICS).filter((t) => !infoTopics.includes(t));
 
 const menuIds = [...new Set([...html.matchAll(/data-menu-content="([^"]+)"/g)].map((m) => m[1]))];
 const missingMenus = menuIds.filter((m) => !MENU_CONTENT[m]);
@@ -51,6 +52,10 @@ if (appVersion) {
 
 if (missingTopics.length) {
   console.error('Missing INFO_TOPICS:', missingTopics.join(', '));
+  failed = true;
+}
+if (orphanTopics.length) {
+  console.error('Unreachable INFO_TOPICS (defined but no ⓘ button in index.html):', orphanTopics.join(', '));
   failed = true;
 }
 if (missingMenus.length) {

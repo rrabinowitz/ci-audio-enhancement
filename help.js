@@ -1,5 +1,5 @@
-import { INFO_TOPICS, MENU_CONTENT } from './helpContent.js?v=15';
-import { getRoadmapItem, formatRoadmapModalBody, getRoadmapByPriority, formatRoadmapDropdownItem } from './roadmapContent.js?v=15';
+import { INFO_TOPICS, MENU_CONTENT } from './helpContent.js?v=18';
+import { getRoadmapItem, formatRoadmapModalBody, getRoadmapByPriority, formatRoadmapDropdownItem } from './roadmapContent.js?v=18';
 
 let activeModal = null;
 
@@ -15,7 +15,10 @@ function ensureModalRoot() {
       <div class="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="helpModalTitle">
         <header class="modal-header">
           <h2 id="helpModalTitle"></h2>
-          <button type="button" class="modal-close" id="helpModalClose" aria-label="Close">×</button>
+          <div class="modal-header-actions">
+            <button type="button" class="modal-print" id="helpModalPrint" title="Print or save this document as PDF" aria-label="Print or save as PDF">⎙ Print / PDF</button>
+            <button type="button" class="modal-close" id="helpModalClose" aria-label="Close">×</button>
+          </div>
         </header>
         <div class="modal-body" id="helpModalBody"></div>
       </div>
@@ -23,6 +26,21 @@ function ensureModalRoot() {
   `;
   document.body.appendChild(root);
   document.getElementById('helpModalClose').addEventListener('click', closeModal);
+  document.getElementById('helpModalPrint').addEventListener('click', () => {
+    window.print();
+  });
+  document.getElementById('helpModalBody').addEventListener('click', (event) => {
+    const link = event.target.closest('a[href^="#"]');
+    if (!link) {
+      return;
+    }
+    const id = decodeURIComponent(link.getAttribute('href').slice(1));
+    const target = id && document.getElementById(`help-${id}`);
+    if (target) {
+      event.preventDefault();
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  });
   document.getElementById('helpModalOverlay').addEventListener('click', (event) => {
     if (event.target.id === 'helpModalOverlay') {
       closeModal();
@@ -40,7 +58,9 @@ export function openModal(title, htmlBody) {
   ensureModalRoot();
   const overlay = document.getElementById('helpModalOverlay');
   document.getElementById('helpModalTitle').textContent = title;
-  document.getElementById('helpModalBody').innerHTML = htmlBody;
+  const body = document.getElementById('helpModalBody');
+  body.innerHTML = htmlBody;
+  body.scrollTop = 0;
   overlay.hidden = false;
   document.body.classList.add('modal-open');
   activeModal = title;
@@ -77,6 +97,18 @@ function closeAllDropdowns() {
   document.querySelectorAll('.nav-dropdown.open').forEach((dropdown) => {
     dropdown.classList.remove('open');
   });
+}
+
+function closeNav() {
+  closeAllDropdowns();
+  const topNav = document.querySelector('.top-nav');
+  if (topNav) {
+    topNav.classList.remove('nav-open');
+  }
+  const navToggle = document.getElementById('navToggle');
+  if (navToggle) {
+    navToggle.setAttribute('aria-expanded', 'false');
+  }
 }
 
 export function openRoadmapItem(itemId) {
@@ -125,10 +157,25 @@ export function initRoadmapMenu(containerId = 'roadmapMenu') {
 export function initHelpUi() {
   ensureModalRoot();
 
+  const navToggle = document.getElementById('navToggle');
+  const topNav = document.querySelector('.top-nav');
+  if (navToggle && topNav) {
+    navToggle.addEventListener('click', (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      const open = topNav.classList.toggle('nav-open');
+      navToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+      if (!open) {
+        closeAllDropdowns();
+      }
+    });
+  }
+
   document.querySelectorAll('[data-info-topic]').forEach((button) => {
     button.addEventListener('click', (event) => {
       event.preventDefault();
       event.stopPropagation();
+      closeNav();
       openInfoTopic(button.dataset.infoTopic);
     });
   });
@@ -137,7 +184,7 @@ export function initHelpUi() {
     button.addEventListener('click', (event) => {
       event.preventDefault();
       event.stopPropagation();
-      closeAllDropdowns();
+      closeNav();
       openMenuContent(button.dataset.menuContent);
     });
   });
@@ -145,7 +192,7 @@ export function initHelpUi() {
   document.querySelectorAll('.nav-dropdown-menu a').forEach((link) => {
     link.addEventListener('click', (event) => {
       event.stopPropagation();
-      closeAllDropdowns();
+      closeNav();
     });
   });
 
@@ -163,7 +210,7 @@ export function initHelpUi() {
   });
 
   document.addEventListener('click', () => {
-    closeAllDropdowns();
+    closeNav();
   });
 
   initRoadmapMenu();

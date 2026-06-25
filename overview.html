@@ -46,6 +46,22 @@
       font-weight: 600;
     }
 
+    .screen-bar .print-btn {
+      font: inherit;
+      color: #0b57a4;
+      background: transparent;
+      border: 1px solid #0b57a4;
+      border-radius: 5px;
+      padding: 0.1rem 0.5rem;
+      margin: 0 0.35rem;
+      cursor: pointer;
+    }
+
+    .screen-bar .print-btn:hover {
+      background: #0b57a4;
+      color: #fff;
+    }
+
     header {
       display: flex;
       justify-content: space-between;
@@ -244,6 +260,7 @@
     <a href="index.html">← Back to app</a>
     <a href="paper.html">Technical paper</a>
     <a class="download" href="CI-Audio-Enhancement-Overview.pdf" download>Download PDF</a>
+    <button type="button" class="print-btn" onclick="window.print()">⎙ Print / Save as PDF</button>
   </div>
 
   <div class="page">
@@ -254,7 +271,7 @@
       </div>
       <div class="meta">
         <strong>One-page overview</strong>
-        Proof-of-concept · v1.4<br>
+        Proof-of-concept · v1.7<br>
         For industry evaluation
       </div>
     </header>
@@ -297,7 +314,8 @@
           <li><strong>Speech / Music modes</strong> — one-click presets with memory.</li>
           <li><strong>Stereo width</strong> — mono collapse for unilateral CI (default).</li>
           <li><strong>Mobile PWA</strong> — collapsible panels, sticky transport, installable manifest.</li>
-          <li><strong>Presets &amp; A/B</strong> — Classical, Rock, Jazz; bypass; WAV + optional vocoder export.</li>
+          <li><strong>Presets &amp; A/B</strong> — Classical, Rock, Jazz; compare presets; undo/redo; loudness-matched bypass; WAV + optional vocoder export.</li>
+          <li><strong>Optimize region</strong> — In/Out markers bracket the passage analyzed by CI Auto-Tune (or center 12 s).</li>
         </ul>
       </section>
 
@@ -310,12 +328,37 @@
           <li><span class="priority">Med</span><strong>Live mic input</strong> — ✓ concerts, TV, conversation through the chain.</li>
           <li><span class="priority">Med</span><strong>Export processed WAV</strong> — ✓ pre-process a personal library.</li>
           <li><span class="priority">Med</span><strong>Session snapshot JSON</strong> — ✓ full settings export/import.</li>
-          <li><span class="priority">Med</span><strong>Optimize on loop region</strong> — auto-tune selected passage only.</li>
-          <li><span class="priority">Med</span><strong>Loudness-matched A/B</strong> — fair bypass comparison.</li>
-          <li><span class="priority">Low</span><strong>Preset diff view</strong> — compare Speech vs Music sliders.</li>
-          <li><span class="priority">Low</span><strong>Offline/live parity test</strong> — automated pipeline validation.</li>
+          <li><span class="priority">Med</span><strong>Optimize on loop region</strong> — ✓ auto-tune selected passage only.</li>
+          <li><span class="priority">Med</span><strong>Loudness-matched A/B</strong> — ✓ fair bypass comparison.</li>
+          <li><span class="priority">Low</span><strong>Preset diff view</strong> — ✓ compare Speech vs Music sliders.</li>
+          <li><span class="priority">Low</span><strong>Slider undo / redo</strong> — ✓ step back through tuning changes.</li>
+          <li><span class="priority">Low</span><strong>Offline/live parity test</strong> — 🔶 automated pipeline validation (<code>npm test</code>).</li>
         </ul>
       </section>
+    </div>
+
+    <div class="compare-wrap">
+      <h2>For companion-app developers (e.g. Nucleus® Smart App)</h2>
+      <ul>
+        <li><strong>Primary fit</strong> — Nucleus® / Kanso® 2 CI processors with direct phone streaming (MFi / ASHA); insert DSP on the phone <em>before</em> the CI audio route.</li>
+        <li><strong>Kanso 2</strong> — controlled by Nucleus Smart App (same integration surface as Nucleus 7/8).</li>
+        <li><strong>Not in scope</strong> — Cochlear™ CoPilot (rehab only); Osia® and Baha® lines (different apps, physiology, and validation).</li>
+        <li><strong>Do not touch</strong> — processor firmware, SmartSound™ scene analysis, or clinical MAP fitting tools.</li>
+        <li><strong>Port</strong> — <code>audioGraph.js</code> → native real-time graph; not a WebView wrapper.</li>
+        <li><strong>In-app detail</strong> — <strong>For Industry ▾ → Cochlear platform developer guide</strong>.</li>
+      </ul>
+    </div>
+
+    <div class="compare-wrap">
+      <h2>For manufacturer sales &amp; marketing</h2>
+      <ul>
+        <li><strong>Complements</strong> clinical fitting and speech-first companion apps — adds upstream <em>music</em> mastering before Bluetooth streaming; does not change implant firmware.</li>
+        <li><strong>Not a medical device</strong> — evaluation POC; not FDA/CE-cleared; listener studies required before efficacy claims.</li>
+        <li><strong>Not manufacturer-affiliated</strong> — independent reference for R&amp;D due diligence; partnership would port DSP natively into a companion app.</li>
+        <li><strong>5-minute demo</strong> — Music Eval → Play → Music mode → loudness-matched bypass A/B → Compare presets → (optional) Optimize for CI.</li>
+        <li><strong>Privacy</strong> — on-device processing; no audio upload; participant MAP JSON may be PHI under clinic agreements.</li>
+        <li><strong>In-app guide</strong> — open the live demo → <strong>For Industry ▾ → Industry &amp; partnership guide</strong> for objection handling and integration phases.</li>
+      </ul>
     </div>
 
     <div class="compare-wrap">
@@ -374,9 +417,9 @@
         </ul>
       </div>
       <div class="disclaimer">
-        <p><strong>Status:</strong> Working proof-of-concept. Vocoder is an engineering surrogate — not a clinical claim.</p>
-        <p><strong>Deliverables:</strong> Reference web demo, technical paper, MAP template, DSP spec, roadmap.</p>
-        <p><strong>Deployment:</strong> Browser demo for evaluation; production as native module in manufacturer iOS/Android apps.</p>
+        <p><strong>Status:</strong> Working proof-of-concept for industry evaluation. Not a regulated medical device. Vocoder is an engineering surrogate — not a clinical efficacy claim. No affiliation with Cochlear, Advanced Bionics, MED-EL, or other manufacturers unless separately agreed.</p>
+        <p><strong>Deliverables:</strong> Live demo, reference web app, technical paper, one-page overview (PDF), MAP JSON template, open source, in-app Roadmap.</p>
+        <p><strong>Deployment:</strong> Browser demo for evaluation today; production as native DSP module in manufacturer iOS/Android companion apps after validation.</p>
       </div>
     </footer>
   </div>

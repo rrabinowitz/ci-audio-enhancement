@@ -4,7 +4,7 @@
  * and high-frequency transposition. Visualizer uses a separate analyser tap.
  */
 
-import { getProfileById, redistributeDeadRegionWeights } from './mapProfiles.js?v=15';
+import { getProfileById, redistributeDeadRegionWeights } from './mapProfiles.js?v=18';
 
 function dbToLinear(db) {
   return Math.pow(10, db / 20);

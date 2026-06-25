@@ -1,25 +1,25 @@
-import { CIAudioEngine, getVisualizationBandCenters } from './audioGraph.js?v=15';
-import { VocoderDiagnostic } from './vocoderDiagnostic.js?v=15';
+import { CIAudioEngine, getVisualizationBandCenters } from './audioGraph.js?v=18';
+import { VocoderDiagnostic } from './vocoderDiagnostic.js?v=18';
 import {
   getProfileList,
   getProfileById,
   parseMapProfileJson,
   exportMapProfileJson
-} from './mapProfiles.js?v=15';
-import { optimizeForCI } from './autoTuner.js?v=15';
-import { initHelpUi, openModal } from './help.js?v=15';
-import { buildDemoBuffer, getDemoMeta } from './demoTrack.js?v=15';
-import { Visualizer, countSaturatedChannels, updateCompVu } from './visualizer.js?v=15';
-import { estimateCompressorGr, computePreviewDelta, estimateBandEnergies } from './processingPreview.js?v=15';
-import { exportProcessedWav, downloadBlob } from './exportAudio.js?v=15';
-import { Playlist } from './playlist.js?v=15';
-import { ParamHistory } from './paramHistory.js?v=15';
-import { buildPresetDiffHtml } from './presetDiff.js?v=15';
+} from './mapProfiles.js?v=18';
+import { optimizeForCI } from './autoTuner.js?v=18';
+import { initHelpUi, openModal } from './help.js?v=18';
+import { buildDemoBuffer, getDemoMeta } from './demoTrack.js?v=18';
+import { Visualizer, countSaturatedChannels, updateCompVu } from './visualizer.js?v=18';
+import { estimateCompressorGr, computePreviewDelta, estimateBandEnergies } from './processingPreview.js?v=18';
+import { exportProcessedWav, downloadBlob } from './exportAudio.js?v=18';
+import { Playlist } from './playlist.js?v=18';
+import { ParamHistory } from './paramHistory.js?v=18';
+import { buildPresetDiffHtml } from './presetDiff.js?v=18';
 import {
   buildSessionSnapshot,
   parseSessionSnapshot,
   downloadSessionJson
-} from './sessionSnapshot.js?v=15';
+} from './sessionSnapshot.js?v=18';
 import {
   getBuiltinPresetList,
   getPresetById,
@@ -28,7 +28,7 @@ import {
   captureCurrentParams,
   exportPresetJson,
   parsePresetJson
-} from './presets.js?v=15';
+} from './presets.js?v=18';
 
 const CHANNEL_COUNT = 16;
 const VIZ_MIN_HZ = 250;
@@ -843,6 +843,7 @@ function initCollapsiblePanels() {
   if (!localStorage.getItem(ADVANCED_PANELS_INIT_KEY)) {
     saved['auto-tune'] = false;
     saved['diagnostic-vocoder'] = false;
+    saved['electrode-map'] = false;
     localStorage.setItem(ADVANCED_PANELS_INIT_KEY, '1');
   }
 

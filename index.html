@@ -71,6 +71,7 @@
     }
 
     .top-nav-inner {
+      position: relative;
       max-width: 960px;
       margin: 0 auto;
       padding: 0.5rem 1.5rem;
@@ -80,11 +81,96 @@
       gap: 0.35rem 0.75rem;
     }
 
+    @media (min-width: 1100px) {
+      .top-nav-inner {
+        max-width: 1380px;
+      }
+    }
+
     .top-nav-brand {
       font-weight: 600;
       font-size: 0.9rem;
       color: var(--text-primary);
       margin-right: auto;
+    }
+
+    .nav-toggle {
+      display: none;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border);
+      color: var(--text-primary);
+      font-size: 0.85rem;
+      padding: 0.4rem 0.7rem;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .nav-menus {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.35rem 0.6rem;
+    }
+
+    @media (max-width: 768px) {
+      .nav-toggle {
+        display: inline-flex;
+        align-items: center;
+        min-height: 40px;
+      }
+
+      .nav-menus {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.15rem;
+        background: var(--bg-secondary);
+        border-bottom: 1px solid var(--border);
+        box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
+        padding: 0.5rem;
+        max-height: calc(100dvh - 56px);
+        overflow-y: auto;
+      }
+
+      .top-nav.nav-open .nav-menus {
+        display: flex;
+      }
+
+      .nav-menus .nav-dropdown {
+        width: 100%;
+      }
+
+      .nav-menus .nav-dropdown-toggle {
+        width: 100%;
+        text-align: left;
+        min-height: 44px;
+      }
+
+      .nav-menus .nav-dropdown-menu {
+        position: static;
+        display: none;
+        min-width: 0;
+        width: 100%;
+        box-shadow: none;
+        border: none;
+        border-radius: 0;
+        background: var(--bg-primary);
+        margin: 0.1rem 0 0.3rem;
+        padding: 0.25rem 0.25rem 0.25rem 0.6rem;
+      }
+
+      .nav-menus .nav-dropdown.open .nav-dropdown-menu {
+        display: block;
+      }
+
+      .nav-menus .nav-roadmap-menu {
+        max-width: none;
+        max-height: 60vh;
+      }
     }
 
     .app-load-error {
@@ -167,6 +253,37 @@
       font-size: 0.72rem;
       color: var(--text-secondary);
       margin-top: 0.15rem;
+    }
+
+    .nav-menu-group {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.45rem 0.65rem 0.2rem;
+      font-size: 0.65rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-secondary);
+    }
+
+    .nav-menu-group:not(:first-child) {
+      margin-top: 0.2rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .nav-menu-group .info-btn {
+      width: 1.15rem;
+      height: 1.15rem;
+      min-width: 1.15rem;
+      padding: 0;
+      line-height: 1;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background: var(--bg-tertiary);
+      color: var(--text-secondary);
+      font-size: 0.7rem;
+      cursor: pointer;
     }
 
     .nav-roadmap-menu {
@@ -575,6 +692,7 @@
       .top-nav-inner {
         padding-left: max(0.75rem, env(safe-area-inset-left));
         padding-right: max(0.75rem, env(safe-area-inset-right));
+        flex-wrap: nowrap;
       }
 
       .panel-transport {
@@ -587,7 +705,6 @@
       .btn,
       .btn-primary,
       .btn-icon,
-      .info-btn,
       .collapse-btn {
         min-height: 44px;
         min-width: 44px;
@@ -595,6 +712,31 @@
 
       input[type="range"] {
         min-height: 44px;
+      }
+
+      /* Keep info icons visually small but give them a 44px touch target. */
+      .info-btn {
+        width: 22px;
+        height: 22px;
+        font-size: 0.75rem;
+      }
+
+      .label-with-info .info-btn,
+      .metric-card .info-btn {
+        width: 20px;
+        height: 20px;
+        font-size: 0.7rem;
+      }
+
+      .info-btn::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 44px;
+        height: 44px;
+        transform: translate(-50%, -50%);
+        border-radius: 50%;
       }
     }
 
@@ -616,6 +758,7 @@
     }
 
     .info-btn {
+      position: relative;
       width: 18px;
       height: 18px;
       border-radius: 50%;
@@ -630,6 +773,9 @@
       cursor: pointer;
       flex-shrink: 0;
       padding: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .info-btn:hover {
@@ -713,6 +859,29 @@
       margin: 0;
     }
 
+    .modal-header-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .modal-print {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      font-size: 0.75rem;
+      line-height: 1;
+      cursor: pointer;
+      padding: 0.4rem 0.6rem;
+      border-radius: 6px;
+      white-space: nowrap;
+    }
+
+    .modal-print:hover {
+      color: var(--text-primary);
+      border-color: var(--accent);
+    }
+
     .modal-close {
       background: transparent;
       border: none;
@@ -793,6 +962,126 @@
       margin: 0.5rem 0;
     }
 
+    .modal-body table.compare {
+      border-collapse: collapse;
+      margin: 0.5rem 0 0.85rem;
+    }
+
+    .modal-body table.compare th,
+    .modal-body table.compare td {
+      border: 1px solid var(--border);
+      padding: 0.4rem 0.55rem;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    .modal-body table.compare th {
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    .modal-body .doc-toc {
+      background: var(--bg-primary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.6rem 0.85rem;
+      margin: 0 0 1rem;
+    }
+
+    .modal-body .doc-toc strong {
+      display: block;
+      color: var(--text-primary);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.4rem;
+    }
+
+    .modal-body .doc-toc ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.3rem 0.85rem;
+    }
+
+    .modal-body .doc-toc li {
+      margin: 0;
+      font-size: 0.82rem;
+    }
+
+    .modal-body :target {
+      scroll-margin-top: 0.5rem;
+    }
+
+    @media print {
+      body.modal-open > *:not(#helpModalRoot) {
+        display: none !important;
+      }
+      #helpModalRoot .modal-overlay {
+        position: static;
+        background: none;
+        display: block;
+        padding: 0;
+      }
+      #helpModalRoot .modal-dialog {
+        max-width: none;
+        width: auto;
+        max-height: none;
+        border: none;
+        border-radius: 0;
+        box-shadow: none;
+        background: #fff;
+        color: #000;
+      }
+      #helpModalRoot .modal-header {
+        border-bottom: 1px solid #ccc;
+        padding: 0 0 0.5rem;
+      }
+      #helpModalRoot .modal-header h2 {
+        color: #000;
+      }
+      #helpModalRoot .modal-body {
+        overflow: visible;
+        max-height: none;
+        padding: 0.75rem 0 0;
+        color: #111;
+      }
+      #helpModalRoot .modal-body h3,
+      #helpModalRoot .modal-body h4,
+      #helpModalRoot .modal-body strong,
+      #helpModalRoot .modal-body dt {
+        color: #000;
+      }
+      #helpModalRoot .modal-body a {
+        color: #000;
+        text-decoration: underline;
+      }
+      #helpModalRoot .modal-body .doc-toc,
+      #helpModalRoot .modal-body table.compare th {
+        background: #f1f1f1;
+      }
+      #helpModalRoot .modal-body .chain-diagram {
+        background: #f6f6f6;
+        color: #111;
+        border-color: #bbb;
+      }
+      #helpModalRoot .modal-body table.compare th,
+      #helpModalRoot .modal-body table.compare td {
+        border-color: #bbb;
+      }
+      #helpModalRoot .modal-print,
+      #helpModalRoot .modal-close {
+        display: none !important;
+      }
+      .modal-body .faq-item,
+      #helpModalRoot .modal-body h3 {
+        break-inside: avoid;
+      }
+    }
+
     header {
       text-align: center;
       margin-bottom: 2rem;
@@ -810,6 +1099,98 @@
       font-size: 0.95rem;
       max-width: 640px;
       margin: 0 auto;
+    }
+
+    .lede {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      max-width: 680px;
+      margin: 0 auto 1rem;
+    }
+
+    .quickstart {
+      display: inline-flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem 0.9rem;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 0.55rem 1rem;
+    }
+
+    .quickstart-label {
+      font-weight: 600;
+      color: var(--text-primary);
+      font-size: 0.85rem;
+    }
+
+    .quickstart-steps {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem 1rem;
+      counter-reset: qs;
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
+    .quickstart-steps li {
+      counter-increment: qs;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      margin: 0;
+    }
+
+    .quickstart-steps li::before {
+      content: counter(qs);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 1.2rem;
+      height: 1.2rem;
+      border-radius: 50%;
+      background: var(--accent);
+      color: #fff;
+      font-size: 0.7rem;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .quickstart-link {
+      background: transparent;
+      border: none;
+      color: var(--accent);
+      font-size: 0.85rem;
+      cursor: pointer;
+      text-decoration: underline;
+      padding: 0.2rem 0.25rem;
+    }
+
+    @media (min-width: 1100px) {
+      .container {
+        max-width: 1380px;
+      }
+
+      .panel-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        gap: 1.25rem;
+        align-items: start;
+      }
+
+      .panel-grid > .panel {
+        margin-bottom: 0;
+      }
+
+      .panel-grid > .panel-transport,
+      .panel-grid > .panel-visualizer {
+        grid-column: 1 / -1;
+      }
     }
 
     .panel {
@@ -1477,33 +1858,72 @@
     <div class="top-nav-inner">
       <span class="top-nav-brand">CI Enhancement Engine</span>
 
+      <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navMenus" aria-label="Open navigation menu">☰ Menu</button>
+
+      <div class="nav-menus" id="navMenus">
       <div class="nav-dropdown">
-        <button type="button" class="nav-dropdown-toggle">Instructions ▾</button>
+        <button type="button" class="nav-dropdown-toggle">Using the App ▾</button>
         <div class="nav-dropdown-menu">
+          <div class="nav-menu-group">For everyone</div>
           <button type="button" data-menu-content="instructions">
-            How to Use (detailed)
-            <span class="menu-desc">Built-in demos, presets, transport, A/B testing, study prep</span>
+            How to Use (step by step)
+            <span class="menu-desc">Demos, presets, transport, A/B testing, study prep</span>
           </button>
-        </div>
-      </div>
-
-      <div class="nav-dropdown">
-        <button type="button" class="nav-dropdown-toggle">Help ▾</button>
-        <div class="nav-dropdown-menu">
-          <button type="button" data-menu-content="help">
-            Troubleshooting &amp; support
-            <span class="menu-desc">Visualizers, profile meters, auto-tune, volume, browsers, privacy</span>
-          </button>
-        </div>
-      </div>
-
-      <div class="nav-dropdown">
-        <button type="button" class="nav-dropdown-toggle">FAQ ▾</button>
-        <div class="nav-dropdown-menu">
           <button type="button" data-menu-content="faq">
             Frequently asked questions
-            <span class="menu-desc">EQ vs CI pre-proc, gold/blue viz, profile meters, MAP, roadmap</span>
+            <span class="menu-desc">EQ vs CI pre-proc, viz colors, demos, modes, privacy</span>
           </button>
+          <button type="button" data-menu-content="help">
+            Help &amp; troubleshooting
+            <span class="menu-desc">Sound issues, meters, browsers, Safari audio, privacy</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="nav-dropdown">
+        <button type="button" class="nav-dropdown-toggle">Science ▾</button>
+        <div class="nav-dropdown-menu">
+          <div class="nav-menu-group">For curious users &amp; researchers</div>
+          <button type="button" data-menu-content="background">
+            Background — why CI pre-processing?
+            <span class="menu-desc">Why CI users need different processing</span>
+          </button>
+          <button type="button" data-menu-content="technical">
+            Technical signal chain
+            <span class="menu-desc">Architecture, ring-mod, preview viz, auto-tune, modules</span>
+          </button>
+          <a href="paper.html" target="_blank" class="nav-paper-link">
+            Full technical paper (new tab)
+            <span class="menu-desc">19 sections — overtone science, validation protocol</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="nav-dropdown">
+        <button type="button" class="nav-dropdown-toggle">For Industry ▾</button>
+        <div class="nav-dropdown-menu">
+          <div class="nav-menu-group">Read in-app</div>
+          <button type="button" data-menu-content="industry">
+            Industry &amp; partnership guide
+            <span class="menu-desc">Sales/R&amp;D — positioning, demo script, regulatory boundaries</span>
+          </button>
+          <button type="button" data-menu-content="industry-developer">
+            Cochlear platform developer guide
+            <span class="menu-desc">Nucleus/Kanso vs Osia/Baha/CoPilot — porting &amp; insertion point</span>
+          </button>
+          <div class="nav-menu-group">Share / download</div>
+          <a href="overview.html" target="_blank" class="nav-paper-link">
+            One-page overview (new tab)
+            <span class="menu-desc">Industry pitch — demo vs native app product path</span>
+          </a>
+          <a href="CI-Audio-Enhancement-Overview.pdf" download="CI-Audio-Enhancement-Overview.pdf" class="nav-paper-link">
+            Download overview (PDF)
+            <span class="menu-desc">Single-page pitch for sharing</span>
+          </a>
+          <a href="paper.html" target="_blank" class="nav-paper-link">
+            Technical paper (new tab)
+            <span class="menu-desc">Architecture, science, validation protocol</span>
+          </a>
         </div>
       </div>
 
@@ -1513,46 +1933,11 @@
       </div>
 
       <div class="nav-dropdown">
-        <button type="button" class="nav-dropdown-toggle">Science ▾</button>
+        <button type="button" class="nav-dropdown-toggle">Tools ▾</button>
         <div class="nav-dropdown-menu">
-          <button type="button" data-menu-content="background">
-            Background overview
-            <span class="menu-desc">Why CI users need different processing</span>
-          </button>
-          <button type="button" data-menu-content="technical">
-            Technical signal chain
-            <span class="menu-desc">Architecture, ring-mod, preview viz, auto-tune, modules</span>
-          </button>
-          <a href="overview.html" target="_blank" class="nav-paper-link">
-            One-page overview (web)
-            <span class="menu-desc">Industry pitch — demo vs native app product path</span>
-          </a>
-          <a href="CI-Audio-Enhancement-Overview.pdf" download="CI-Audio-Enhancement-Overview.pdf" class="nav-paper-link">
-            Download one-page overview (PDF)
-            <span class="menu-desc">Single-page pitch for sharing</span>
-          </a>
-          <a href="paper.html" target="_blank" class="nav-paper-link">
-            Full technical paper
-            <span class="menu-desc">Overtone science, double compression, research protocol</span>
-          </a>
-        </div>
-      </div>
-
-      <div class="nav-dropdown">
-        <button type="button" class="nav-dropdown-toggle">Documents ▾</button>
-        <div class="nav-dropdown-menu">
-          <a href="overview.html" target="_blank">
-            One-page overview
-            <span class="menu-desc">Industry pitch — demo vs product path</span>
-          </a>
-          <a href="CI-Audio-Enhancement-Overview.pdf" download="CI-Audio-Enhancement-Overview.pdf">
-            Download overview (PDF)
-            <span class="menu-desc">Single-page pitch for sharing</span>
-          </a>
-          <a href="paper.html" target="_blank">
-            Technical paper
-            <span class="menu-desc">Architecture, science, validation protocol</span>
-          </a>
+          <div class="nav-menu-group">Session settings (no audio)
+            <button type="button" class="info-btn" data-info-topic="session-snapshot" title="About session snapshot JSON" aria-label="About session snapshot JSON">i</button>
+          </div>
           <button type="button" id="exportSessionBtn">
             Export session JSON
             <span class="menu-desc">Full settings JSON — see FAQ “session JSON export”</span>
@@ -1561,8 +1946,8 @@
             Import session JSON
             <span class="menu-desc">Restore a saved tuning session</span>
           </button>
-          <button type="button" class="info-btn" data-info-topic="session-snapshot" title="About session snapshot JSON" aria-label="About session snapshot JSON">i</button>
         </div>
+      </div>
       </div>
 
       <input type="file" id="sessionFileInput" class="hidden-input" accept="application/json,.json">
@@ -1574,14 +1959,24 @@
   <div class="container">
     <header>
       <h1>CI Audio Enhancement Engine</h1>
-      <p>
-        Pre-processor for cochlear implant users. Multi-band compression, harmonic bass excitation,
-        clarity lift, and high-frequency transposition — preserving the waveform while maximizing
-        perceptual salience after CI re-coding.
-        <button type="button" class="info-btn" data-info-topic="mobile-layout" title="About mobile layout and PWA" aria-label="About mobile layout and PWA">i</button>
+      <p class="lede">
+        A music pre-processor for cochlear-implant streaming — multi-band compression, harmonic
+        bass excitation, clarity lift, and high-frequency transposition, tuned for how CIs
+        represent sound.
       </p>
+      <div class="quickstart">
+        <span class="quickstart-label">New here?</span>
+        <ol class="quickstart-steps">
+          <li>Tap <strong>Music Eval</strong></li>
+          <li>Press <strong>Play</strong></li>
+          <li>Toggle <strong>Bypass</strong> to compare</li>
+        </ol>
+        <button type="button" class="quickstart-link" data-menu-content="instructions">Full instructions</button>
+        <button type="button" class="info-btn" data-info-topic="mobile-layout" title="About mobile layout, two-column desktop view, and PWA" aria-label="About mobile layout and PWA">i</button>
+      </div>
     </header>
 
+    <div class="panel-grid">
     <section class="panel panel-transport" data-panel-id="transport">
       <div class="panel-heading">
         <h2>Transport</h2>
@@ -1669,7 +2064,7 @@
       </div>
     </section>
 
-    <section class="panel">
+    <section class="panel panel-visualizer" data-panel-id="visualizer">
       <div class="panel-heading">
         <h2>Input vs Enhanced (16 channels)</h2>
         <button type="button" class="info-btn" data-info-topic="spectrum" title="About spectrum analyzer" aria-label="About spectrum analyzer">i</button>
@@ -1741,7 +2136,7 @@
       </div>
     </section>
 
-    <section class="panel">
+    <section class="panel" data-panel-id="enhancement-controls">
       <div class="panel-heading">
         <h2>Enhancement Controls</h2>
         <button type="button" class="info-btn" data-info-topic="enhancement-controls" title="About enhancement controls" aria-label="About enhancement controls">i</button>
@@ -1898,7 +2293,7 @@
       </div>
     </section>
 
-    <section class="panel map-panel">
+    <section class="panel map-panel" data-panel-id="electrode-map">
       <div class="panel-heading">
         <h2>Electrode Map (MAP-Inspired)</h2>
         <button type="button" class="info-btn" data-info-topic="electrode-map" title="About electrode map" aria-label="About electrode map">i</button>
@@ -1946,9 +2341,11 @@
         </div>
       </div>
     </section>
+    </div>
 
     <footer>
-      Use <strong>Instructions</strong>, <strong>Help</strong>, <strong>FAQ</strong>, <strong>Science</strong>, <strong>Roadmap</strong>, and <strong>Documents</strong> above.
+      Menus above: <strong>Using the App</strong> (how-to, FAQ, help), <strong>Science</strong>,
+      <strong>For Industry</strong> (partnership + developer guides), <strong>Roadmap</strong>, and <strong>Tools</strong>.
       <a href="overview.html" target="_blank">One-page overview</a> ·
       <a href="CI-Audio-Enhancement-Overview.pdf" download="CI-Audio-Enhancement-Overview.pdf">Download PDF</a> ·
       <a href="paper.html" target="_blank">Technical paper</a> · All processing is local in the browser.
@@ -1956,7 +2353,7 @@
   </div>
 
   <script type="module">
-    const APP_VERSION = '15';
+    const APP_VERSION = '18';
     import(`./app.js?v=${APP_VERSION}`).catch((error) => {
       console.error('CI Audio Enhancement failed to load:', error);
       const banner = document.getElementById('appLoadError');

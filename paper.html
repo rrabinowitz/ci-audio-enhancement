@@ -29,8 +29,23 @@
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       margin-bottom: 2rem;
       font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
     }
     nav.top a { color: var(--accent); }
+    .print-btn {
+      font: inherit;
+      color: var(--accent);
+      background: transparent;
+      border: 1px solid var(--accent);
+      border-radius: 6px;
+      padding: 0.3rem 0.7rem;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .print-btn:hover { background: var(--accent); color: var(--bg); }
     h1 {
       font-size: 1.85rem;
       line-height: 1.25;
@@ -102,21 +117,96 @@
     th { background: var(--surface); }
     code { font-family: ui-monospace, monospace; font-size: 0.88em; color: #79c0ff; }
     a { color: var(--accent); }
+    .toc {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      margin: 1.5rem 0;
+      font-family: -apple-system, sans-serif;
+    }
+    .toc strong {
+      display: block;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--muted);
+      margin-bottom: 0.6rem;
+    }
+    .toc ol {
+      margin: 0;
+      padding-left: 1.3rem;
+      columns: 2;
+      column-gap: 1.5rem;
+      font-size: 0.88rem;
+    }
+    .toc li { margin-bottom: 0.3rem; }
+    h2 { scroll-margin-top: 1rem; }
+    @media (max-width: 560px) { .toc ol { columns: 1; } }
+    @media print {
+      body { background: #fff; color: #111; }
+      .wrap { max-width: none; padding: 0; }
+      nav.top, .print-btn { display: none !important; }
+      h1, h2, h3 { color: #000; }
+      h2 { border-bottom-color: #999; break-after: avoid; }
+      .subtitle, .meta, figcaption { color: #444; }
+      a { color: #000; }
+      code { color: #1a3a6b; }
+      .abstract { background: #f4f4f4; border-color: #bbb; border-left-color: #555; }
+      .toc { background: #f4f4f4; border-color: #bbb; }
+      .toc strong { color: #444; }
+      figure { background: #f8f8f8; border-color: #bbb; break-inside: avoid; }
+      .diagram { color: #111; }
+      .framework { background: #f6f1e3; border-color: #c9b98f; }
+      .framework strong { color: #8a6d1a; }
+      th { background: #eee; }
+      th, td { border-color: #bbb; }
+      table, figure, .abstract { break-inside: avoid; }
+    }
   </style>
 </head>
 <body>
   <div class="wrap">
-    <nav class="top"><a href="index.html">← CI Audio Enhancement Engine (application)</a></nav>
+    <nav class="top">
+      <a href="index.html">← CI Audio Enhancement Engine (application)</a>
+      <button type="button" class="print-btn" onclick="window.print()">⎙ Print / Save as PDF</button>
+    </nav>
 
     <h1>CI Audio Enhancement Engine: Technical Overview</h1>
     <p class="subtitle">A CI-targeted music pre-processor for industry evaluation — architecture, psychoacoustic rationale, and validation requirements</p>
-    <p class="meta">Document version 2.1 · Open-source reference for cochlear implant manufacturers, audiologists, and research groups</p>
+    <p class="meta">Document version 2.3 · Open-source reference for cochlear implant manufacturers, audiologists, and research groups</p>
 
     <div class="abstract">
       <strong>Abstract.</strong> The CI Audio Enhancement Engine is a browser-based audio pre-processor positioned upstream of cochlear implant (CI) speech processors during wireless music streaming. The system applies MAP-aware spectral shaping, multi-band compression, sub-bass harmonic excitation, high-frequency transposition, and vocoder-in-the-loop parameter optimization. Design objectives prioritize perceptual salience and source separability after CI-like re-coding rather than fidelity on conventional transducers. This document describes signal-processing architecture, differentiation from consumer EQ and typical manufacturer companion applications, perceptual proxy metrics, known limitations, and recommended protocols for independent evaluation with CI listeners.
     </div>
 
-    <h2>1. Problem Statement</h2>
+    <nav class="toc" aria-label="Table of contents">
+      <strong>Contents</strong>
+      <ol>
+        <li><a href="#sec-1">Problem Statement</a></li>
+        <li><a href="#sec-2">Regulatory and Commercial Status</a></li>
+        <li><a href="#sec-3">Product Differentiation Framework</a></li>
+        <li><a href="#sec-4">Comparative Capability Matrix</a></li>
+        <li><a href="#sec-5">CI Representation Constraints</a></li>
+        <li><a href="#sec-6">Harmonic Bass Excitation</a></li>
+        <li><a href="#sec-7">Frequency Transposition vs Boosting</a></li>
+        <li><a href="#sec-8">Double-Stage Compression</a></li>
+        <li><a href="#sec-9">Optimization Objective: Separability</a></li>
+        <li><a href="#sec-10">MAP-Aware Spectral Shaping</a></li>
+        <li><a href="#sec-11">Vocoder-in-the-Loop Auto-Tuning</a></li>
+        <li><a href="#sec-12">Perceptual Proxy Metrics</a></li>
+        <li><a href="#sec-13">Visualization &amp; Metering</a></li>
+        <li><a href="#sec-13a">Application Workflow &amp; Session Tooling</a></li>
+        <li><a href="#sec-14">Signal Processing Architecture</a></li>
+        <li><a href="#sec-15">Adjacent Research Domains</a></li>
+        <li><a href="#sec-16">Validation Requirements</a></li>
+        <li><a href="#sec-17">Independent Evaluation Protocol</a></li>
+        <li><a href="#sec-18">Known Limitations</a></li>
+        <li><a href="#sec-19">Summary</a></li>
+      </ol>
+    </nav>
+
+    <h2 id="sec-1">1. Problem Statement</h2>
     <p>Music streamed from consumer devices to CI sound processors traverses two distinct processing stages:</p>
     <ol>
       <li>Upstream playback processing (optional phone EQ, volume normalization, codec compression).</li>
@@ -125,12 +215,35 @@
     <p>Stage 1 is typically optimized for normal-hearing listeners or generic loudspeaker reproduction. Stage 2 reduces the signal to approximately 16–22 amplitude-envelope channels with limited temporal fine structure. Musical content that depends on sub-bass pitch, wide dynamic range, or high-frequency timbral detail is often degraded after stage 2 regardless of stage-1 EQ settings.</p>
     <p>Manufacturer companion applications primarily address clinical fitting, program selection, volume, and speech-oriented use cases. They generally do not implement aggressive music-specific pre-processing upstream of the implant coder, in part because such processing must be validated against interaction effects with existing envelope-extraction strategies.</p>
 
-    <h2>2. Product Differentiation Framework</h2>
+    <h2 id="sec-2">2. Regulatory and Commercial Status</h2>
+    <p>The CI Audio Enhancement Engine is distributed as an <strong>evaluation proof-of-concept</strong> and open reference implementation. It is intended for technical demonstration, internal manufacturer R&amp;D review, and research collaboration — not for clinical diagnosis, MAP fitting replacement, or direct patient care without appropriate regulatory clearance and institutional oversight.</p>
+    <ul>
+      <li><strong>Not a cleared medical device</strong> — no FDA, CE, or TGA marketing authorization is claimed for this reference application.</li>
+      <li><strong>No manufacturer endorsement</strong> — naming implant makers (Cochlear, Advanced Bionics, MED-EL, and others) describes the clinical ecosystem only; no affiliation or partnership is implied unless separately executed.</li>
+      <li><strong>Complementary positioning</strong> — manufacturer companion applications remain authoritative for clinical MAP fitting, program selection, device safety, and speech-oriented features. This system addresses upstream music-streaming preprocessing.</li>
+      <li><strong>Implant firmware unchanged</strong> — processing occurs on the phone before wireless delivery; sound-processor coding strategies are not modified.</li>
+      <li><strong>PHI considerations</strong> — participant-specific electrode-map JSON may constitute protected health information; clinical studies require IRB approval and data-handling agreements.</li>
+    </ul>
+    <p>A commercial product path would integrate native DSP modules into manufacturer companion applications under each organization's quality system and regional regulatory pathway (e.g., SaMD classification review where applicable).</p>
+
+    <h3>Product-line scope (illustrative: Cochlear portfolio)</h3>
+    <p>Engineering evaluators should map this reference to the correct app and hardware line before porting:</p>
+    <table>
+      <tr><th>Product / app</th><th>Scope for this reference</th></tr>
+      <tr><td>Nucleus® Smart App; Nucleus® 7/8; Kanso® 2 sound processors</td><td><strong>In scope</strong> — direct media streaming to CI processors; native DSP inserts on phone before MFi / ASHA route.</td></tr>
+      <tr><td>Kanso® 2</td><td>Same as above — paired via Nucleus Smart App, not a separate streaming stack.</td></tr>
+      <tr><td>Cochlear™ CoPilot</td><td><strong>Out of scope</strong> — rehabilitation / education; no hardware audio bus.</td></tr>
+      <tr><td>Osia® Smart App; Osia® 2</td><td><strong>Not validated</strong> — active bone conduction; different coding and accessory streaming model.</td></tr>
+      <tr><td>Baha® Smart App; Baha® 6 Max</td><td><strong>Not validated</strong> — bone conduction device with in-app tone controls; separate product decision.</td></tr>
+    </table>
+    <p>Trademark names illustrate a typical manufacturer portfolio; no endorsement is implied. See in-app <strong>Cochlear platform developer guide</strong> for insertion-point and module-porting detail.</p>
+
+    <h2 id="sec-3">3. Product Differentiation Framework</h2>
     <p>Evaluators may assess whether a pre-processor offers mechanisms beyond conventional EQ and compression by identifying specific signal-processing operations rather than subjective descriptors alone.</p>
     <p><strong>Insufficient differentiation</strong> typically consists of mid-frequency boost and broadband compression tuned for pleasant phone-speaker output.</p>
     <p><strong>Mechanism-based differentiation</strong> in this system includes: harmonic generation in electrode-usable bands from sub-bass sources; dynamic-range pre-conditioning prior to implant compression; frequency transposition of high-band transients toward MAP-dense regions; and parameter selection via vocoder-surrogate optimization on a participant-specific electrode map.</p>
 
-    <h2>3. Comparative Capability Matrix</h2>
+    <h2 id="sec-4">4. Comparative Capability Matrix</h2>
     <table>
       <tr><th>Capability</th><th>Phone EQ / Compressor</th><th>Typical CI Manufacturer App</th><th>CI Audio Enhancement Engine</th></tr>
       <tr><td>Primary use case</td><td>General media playback</td><td>Fitting, programs, speech</td><td>Music pre-processing before CI coding</td></tr>
@@ -158,7 +271,7 @@
       <figcaption>Figure 1. Signal-chain placement of the CI Audio Enhancement Engine relative to consumer EQ and CI speech processing.</figcaption>
     </figure>
 
-    <h2>4. Cochlear Implant Representation Constraints</h2>
+    <h2 id="sec-5">5. Cochlear Implant Representation Constraints</h2>
     <p>The pre-processor design assumes the following constraints inherent to contemporary CI signal processing:</p>
     <ul>
       <li><strong>Limited spectral resolution:</strong> Approximately 16–22 frequency channels across roughly 250 Hz–8 kHz, producing on the order of 1/3-octave spectral smearing.</li>
@@ -169,7 +282,7 @@
     </ul>
     <p>Generic EQ operates on the assumption that the listener receives a substantially preserved spectral waveform. CI listeners receive band-limited amplitude envelopes—a different informational representation requiring different preprocessing objectives.</p>
 
-    <h2>5. Harmonic Bass Excitation and the Overtone Series</h2>
+    <h2 id="sec-6">6. Harmonic Bass Excitation and the Overtone Series</h2>
     <p>A periodic signal with fundamental frequency <em>F</em><sub>0</sub> contains energy at integer multiples <em>F</em><sub>0</sub>, 2<em>F</em><sub>0</sub>, 3<em>F</em><sub>0</sub>, … (the overtone series). CI recipients often demonstrate poor resolution of deep sub-bass fundamentals (e.g., 40–80 Hz) because apical channels are limited in number and low-frequency place coding is coarse.</p>
     <p>The CI Audio Enhancement Engine extracts energy below approximately 150 Hz and applies polynomial non-linear distortion via a waveshaping stage. Second- and third-order terms generate new spectral components in the approximately 280–650 Hz range, where more electrodes are available and envelope cues are more reliably perceived.</p>
     <figure>
@@ -189,7 +302,7 @@
       <li><strong>Distinction from EQ boost:</strong> Amplifying a 50 Hz component increases level in a poorly resolved region. Non-linear harmonic generation introduces new components in resolved regions—a principle related to frequency-lowering and bass-substitution approaches in hearing-aid literature.</li>
     </ul>
 
-    <h2>6. Frequency Transposition vs Spectral Boosting</h2>
+    <h2 id="sec-7">7. Frequency Transposition vs Spectral Boosting</h2>
     <p>High-frequency transients above approximately 6 kHz are extracted and processed through ring-modulation transposition (3.5 kHz carrier, low-pass near 5 kHz), then blended with the direct high band. Modulation patterns relocate toward mid frequencies where electrode density and user acclimation are typically highest—rather than amplifying energy in situ at 8 kHz.</p>
     <figure>
       <div class="diagram">Treble EQ at 8 kHz:        Increased level remains at 8 kHz (low CI resolution)
@@ -199,11 +312,11 @@ Frequency transposition:   Modulation patterns appear near ~4 kHz
       <figcaption>Figure 3. Boosting preserves frequency location; transposition relocates modulations.</figcaption>
     </figure>
 
-    <h2>7. Double-Stage Dynamic Range Compression</h2>
+    <h2 id="sec-8">8. Double-Stage Dynamic Range Compression</h2>
     <p>The enhancement chain applies three-band automatic gain control with compression ratios of approximately 12:1 (low), 16:1 (mid), and 20:1 (high), with fast attack and makeup gain. The CI speech processor subsequently applies envelope extraction and channel-level compression.</p>
     <p>Pre-compression raises quiet musical elements—soft consonants, decay tails, secondary instruments—into a range more likely to remain above the effective noise floor after implant processing. Consumer compressors tuned for headphone playback typically do not model this two-stage interaction.</p>
 
-    <h2>8. Optimization Objective: Separability</h2>
+    <h2 id="sec-9">9. Optimization Objective: Separability</h2>
     <p>Conventional mastering prioritizes natural timbre, stereo width, and full-bandwidth reproduction on high-fidelity transducers. CI-targeted preprocessing prioritizes:</p>
     <ul>
       <li>Beat and rhythm tracking without resolved sub-bass fundamentals.</li>
@@ -213,7 +326,7 @@ Frequency transposition:   Modulation patterns appear near ~4 kHz
     </ul>
     <p>The system's auto-tune module selects enhancement parameters by maximizing composite scores on vocoded output rather than by THD, flat frequency response, or speaker A-weighting.</p>
 
-    <h2>9. MAP-Aware Spectral Shaping</h2>
+    <h2 id="sec-10">10. MAP-Aware Spectral Shaping</h2>
     <p>Clinical MAP files from implant manufacturers (Cochlear, Advanced Bionics, MED-EL, and others) are proprietary and are not publicly distributed in a standardized import format. The CI Audio Enhancement Engine accepts a JSON electrode-map schema containing:</p>
     <ul>
       <li>Per-channel center frequency (Hz).</li>
@@ -223,16 +336,16 @@ Frequency transposition:   Modulation patterns appear near ~4 kHz
     <p>Dead-channel weight is redistributed to adjacent active channels. Six literature-derived presets ship with the application; custom maps may be imported from audiologist-supplied data. Published research datasets (e.g., UCSF flat-panel CT frequency-reallocation studies, Dryad doi:10.5061/dryad.jh9w0vtm2) may inform preset design but require manual conversion to the JSON schema.</p>
     <p>Full clinical MAP integration would require manufacturer or clinic partnership and validated import pipelines.</p>
 
-    <h2>10. Vocoder-in-the-Loop Auto-Tuning</h2>
+    <h2 id="sec-11">11. Vocoder-in-the-Loop Auto-Tuning</h2>
     <p>An offline analysis path evaluates <strong>625 combinations</strong> of harmonic drive, compression threshold, clarity lift, and transpose mix (5×5×5×5 grid). For each candidate:</p>
     <ol>
-      <li>A 12-second audio segment is processed through an offline mirror of the enhancement chain.</li>
+      <li>A 12-second segment (from <strong>Optimize region</strong> In/Out when set, otherwise track center) is processed through an offline mirror of the enhancement chain.</li>
       <li>Output is passed through a 16-channel noise-band vocoder configured to the active electrode map.</li>
       <li>Composite and component metrics are computed on the vocoded signal.</li>
     </ol>
     <p>The highest-scoring parameter set is applied to the live processing graph. The diagnostic vocoder uses wide overlapping bandpass filters (low Q), 50 Hz envelope smoothing, and adjustable dry/wet blending for developer-side A/B evaluation. It is bypassed by default during normal playback.</p>
 
-    <h2>11. Perceptual Proxy Metrics</h2>
+    <h2 id="sec-12">12. Perceptual Proxy Metrics</h2>
     <table>
       <tr><th>Metric</th><th>Definition / rationale</th></tr>
       <tr><td>Composite score</td><td>Weighted sum of component metrics on vocoded output; optimization target for auto-tune</td></tr>
@@ -244,7 +357,7 @@ Frequency transposition:   Modulation patterns appear near ~4 kHz
     </table>
     <p>These metrics are engineering surrogates. Perceptual validity requires correlation with scores from CI listener studies.</p>
 
-    <h2>12. Visualization &amp; Metering</h2>
+    <h2 id="sec-13">13. Visualization &amp; Metering</h2>
     <p>The reference application includes display-only analyzers parallel to the processing bus. They do not affect the audio path.</p>
     <ul>
       <li><strong>16-channel spectrum</strong> — wide gray input bars vs narrow blue (live) or gold (paused preview) enhanced bars.</li>
@@ -255,20 +368,24 @@ Frequency transposition:   Modulation patterns appear near ~4 kHz
     </ul>
     <p>Most enhancement stages apply a consistent spectral reshape rather than second-by-second variation; moment-to-moment dynamics are best observed on the GR meters. Contextual ⓘ help is available on every panel and major control in the application.</p>
 
-    <h2>12a. Application Workflow &amp; Session Tooling</h2>
+    <h2 id="sec-13a">13a. Application Workflow &amp; Session Tooling</h2>
     <p>Beyond the core signal path, the reference application includes workflow features for tuning sessions and mobile use:</p>
     <ul>
       <li><strong>Built-in demo tracks</strong> — <strong>DSP Check</strong> (4 s mono engineering fixture) and <strong>Music Eval</strong> (8 s stereo groove for music A/B); see ⓘ Built-in demo tracks.</li>
       <li><strong>Playlist queue</strong> — multi-track queue with auto-advance when loop is off; metadata persists in sessionStorage for the browser tab.</li>
       <li><strong>Speech / Music mode</strong> — one-click preset shortcuts with localStorage memory; manual slider edits revert to Custom.</li>
       <li><strong>Stereo width</strong> — M/S matrix collapses stereo toward mono before the enhancement bus (default 0% for unilateral CI); export uses the same width.</li>
-      <li><strong>Session snapshot JSON</strong> — export/import all tuning settings (sliders, MAP, vocoder, viz) under Documents ▾; audio buffers are not included.</li>
+      <li><strong>Session snapshot JSON</strong> — export/import all tuning settings (sliders, MAP, vocoder, viz) under Tools ▾; audio buffers are not included.</li>
       <li><strong>WAV export</strong> — offline render with optional diagnostic vocoder pass (<code>-processed.wav</code> vs <code>-vocoded.wav</code>).</li>
-      <li><strong>Mobile layout &amp; PWA</strong> — collapsible panels, sticky transport, 44px touch targets, safe-area insets, and <code>manifest.json</code> for add-to-home-screen.</li>
+      <li><strong>Optimize region</strong> — In/Out markers under the scrubber select the passage analyzed by CI Auto-Tune (default: center 12 s of the track).</li>
+      <li><strong>Loudness-matched A/B</strong> — optional makeup gain when bypassing enhancement for fair raw vs enhanced comparison.</li>
+      <li><strong>Compare presets</strong> — side-by-side table of slider values between any two profiles (e.g. Speech vs Music).</li>
+      <li><strong>Undo / redo</strong> — step back through manual slider edits (⌘/Ctrl+Z); cleared on preset load or session import.</li>
+      <li><strong>Mobile layout &amp; PWA</strong> — collapsible panels (auto-tune and vocoder collapsed on first visit), sticky transport, 44px touch targets, safe-area insets, and <code>manifest.json</code> for add-to-home-screen.</li>
     </ul>
-    <p>Planned workflow improvements (optimize on loop region, loudness-matched A/B, preset diff view, offline/live parity test) are listed in the in-app Roadmap.</p>
+    <p>Further planned items (audiogram CSV, per-band vocoder transposition, content-aware mode suggestion, and more) are catalogued in the in-app <strong>Roadmap ▾</strong> menu with live / partial / planned badges.</p>
 
-    <h2>13. Signal Processing Architecture</h2>
+    <h2 id="sec-14">14. Signal Processing Architecture</h2>
     <figure>
       <div class="diagram">                         ┌── MAP spectral shaper (16 parallel peaking filters)
                          │
@@ -285,7 +402,7 @@ Input (file / mic / playlist) ── Stereo width (M/S → mono bus)
                          │
                          └── Parallel analyser taps → 16-ch spectrum, band pre/post meters, GR (visualization only)
 
-Workflow: playlist queue · Speech/Music mode · session JSON export/import · optional vocoder WAV export
+Workflow: playlist queue · Speech/Music mode · optimize region · loudness-matched A/B · compare presets · undo/redo · session JSON · optional vocoder WAV export
 
 Visualization (display-only): input vs enhanced spectrum · channel contrast · enhancement profile (fixed ±35%, time-averaged) · band energy bars · live GR meters
 
@@ -297,7 +414,7 @@ Offline auto-tune: ∀ parameter candidates (625 grid incl. transpose mix) → e
       <figcaption>Figure 4. CI Audio Enhancement Engine processing topology.</figcaption>
     </figure>
 
-    <h2>14. Adjacent Research Domains</h2>
+    <h2 id="sec-15">15. Adjacent Research Domains</h2>
     <h3>Content-aware processing (planned)</h3>
     <p>Future versions may classify input as speech-dominant, percussive, or harmonic and adapt harmonic drive, transposition depth, and compression accordingly. The current release provides <strong>Speech mode</strong> and <strong>Music mode</strong> one-click shortcuts (with localStorage memory), built-in genre presets, manual slider control, and vocoder-in-the-loop auto-tune (625 combinations). Automatic content-type suggestion is on the Roadmap.</p>
     <h3>Hearing-aid algorithm crossover</h3>
@@ -307,7 +424,7 @@ Offline auto-tune: ∀ parameter candidates (625 grid incl. transpose mix) → e
     <h3>Music-mode product concept</h3>
     <p>A dedicated music-streaming mode would pair MAP-personalized preprocessing with audiologist-reviewed validation, complementing—not replacing—clinical MAP fitting and manufacturer program settings.</p>
 
-    <h2>15. Validation Requirements</h2>
+    <h2 id="sec-16">16. Validation Requirements</h2>
     <h3>Phase A — Engineering evaluation (current capability)</h3>
     <ul>
       <li>A/B comparison: raw vs enhanced audio through diagnostic vocoder at 100% simulated blend.</li>
@@ -329,7 +446,7 @@ Offline auto-tune: ∀ parameter candidates (625 grid incl. transpose mix) → e
       <li>Acclimation periods of 1–4 weeks with daily use logging.</li>
     </ul>
 
-    <h2>16. Independent Evaluation Protocol</h2>
+    <h2 id="sec-17">17. Independent Evaluation Protocol</h2>
     <p>Complete application source code is distributed for independent replication. A suggested evaluation protocol:</p>
     <ol>
       <li>Deploy the application locally (static HTTP server; Web Audio API required).</li>
@@ -350,7 +467,7 @@ Offline auto-tune: ∀ parameter candidates (625 grid incl. transpose mix) → e
       <tr><td>Manufacturer, processor model, coding strategy</td><td>Strategy-specific tuning profiles</td></tr>
     </table>
 
-    <h2>17. Known Limitations</h2>
+    <h2 id="sec-18">18. Known Limitations</h2>
     <ul>
       <li>The diagnostic vocoder approximates CI output; coding strategies (ACE, FSP, HiRes, Optima, etc.) differ across manufacturers and firmware versions.</li>
       <li>Proxy metrics are not validated perceptual instruments until correlated with listener data.</li>
@@ -361,7 +478,7 @@ Offline auto-tune: ∀ parameter candidates (625 grid incl. transpose mix) → e
       <li>All processing occurs client-side in the browser; latency and real-time streaming integration depend on host platform.</li>
     </ul>
 
-    <h2>18. Summary</h2>
+    <h2 id="sec-19">19. Summary</h2>
     <p>The CI Audio Enhancement Engine occupies the upstream layer in the music-streaming signal path to cochlear implants. Relative to phone EQ and typical manufacturer companion applications, the system implements harmonic information generation via the overtone series, MAP-aware spectral shaping, pre-compression for two-stage dynamics, high-frequency transposition, and vocoder-surrogate parameter optimization with separability-oriented metrics. Efficacy for CI music perception requires validation through controlled listener studies on implant hardware; the open codebase and electrode-map import format are intended to support such evaluation by industry R&amp;D, clinical research, and audiology groups.</p>
 
     <p style="margin-top:2rem;color:var(--muted);font-size:0.85rem;">

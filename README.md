@@ -11,13 +11,15 @@ Browser-based music pre-processor for cochlear implant users. Runs entirely clie
 - **Stereo width** — mono collapse toward CI-friendly processing (default 0%)
 - **Visualizations** — 16-channel spectrum (live + preview), channel contrast, enhancement profile (fixed ±35%), band energy comparison, GR meters
 - **Presets** — Speech, Music, Classical, Rock, Jazz + save/import/export custom presets
-- **CI Auto-Tune** — 625-combo vocoder-in-the-loop offline optimization (includes transpose mix)
+- **CI Auto-Tune** — 625-combo vocoder-in-the-loop offline optimization (includes transpose mix); **optimize region** In/Out markers
+- **Tuning workflow** — compare presets, undo/redo, loudness-matched A/B bypass
 - **Export WAV** — offline render; optional diagnostic vocoder pass
-- **Session JSON** — export/import full tuning session (Documents ▾)
+- **Session JSON** — export/import full tuning session (**Tools ▾**)
 - **Microphone input** — live enhancement chain via getUserMedia
 - **Diagnostic vocoder** — 16-channel noise vocoder for developer A/B (bypassed by default)
 - **Electrode maps** — literature presets + JSON import/export
-- **Mobile UI** — collapsible panels, sticky transport, 44px touch targets, PWA manifest
+- **Mobile UI** — ☰ hamburger menu, single-column stack, sticky transport, 44px touch targets, PWA manifest
+- **Desktop UI** — two-column dashboard at wide widths; full inline menu bar
 - **Roadmap** — live / partial / planned features with ✓ on completed requirements
 - **Theme** — dark/light toggle
 
@@ -50,7 +52,7 @@ Vercel assigns a URL like `https://ci-audio-enhancement.vercel.app`.
 
 ## Tester notes
 
-- Use Chrome or Edge for best Web Audio support.
+- Use Chrome or Edge for development; **Safari** (macOS/iOS) is supported — tap Play if you see an `interrupted` audio error.
 - **Quick test:** **Music Eval** → Play → **Music mode** → loudness-matched bypass A/B. Upload your own file for real tuning.
 - Run `npm test` — validates help topics, module imports, and offline pipeline smoke test.
 - Hard-refresh (`Cmd+Shift+R`) after updates — the app shows a red banner if JavaScript fails to load.
@@ -58,9 +60,15 @@ Vercel assigns a URL like `https://ci-audio-enhancement.vercel.app`.
 
 ## Help & documentation
 
-In-app: **Instructions**, **Help**, **FAQ**, **Science → Technical**, and **Roadmap** menus (top nav), plus ⓘ icons on every panel, sub-panel, and major control.
+In-app: **Using the App** (instructions, FAQ, help), **Science**, **For Industry** (partnership + developer guides), **Roadmap**, and **Tools** menus, plus ⓘ icons on every panel. Every in-app document has **⎙ Print / PDF**.
 
-**Industry pitch:** [One-page overview](overview.html) · [Download PDF](CI-Audio-Enhancement-Overview.pdf) · also under **Documents ▾** in the app nav.
+**For manufacturer evaluators (sales, marketing, R&D):** start with **For Industry ▾ → Industry & partnership guide** in the live app, then the one-page overview and technical paper below.
+
+**For companion-app developers (e.g. Nucleus Smart App teams):** **For Industry ▾ → Cochlear platform developer guide** — product-line scope (Nucleus/Kanso vs Osia/Baha/CoPilot), native porting map, and streaming insertion point.
+
+**Industry pitch:** [One-page overview](overview.html) · [Download PDF](CI-Audio-Enhancement-Overview.pdf) · also under **For Industry ▾** in the app nav.
+
+**Public demo:** deploy via Vercel/GitHub Pages (see above); processing remains entirely client-side.
 
 ## Files
 

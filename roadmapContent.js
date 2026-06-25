@@ -100,7 +100,7 @@ export const ROADMAP_ITEMS = [
     title: 'Session snapshot (export / import JSON)',
     summary: 'Export and import a full tuning session — sliders, MAP, preset/mode, vocoder, stereo width, viz settings — as one JSON file.',
     requirements: [
-      '✓ sessionSnapshot.js + Documents ▾ export/import UI',
+      '✓ sessionSnapshot.js + Tools ▾ export/import UI',
       '✓ Restores enhancement, map, vocoder, stereo width, viz, loop',
       'Does not include audio buffers or playlist files',
       'Future: include playlist metadata references in snapshot'
@@ -388,12 +388,12 @@ export const ROADMAP_ITEMS = [
   {
     id: 'github-vercel-deploy',
     priority: 'deferred',
-    status: 'partial',
+    status: 'available',
     title: 'GitHub + Vercel deployment',
     summary: 'Public static hosting for demos and listener studies.',
     requirements: [
       '✓ vercel.json + README deploy steps',
-      'Git init/push (user account)',
+      '✓ Git init/push + Vercel import (public demo URL)',
       'Optional custom domain + HTTPS headers for mic/export features'
     ]
   }

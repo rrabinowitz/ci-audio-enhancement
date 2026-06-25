@@ -128,7 +128,7 @@ export const INFO_TOPICS = {
         <li><strong>Include diagnostic vocoder</strong> (checkbox) — when checked, runs the offline 16-channel vocoder after enhancement. Filename uses <code>-vocoded.wav</code>; unchecked uses <code>-processed.wav</code> (enhancement only).</li>
         <li>Requires a loaded file or built-in demo; disabled during live microphone input.</li>
       </ul>
-      <p>Progress appears in the status line during render. For study reproducibility, also export a <strong>session JSON</strong> under Documents ▾.</p>
+      <p>Progress appears in the status line during render. For study reproducibility, also export a <strong>session JSON</strong> under Tools ▾.</p>
     `
   },
   'vocoder-enable': {
@@ -248,7 +248,7 @@ export const INFO_TOPICS = {
     body: `
       <p>Export or import all tuning settings as one JSON file — enhancement sliders, MAP profile, preset/mode, vocoder, stereo width, viz controls, and loop preference.</p>
       <ul>
-        <li><strong>Export session JSON</strong> — Documents ▾ in the nav bar.</li>
+        <li><strong>Export session JSON</strong> — Tools ▾ in the nav bar.</li>
         <li><strong>Import session JSON</strong> — restores sliders and map; does not load audio files.</li>
       </ul>
       <p>Use alongside per-track WAV export and preset JSON for reproducible study sessions. Audio buffers are not included.</p>
@@ -266,14 +266,27 @@ export const INFO_TOPICS = {
     `
   },
   'mobile-layout': {
-    title: 'Mobile Layout & PWA',
+    title: 'Layout, Mobile & PWA',
     body: `
-      <p>On phones and narrow windows:</p>
+      <p>The interface adapts to the screen it runs on — phone, tablet, laptop, or desktop — in any modern browser (Chrome, Safari, Firefox, Edge) on macOS, Windows, iOS, or Android.</p>
+      <h4>On phones and narrow windows</h4>
       <ul>
-        <li><strong>Collapsible panels</strong> — ▾ on each section heading; state saved in localStorage.</li>
-        <li><strong>Sticky transport bar</strong> — playback controls stay visible while scrolling.</li>
-        <li><strong>44px touch targets</strong> on buttons and sliders.</li>
+        <li><strong>☰ Menu button</strong> — the top menus collapse into a single <strong>☰ Menu</strong> button. Tap it to open the menu list, tap a section (Using the App, Science, For Industry, Roadmap, Tools) to expand it, then pick an item. Tapping a choice or anywhere outside closes the menu.</li>
+        <li><strong>Single-column stack</strong> — panels stack vertically and fill the width.</li>
+        <li><strong>Sticky transport bar</strong> — playback controls stay reachable while scrolling.</li>
+        <li><strong>44px touch targets</strong> — buttons and sliders are finger-sized; the small ⓘ icons keep a 44px tappable area even though they look small.</li>
         <li><strong>PWA manifest</strong> — add to home screen on iOS/Android for a standalone app icon (<code>manifest.json</code>).</li>
+      </ul>
+      <h4>On wide screens (laptop / desktop)</h4>
+      <ul>
+        <li><strong>Two-column dashboard</strong> — at about 1100px and wider, the transport and the 16-channel visualizer span the full width, and the control panels arrange into two columns to use the space and cut scrolling.</li>
+        <li><strong>Full menu bar</strong> — the dropdown menus appear inline instead of behind the ☰ button.</li>
+      </ul>
+      <h4>Everywhere</h4>
+      <ul>
+        <li><strong>Collapsible panels</strong> — ▾ on each section heading; state is saved in localStorage. <strong>CI Auto-Tune</strong>, <strong>Electrode Map</strong>, and <strong>Diagnostic Vocoder</strong> start collapsed on first visit to keep the first screen focused.</li>
+        <li><strong>Light / dark theme</strong> — the ☀ / 🌙 toggle persists your choice.</li>
+        <li><strong>Print / save as PDF</strong> — every in-app document (Instructions, FAQ, Help, the Science and Industry guides) has a <strong>⎙ Print / PDF</strong> button that exports a clean, light-background copy.</li>
       </ul>
       <p>Safe-area insets are respected for notched devices. ES modules still require HTTP — use a local server or deployed URL, not <code>file://</code>.</p>
     `
@@ -422,7 +435,22 @@ export const MENU_CONTENT = {
   instructions: {
     title: 'How to Use — Step by Step',
     body: `
-      <h3>Quick start (Music Eval demo)</h3>
+      <nav class="doc-toc">
+        <strong>On this page</strong>
+        <ul>
+          <li><a href="#new-here">New here?</a></li>
+          <li><a href="#quick-start">Quick start</a></li>
+          <li><a href="#eng-check">Engineering check</a></li>
+          <li><a href="#playlist">Playlist workflow</a></li>
+          <li><a href="#full-workflow">Full workflow</a></li>
+          <li><a href="#demos-only">Demos only</a></li>
+          <li><a href="#study">Study &amp; research</a></li>
+          <li><a href="#reference">Interface reference</a></li>
+        </ul>
+      </nav>
+      <h3 id="help-new-here">New here?</h3>
+      <p>This is a <strong>music pre-processor</strong> for material you stream to a cochlear implant — not a speech-therapy or clinical MAP-fitting tool. The blue callout under the title shows the fastest path: <strong>Music Eval</strong> → <strong>Play</strong> → toggle <strong>Bypass Enhancement</strong> (with <strong>Loudness-match when bypassing</strong> on). Every panel and major control has a ⓘ icon; <strong>For Industry ▾</strong> links the overview, PDF, and technical paper. On wide screens the control panels arrange in two columns; on phones use the <strong>☰ Menu</strong> button for docs.</p>
+      <h3 id="help-quick-start">Quick start (Music Eval demo)</h3>
       <ol>
         <li><strong>Music Eval</strong> — 8-second stereo groove; loop starts automatically; appears in the playlist as <em>Demo — Music Eval (8 s)</em>.</li>
         <li><strong>Play</strong> — enhancement is active by default.</li>
@@ -430,20 +458,20 @@ export const MENU_CONTENT = {
         <li><strong>A/B</strong> — enable <strong>Loudness-match when bypassing</strong>, then toggle <strong>Bypass Enhancement</strong> with Loop on.</li>
         <li>Optional: <strong>Optimize for CI</strong> on this clip, then re-compare bypass vs enhanced.</li>
       </ol>
-      <h3>Engineering check (DSP Check demo)</h3>
+      <h3 id="help-eng-check">Engineering check (DSP Check demo)</h3>
       <ol>
         <li><strong>DSP Check</strong> — 4-second mono fixture; confirms each DSP stage and meter.</li>
         <li>Watch <strong>GR meters</strong>, <strong>band energy</strong>, and <strong>enhancement profile</strong> while looping.</li>
         <li>Run <strong>Optimize for CI</strong> once to verify auto-tune and metric cards.</li>
       </ol>
-      <h3>Playlist workflow</h3>
+      <h3 id="help-playlist">Playlist workflow</h3>
       <ol>
         <li><strong>Add files to queue…</strong> — multi-select to build a playlist without stopping playback.</li>
         <li><strong>Click a row</strong> in the playlist to switch tracks.</li>
         <li>Turn <strong>Loop</strong> off to auto-advance to the next track when a song ends.</li>
         <li>After a full page reload, re-add file items (built-in demos regenerate automatically).</li>
       </ol>
-      <h3>Full workflow (your uploaded audio)</h3>
+      <h3 id="help-full-workflow">Full workflow (your uploaded audio)</h3>
       <ol>
         <li><strong>Choose Audio File</strong> — your MP3/WAV/FLAC from disk (see ⓘ <strong>Your uploaded audio</strong> — why demos are not enough for final tuning).</li>
         <li><strong>Optimize region</strong> — set In/Out under the scrubber on a representative chorus or verse (≥ 4 s).</li>
@@ -453,13 +481,13 @@ export const MENU_CONTENT = {
         <li><strong>A/B</strong> — <strong>Loudness-match when bypassing</strong> + Bypass Enhancement.</li>
         <li><strong>Export</strong> — WAV per track + session JSON for settings.</li>
       </ol>
-      <h3>Demos only (no upload yet)</h3>
+      <h3 id="help-demos-only">Demos only (no upload yet)</h3>
       <ol>
         <li><strong>Music Eval</strong> or <strong>DSP Check</strong> — instant material; see ⓘ <strong>Built-in demo tracks</strong>.</li>
         <li><strong>Stereo width</strong> — try Music Eval at 0% vs 50%.</li>
         <li><strong>Loop and scrub</strong> — Loop for repeated passages; −5s/+5s to focus.</li>
       </ol>
-      <h3>Study and research preparation</h3>
+      <h3 id="help-study">Study and research preparation</h3>
       <ol>
         <li>Import participant JSON map (center frequencies, dead electrodes) from clinical records.</li>
         <li>Run Optimize on representative stimuli per genre; export map JSON, preset JSON, and session JSON.</li>
@@ -468,11 +496,13 @@ export const MENU_CONTENT = {
         <li>At 100% vocoder simulation, confirm bypass A/B results align with metric predictions.</li>
         <li>Clinical validation requires streaming processed audio to the participant's implant hardware; the vocoder is a development proxy only.</li>
       </ol>
-      <h3>Interface reference</h3>
+      <h3 id="help-reference">Interface reference</h3>
       <ul>
-        <li><strong>Documents ▾</strong> — overview, PDF, technical paper, session JSON export/import.</li>
-        <li><strong>Roadmap ▾</strong> — live, partial, and planned features with ✓ on completed requirements.</li>
-        <li><strong>Collapsible panels</strong> — ▾ on section headings; state remembered on mobile and desktop.</li>
+        <li><strong>Quick-start callout</strong> — numbered steps under the title; tap <strong>Full instructions</strong> for this document.</li>
+        <li><strong>☰ Menu</strong> (phones) / inline menus (desktop) — <strong>Using the App ▾</strong> (how-to, FAQ, help), <strong>Science ▾</strong>, <strong>For Industry ▾</strong> (partnership + developer guides, downloadable overview/PDF/paper), <strong>Roadmap ▾</strong>, <strong>Tools ▾</strong> (session JSON).</li>
+        <li><strong>Two-column layout</strong> — on screens about 1100px wide, control panels sit side-by-side; transport and the 16-channel visualizer stay full width.</li>
+        <li><strong>Collapsible panels</strong> — ▾ on section headings; Auto-Tune, Electrode Map, and Diagnostic Vocoder start collapsed on first visit. State is remembered.</li>
+        <li><strong>⎙ Print / PDF</strong> — every in-app document modal has a print button for a clean, shareable copy.</li>
         <li><strong>☀ / 🌙</strong> — light/dark theme (localStorage).</li>
         <li><strong>ⓘ icons</strong> — contextual help on every panel, sub-panel, and major control.</li>
       </ul>
@@ -485,6 +515,8 @@ export const MENU_CONTENT = {
       <dl>
         <dt>Menus, buttons, or ⓘ popups do nothing</dt>
         <dd>Usually means JavaScript failed to load — a red banner appears at the top when the app module cannot start, or the status line shows <strong>Initialization error</strong> (e.g. a missing engine method after a code update). Open the browser console (F12) for details. <strong>Hard-refresh</strong> with <strong>Cmd+Shift+R</strong> (Mac) or <strong>Ctrl+Shift+R</strong> (Windows) so all JS modules reload — only refreshing <code>app.js</code> is not enough if the browser cached an older dependency. Run <code>npm test</code> in the repo to validate help topics and module syntax. The app requires HTTP (<code>python3 -m http.server 8765</code>), not <code>file://</code>.</dd>
+        <dt>Demo load error: Audio output is blocked (context state: interrupted)</dt>
+        <dd><strong>Safari</strong> uses a non-standard <code>interrupted</code> audio state. Tap <strong>Play</strong> or click anywhere on the page to unlock audio, then load the demo again. After a code update, hard-refresh (<strong>Cmd+Shift+R</strong>). Chrome and Edge are less prone to this message.</dd>
         <dt>No sound after loading</dt>
         <dd>Playback requires a user gesture (click Play). Check Volume in the transport bar — confirm it is not set to −24 dB.</dd>
         <dt>Visualizations unchanged when moving sliders</dt>
@@ -511,7 +543,7 @@ export const MENU_CONTENT = {
         <dd>Lower transport Volume (default 0 dB). Demo synthesis levels are reduced, but enhancement makeup gain can still feel loud.</dd>
       </dl>
       <h3>Browser support</h3>
-      <p>Chrome or Edge recommended. Safari and Firefox are generally supported. Transposition uses ring modulation in the live graph; AudioWorklet is not required.</p>
+      <p>Chrome, Edge, Firefox, and Safari on macOS, Windows, iOS, and Android. Chrome or Edge recommended for development. <strong>Safari</strong> may show an <code>interrupted</code> audio state until you tap Play — see troubleshooting above. The layout adapts automatically: ☰ Menu on phones, two-column dashboard on wide screens. Transposition uses ring modulation in the live graph; AudioWorklet is not required.</p>
       <h3>Privacy</h3>
       <p>All processing occurs locally in the browser. Audio is not uploaded. Presets, theme, content mode, panel collapse state, and viz settings use localStorage; playlist names use sessionStorage.</p>
       <h3>For researchers</h3>
@@ -521,40 +553,85 @@ export const MENU_CONTENT = {
   faq: {
     title: 'Frequently Asked Questions',
     body: `
-      <div class="faq-item"><h4>Is this equivalent to EQ and compression?</h4>
-      <p>Partially — but the optimization target differs. Phone EQ prioritizes pleasant playback on speakers. This engine prioritizes separability and salience after CI-like re-coding. It includes harmonic generation (not level boost alone), ring-mod frequency transposition, MAP-aware shaping, vocoder-in-the-loop auto-tune, and control-linked visualizations.</p></div>
-      <div class="faq-item"><h4>Why are there two colors in the spectrum display?</h4>
-      <p>Gray is the unprocessed input; blue (live) or gold (preview) is after enhancement. Narrow inner bars sit in front of wide gray bars so you can see exactly where the engine adds or removes energy.</p></div>
-      <div class="faq-item"><h4>Why don’t the profile and band meters scroll like a timeline?</h4>
-      <p>Most settings apply a steady overall change (EQ curve, compression ratio, MAP shape) — not second-by-second variation. Scrolling traces were hard to read and misleading. The app now shows large band comparison bars and a fixed-scale enhancement profile, time-averaged during playback. Live compression dynamics appear in the GR meters.</p></div>
-      <div class="faq-item"><h4>How do Speech mode and Music mode buttons work?</h4>
-      <p>They apply the built-in Speech or Music presets in one click. Your choice is saved in localStorage. Moving any slider manually switches to Custom (current).</p></div>
+      <nav class="doc-toc">
+        <strong>Jump to a topic</strong>
+        <ul>
+          <li><a href="#faq-using">Using the app, demos &amp; A/B</a></li>
+          <li><a href="#faq-viz">Visualizers &amp; meters</a></li>
+          <li><a href="#faq-science">Concept &amp; science</a></li>
+          <li><a href="#faq-clinical">Clinical &amp; regulatory</a></li>
+          <li><a href="#faq-industry">Industry &amp; developers</a></li>
+          <li><a href="#faq-research">Roadmap &amp; research</a></li>
+        </ul>
+      </nav>
+
+      <h3 id="help-faq-using">Using the app, demos &amp; A/B</h3>
+      <div class="faq-item"><h4>Which demo should I use first?</h4>
+      <p>Start with <strong>Music Eval</strong> if you want to hear musical intent (Music mode vs bypass). Use <strong>DSP Check</strong> if you are verifying meters, auto-tune, or visualization behavior. Queue both in the playlist to compare.</p></div>
       <div class="faq-item"><h4>What is the difference between demo tracks and my uploaded files?</h4>
       <p><strong>DSP Check</strong> and <strong>Music Eval</strong> are synthetic, in-browser fixtures — no upload, always available, regenerate after reload. They prove engineering (meters, auto-tune) and musical intent (Music mode A/B). <strong>Your uploaded files</strong> are real library material for genre-specific tuning and WAV export; they stay in memory only until you reload the page. See ⓘ <strong>Built-in demo tracks</strong> and ⓘ <strong>Your uploaded audio</strong>.</p></div>
       <div class="faq-item"><h4>What are DSP Check and Music Eval?</h4>
       <p><strong>DSP Check</strong> (4 s, mono) is an engineering fixture: sub-bass, arpeggio, kick, and hi-hat — each layer exercises one part of the chain and the meters. <strong>Music Eval</strong> (8 s, stereo groove) is the musical demo: bass, chords, lead, drums, and stereo panning so you can hear whether <strong>Music mode</strong> improves rhythm and separation for CI streaming. See ⓘ <strong>Built-in demo tracks</strong> for the full how and why.</p></div>
-      <div class="faq-item"><h4>Is this app for speech understanding?</h4>
-      <p>No — manufacturer CI apps and clinical MAP fitting already target speech. This engine is a <strong>music pre-processor</strong> upstream of wireless streaming: bass harmonic substitution, multi-band compression, clarity lift, and transposition for rhythm, melody, and separability. <strong>Speech mode</strong> is a preset name for mixes with prominent vocals, not a replacement for clinical speech processing.</p></div>
-      <div class="faq-item"><h4>Which demo should I use first?</h4>
-      <p>Start with <strong>Music Eval</strong> if you want to hear musical intent (Music mode vs bypass). Use <strong>DSP Check</strong> if you are verifying meters, auto-tune, or visualization behavior. Queue both in the playlist to compare.</p></div>
+      <div class="faq-item"><h4>How do Speech mode and Music mode buttons work?</h4>
+      <p>They apply the built-in Speech or Music presets in one click. Your choice is saved in localStorage. Moving any slider manually switches to Custom (current).</p></div>
       <div class="faq-item"><h4>What is the playlist for?</h4>
       <p>Queue multiple tracks and auto-advance when Loop is off — useful for tuning across a library without re-uploading each file. Names persist in the tab; re-add files after a full page reload. Built-in demos regenerate automatically.</p></div>
-      <div class="faq-item"><h4>What is session JSON export?</h4>
-      <p>Under Documents ▾, exports all settings (sliders, MAP, vocoder, stereo width, viz) as one JSON file for study reproducibility. It does not include audio — pair with WAV export per track.</p></div>
       <div class="faq-item"><h4>What does stereo width do?</h4>
       <p>Collapses stereo toward mono before enhancement — default 0% for unilateral CI users. 100% retains more side information before the mono processing bus. Applies to export as well.</p></div>
       <div class="faq-item"><h4>Can I use this on a phone?</h4>
-      <p>Yes — collapsible panels, sticky transport, and 44px touch targets are built in. Add to home screen via the PWA manifest for a standalone icon. ES modules still require HTTP (local server or deployed URL), not <code>file://</code>.</p></div>
+      <p>Yes — on phones the menus collapse into a single <strong>☰ Menu</strong> button, panels stack in one column, the transport bar stays sticky, and buttons/sliders use 44px touch targets. On laptops and desktops the same page expands into a two-column dashboard. It works in Chrome, Safari, Firefox, and Edge on macOS, Windows, iOS, and Android. Add to home screen via the PWA manifest for a standalone icon. ES modules still require HTTP (local server or deployed URL), not <code>file://</code>.</p></div>
+      <div class="faq-item"><h4>What is Optimize region (In / Out)?</h4>
+      <p>Sliders under the transport scrubber bracket the section of your track that <strong>Optimize for CI</strong> analyzes (4–12 seconds). Default (full track) uses the center 12 seconds. Useful on long songs — set In/Out on a chorus before optimizing.</p></div>
+      <div class="faq-item"><h4>What is Loudness-match when bypassing?</h4>
+      <p>When checked (default), toggling <strong>Bypass Enhancement</strong> temporarily adjusts the raw path so level matches the enhanced path — a fairer A/B for quality, not just loudness. Uncheck for level-accurate raw vs enhanced.</p></div>
+      <div class="faq-item"><h4>What does Compare presets do?</h4>
+      <p>Opens a table showing how harmonic drive, compression threshold, clarity lift, and transpose mix differ between any two presets (default: Speech vs Music). Use before fine-tuning sliders.</p></div>
+      <div class="faq-item"><h4>Can I undo slider changes?</h4>
+      <p>Yes — <strong>Undo</strong> / <strong>Redo</strong> buttons (or ⌘/Ctrl+Z and ⇧⌘/Ctrl+Z) step through manual slider edits. History clears when you load a preset or import a session JSON.</p></div>
+      <div class="faq-item"><h4>Can I save or print the in-app guides?</h4>
+      <p>Yes — every in-app document (Instructions, FAQ, Help, Background, Technical chain, Industry &amp; partnership guide, Cochlear platform developer guide) has a <strong>⎙ Print / PDF</strong> button in the modal header. It opens your browser’s print dialog so you can save a clean PDF or paper copy. The one-page overview and technical paper also have print buttons on their web pages; the overview PDF is additionally available under <strong>For Industry ▾</strong>.</p></div>
+      <div class="faq-item"><h4>Why does the layout look different on my laptop vs my phone?</h4>
+      <p>By design. On phones, menus collapse behind <strong>☰ Menu</strong> and panels stack in one column with a sticky transport bar. On screens about 1100px wide, the same page expands into a <strong>two-column dashboard</strong> (transport + visualizer full width; control panels side-by-side). Collapsible sections remember whether you left them open. See ⓘ <strong>Layout, Mobile &amp; PWA</strong> in the quick-start callout.</p></div>
+      <div class="faq-item"><h4>What is session JSON export?</h4>
+      <p>Under <strong>Tools ▾</strong>, exports all settings (sliders, MAP, vocoder, stereo width, viz) as one JSON file for study reproducibility. It does not include audio — pair with WAV export per track.</p></div>
+
+      <h3 id="help-faq-viz">Visualizers &amp; meters</h3>
+      <div class="faq-item"><h4>Why are there two colors in the spectrum display?</h4>
+      <p>Gray is the unprocessed input; blue (live) or gold (preview) is after enhancement. Narrow inner bars sit in front of wide gray bars so you can see exactly where the engine adds or removes energy.</p></div>
+      <div class="faq-item"><h4>Why don’t the profile and band meters scroll like a timeline?</h4>
+      <p>Most settings apply a steady overall change (EQ curve, compression ratio, MAP shape) — not second-by-second variation. Scrolling traces were hard to read and misleading. The app now shows large band comparison bars and a fixed-scale enhancement profile, time-averaged during playback. Live compression dynamics appear in the GR meters.</p></div>
+
+      <h3 id="help-faq-science">Concept &amp; science</h3>
+      <div class="faq-item"><h4>Is this equivalent to EQ and compression?</h4>
+      <p>Partially — but the optimization target differs. Phone EQ prioritizes pleasant playback on speakers. This engine prioritizes separability and salience after CI-like re-coding. It includes harmonic generation (not level boost alone), ring-mod frequency transposition, MAP-aware shaping, vocoder-in-the-loop auto-tune, and control-linked visualizations.</p></div>
+      <div class="faq-item"><h4>Is this app for speech understanding?</h4>
+      <p>No — manufacturer CI apps and clinical MAP fitting already target speech. This engine is a <strong>music pre-processor</strong> upstream of wireless streaming: bass harmonic substitution, multi-band compression, clarity lift, and transposition for rhythm, melody, and separability. <strong>Speech mode</strong> is a preset name for mixes with prominent vocals, not a replacement for clinical speech processing.</p></div>
       <div class="faq-item"><h4>How does harmonic excitation relate to the overtone series?</h4>
       <p>Non-linear distortion on sub-bass generates integer harmonics (2f, 3f, …) in perceptible bands. The listener may not resolve the fundamental; the perceptual correlate is new spectral energy in electrode-usable regions that preserves rhythm and pitch-class structure.</p></div>
       <div class="faq-item"><h4>How do Speech and Music presets differ?</h4>
       <p>Speech: lower harmonic drive, higher clarity lift, less transposition — favors intelligibility. Music: higher harmonic drive, heavier compression, more transposition — favors rhythm and timbral salience.</p></div>
+
+      <h3 id="help-faq-clinical">Clinical &amp; regulatory</h3>
+      <div class="faq-item"><h4>Is this a medical device or cleared for clinical use?</h4>
+      <p>No. This is an <strong>evaluation proof-of-concept</strong> and open reference implementation for industry R&amp;D, audiologists, and researchers. It is not FDA- or CE-marked, not a clinical diagnostic, and does not replace manufacturer MAP fitting or speech programs. Listener studies on implant hardware are required before efficacy claims.</p></div>
       <div class="faq-item"><h4>Why is this processing not available in manufacturer CI apps?</h4>
       <p>Manufacturer applications focus on clinical fitting, speech programs, and implant safety. Aggressive music pre-processing upstream of the envelope coder requires validation against each manufacturer's coding strategy.</p></div>
       <div class="faq-item"><h4>Can clinical MAP files be imported directly?</h4>
       <p>Proprietary MAP formats are not supported. JSON import accepts center frequencies from clinical records, or literature-based presets can be used. Audiogram CSV import is planned (see Roadmap).</p></div>
       <div class="faq-item"><h4>Does the diagnostic vocoder demonstrate clinical benefit?</h4>
       <p>The vocoder is an engineering surrogate only. Clinical benefit requires listener studies with processed audio streamed to actual implants.</p></div>
+
+      <h3 id="help-faq-industry">Industry &amp; developers</h3>
+      <div class="faq-item"><h4>How does this relate to manufacturer companion apps (e.g. streaming / fitting apps)?</h4>
+      <p>Manufacturer apps handle clinical fitting, programs, device management, and speech-oriented features. This engine adds an <strong>upstream music mastering layer</strong> on the phone before Bluetooth streaming — a gap typical companion apps do not address today. See <strong>For Industry ▾ → Industry &amp; partnership guide</strong>.</p></div>
+      <div class="faq-item"><h4>What would a manufacturer partnership look like?</h4>
+      <p>Phase A: technical evaluation with this browser demo. Phase B: blind listener study streaming processed audio to participant hardware. Phase C: port DSP to native iOS/Android in the companion app, validated proprietary MAP import, and market-specific regulatory review. Algorithms and presets transfer; the browser shell does not.</p></div>
+      <div class="faq-item"><h4>Does this apply to Osia®, Baha®, or Cochlear™ CoPilot?</h4>
+      <p><strong>Primary target:</strong> cochlear-implant direct streaming (Nucleus® / Kanso® processors via Nucleus® Smart App). <strong>CoPilot</strong> is rehabilitation-only — no audio insertion point. <strong>Osia</strong> and <strong>Baha</strong> use different sound paths and apps; this 16-channel CI vocoder reference is <strong>not validated</strong> for those lines without separate work. See <strong>For Industry ▾ → Cochlear platform developer guide</strong>.</p></div>
+      <div class="faq-item"><h4>Where would a Nucleus Smart App engineer hook this in?</h4>
+      <p>On the phone, <strong>before</strong> media audio is routed to the MFi (iOS) or ASHA (Android) CI streaming path — upstream of processor firmware. Port <code>audioGraph.js</code> to a native real-time graph; do not embed the WebView demo or modify implant coding. Details in the developer guide.</p></div>
+
+      <h3 id="help-faq-research">Roadmap &amp; research</h3>
       <div class="faq-item"><h4>What is the Roadmap menu?</h4>
       <p>A catalog of planned and in-progress features. Each entry in <strong>Roadmap ▾</strong> shows a status badge (live, partial, planned), a short description, and a bulleted list of implementation requirements — including items marked ✓ when already delivered.</p></div>
       <div class="faq-item"><h4>How can researchers evaluate the system independently?</h4>
@@ -567,8 +644,214 @@ export const MENU_CONTENT = {
       <p>Cochlear implants provide excellent speech perception for many users but music often suffers: weak bass, blurred timbre, poor pitch resolution above ~300–500 Hz, and limited dynamic range after envelope extraction.</p>
       <p>Commercial CI companion apps offer volume, programs, and sometimes coarse tone controls — not harmonic regeneration, transposition, vocoder-aware auto-tuning, MAP-personalized mastering, or researcher-facing diagnostics.</p>
       <p>Phone EQ assumes normal hearing with intact temporal fine structure. CI users receive ~16–22 channels of slowly varying envelopes — a fundamentally different representation.</p>
-      <p>This engine implements multi-band compression, harmonic bass excitation, clarity lift, ring-mod transposition, MAP shaping, profile-based visualizers, two built-in demos (<strong>DSP Check</strong> engineering fixture + <strong>Music Eval</strong> stereo groove), playlist queue, session JSON, stereo width control, Speech/Music mode memory, microphone input, WAV export (optional vocoder), mobile collapsible UI, PWA manifest, and offline vocoder-in-the-loop optimization.</p>
-      <p><a href="paper.html" target="_blank"><strong>Technical paper →</strong></a> Signal-chain diagrams, overtone-series mechanism, double-compression theory, and research collaboration guidelines.</p>
+      <p>This engine implements multi-band compression, harmonic bass excitation, clarity lift, ring-mod transposition, MAP shaping, profile-based visualizers, two built-in demos (<strong>DSP Check</strong> engineering fixture + <strong>Music Eval</strong> stereo groove), playlist queue, session JSON, stereo width control, Speech/Music mode memory, optimize region, loudness-matched A/B, compare presets, undo/redo, microphone input, WAV export (optional vocoder), mobile collapsible UI, PWA manifest, and offline vocoder-in-the-loop optimization.</p>
+      <p><a href="paper.html" target="_blank"><strong>Technical paper →</strong></a> Signal-chain diagrams, overtone-series mechanism, double-compression theory, validation phases, and research collaboration guidelines. See <strong>For Industry ▾ → Industry &amp; partnership guide</strong> (commercial) and <strong>Cochlear platform developer guide</strong> (companion-app engineering).</p>
+    `
+  },
+  industry: {
+    title: 'Industry & Partnership Guide',
+    body: `
+      <p><em>For manufacturer marketing, sales, clinical affairs, and R&amp;D teams evaluating upstream music pre-processing — e.g. implant makers and their companion-app organizations. Mobile engineers: see also <strong>Cochlear platform developer guide</strong> in this menu.</em></p>
+      <nav class="doc-toc">
+        <strong>On this page</strong>
+        <ul>
+          <li><a href="#ind-summary">Executive summary</a></li>
+          <li><a href="#ind-ecosystem">Where it sits</a></li>
+          <li><a href="#ind-isnot">Is / is not</a></li>
+          <li><a href="#ind-demo">5-minute demo script</a></li>
+          <li><a href="#ind-eq">Why not just EQ?</a></li>
+          <li><a href="#ind-path">Partnership path</a></li>
+          <li><a href="#ind-evidence">Evidence package</a></li>
+          <li><a href="#ind-privacy">Privacy &amp; data</a></li>
+          <li><a href="#ind-questions">Commercial questions</a></li>
+          <li><a href="#ind-docs">External documents</a></li>
+        </ul>
+      </nav>
+      <h3 id="help-ind-summary">Executive summary</h3>
+      <p>The CI Audio Enhancement Engine is a <strong>music pre-processor</strong> that runs on the phone <strong>before</strong> audio is wirelessly streamed to a sound processor. It does not modify implant firmware, clinical MAP fitting, or manufacturer safety systems. The browser app is an <strong>evaluation reference</strong>; production value is the DSP methodology, presets, MAP-aware shaping, and vocoder-in-the-loop auto-tune — portable to a native module inside a manufacturer companion app.</p>
+      <h3 id="help-ind-ecosystem">Where it sits in your product ecosystem</h3>
+      <ul>
+        <li><strong>Manufacturer companion apps</strong> (fitting, programs, streaming control, remote care) — remain the system of record for clinical settings and device management.</li>
+        <li><strong>This engine</strong> — optional upstream layer on streamed music: harmonic bass substitution, MAP-weighted shaping, pre-compression, transposition, and genre presets tuned for envelope-coded hearing.</li>
+        <li><strong>Sound processor</strong> — unchanged; receives pre-conditioned audio via existing Bluetooth / Auracast / accessory paths.</li>
+      </ul>
+      <p>Positioning: <strong>complements</strong> speech-first programs and clinical MAP workflows; targets the documented <strong>music-enjoyment gap</strong> without replacing audiologist fitting.</p>
+      <h3 id="help-ind-isnot">What this is — and is not</h3>
+      <table class="compare" style="width:100%;font-size:0.9em">
+        <tr><th>Is</th><th>Is not</th></tr>
+        <tr><td>Evaluation POC + open reference implementation</td><td>FDA / CE-marked medical device or clinical diagnostic</td></tr>
+        <tr><td>Upstream mastering for music streaming</td><td>Replacement for clinical MAP fitting or speech processors</td></tr>
+        <tr><td>On-device processing; no audio cloud upload</td><td>Affiliated with or endorsed by any implant manufacturer</td></tr>
+        <tr><td>Engineering vocoder surrogate for R&amp;D tuning</td><td>Validated predictor of individual listener outcomes (yet)</td></tr>
+      </table>
+      <h3 id="help-ind-demo">5-minute live demo script (for stakeholder meetings)</h3>
+      <ol>
+        <li>Open deployed demo URL or local server — confirm status line is ready (not an initialization error).</li>
+        <li><strong>Music Eval</strong> → <strong>Play</strong> → <strong>Music mode</strong> — “This is the music-tuned preset; rhythm and separation are the design target, not speaker fidelity.”</li>
+        <li>Enable <strong>Loudness-match when bypassing</strong> → toggle <strong>Bypass Enhancement</strong> with Loop on — fair A/B vs raw stream.</li>
+        <li><strong>Compare presets</strong> — show Speech vs Music slider differences in one table.</li>
+        <li>Optional: <strong>Optimize for CI</strong> on Music Eval (~30–90 s) — metric cards show vocoder-surrogate scores (engineering proxy, not clinical endpoints).</li>
+        <li>Close with <strong>For Industry ▾ → Download overview (PDF)</strong> and <strong>Technical paper</strong> for R&amp;D follow-up.</li>
+      </ol>
+      <h3 id="help-ind-eq">Why not “just add EQ” to the companion app?</h3>
+      <p>Phone EQ optimizes timbre on speakers. CI users receive ~16–22 amplitude envelopes. This stack adds <strong>harmonic generation</strong> in usable bands, <strong>pre-compression</strong> before implant-side dynamics, <strong>frequency transposition</strong>, <strong>MAP-aware 16-channel shaping</strong>, and <strong>vocoder-in-the-loop parameter search</strong> — mechanisms a parametric EQ cannot replicate. See comparison table in the one-page overview.</p>
+      <h3 id="help-ind-path">Partnership path (typical manufacturer integration)</h3>
+      <ol>
+        <li><strong>Phase A — Technical eval</strong> (now): browser demo, open codebase, internal listening with diagnostic vocoder; no patient data required.</li>
+        <li><strong>Phase B — Pilot study</strong>: blind A/B on participant hardware (Bluetooth stream); MUSHRA / preference scales; participant MAP JSON from clinic (PHI — IRB required).</li>
+        <li><strong>Phase C — Product integration</strong>: port DSP to native iOS/Android SDK; validated proprietary MAP import; music mode in companion app; regulatory pathway per market.</li>
+      </ol>
+      <p>Proprietary clinical MAP import (Cochlear, Advanced Bionics, MED-EL, etc.) requires manufacturer cooperation — see Roadmap ▾ <em>Proprietary MAP import</em>.</p>
+      <h3 id="help-ind-evidence">Evidence package today</h3>
+      <ul>
+        <li>Working reference app with built-in demos, presets, session export, and WAV render.</li>
+        <li>Technical paper: psychoacoustic rationale, signal chain, validation protocol (Phases A–C).</li>
+        <li>Automated engineering checks (<code>npm test</code>): help/docs consistency + offline pipeline smoke test.</li>
+        <li><strong>Not yet included:</strong> peer-reviewed listener outcomes, manufacturer-coder-specific validation, or regulatory clearance.</li>
+      </ul>
+      <h3 id="help-ind-privacy">Privacy &amp; data handling (for commercial / legal review)</h3>
+      <ul>
+        <li>Audio files and microphone input are processed <strong>locally in the browser</strong> — not uploaded to a server.</li>
+        <li>Participant-specific electrode-map JSON may constitute <strong>PHI</strong> if it identifies a patient; handle under clinic IRB and data agreements.</li>
+        <li>Session JSON exports contain tuning settings only — no audio buffers.</li>
+      </ul>
+      <h3 id="help-ind-questions">Common commercial questions</h3>
+      <dl>
+        <dt>Does this compete with our speech programs?</dt>
+        <dd>No — it targets <strong>music streaming</strong> upstream. Speech programs and clinical MAP fitting remain authoritative for speech-in-noise and safety limits.</dd>
+        <dt>Does it change implant firmware?</dt>
+        <dd>No — preprocessing occurs on the phone before wireless delivery. Processor coding strategy is unchanged.</dd>
+        <dt>Can we brand this as a “music mode”?</dt>
+        <dd>Yes — that is the intended product concept: MAP-personalized music preprocessing inside the companion app, validated with your hardware and regulatory team.</dd>
+        <dt>What would we license or port?</dt>
+        <dd>Algorithms (harmonic excitation, transposition, MAP shaper, auto-tune grid), preset library, JSON MAP schema, and evaluation metrics — implemented natively, not as a WebView wrapper.</dd>
+        <dt>What deliverables exist for due diligence?</dt>
+        <dd>Live demo URL, one-page overview (PDF), technical paper, source repo, electrode-map template (<code>profiles/example-custom.json</code>), and in-app Roadmap with ✓ on completed items.</dd>
+      </dl>
+      <h3 id="help-ind-docs">External documents</h3>
+      <p>Mobile / platform engineers: <strong>For Industry ▾ → Cochlear platform developer guide</strong> (product-line scope, native porting map, insertion point).</p>
+      <p>
+        <a href="overview.html" target="_blank">One-page overview</a> ·
+        <a href="CI-Audio-Enhancement-Overview.pdf" download>Overview PDF</a> ·
+        <a href="paper.html" target="_blank">Technical paper</a>
+      </p>
+    `
+  },
+  'industry-developer': {
+    title: 'Cochlear Platform Developer Guide',
+    body: `
+      <p><em>For mobile, firmware, and audio engineers evaluating porting this reference stack into a manufacturer companion app — written against the Cochlear product portfolio as an illustrative example. Not affiliated with or endorsed by Cochlear Ltd.</em></p>
+      <nav class="doc-toc">
+        <strong>On this page</strong>
+        <ul>
+          <li><a href="#dev-portfolio">Product portfolio scope</a></li>
+          <li><a href="#dev-insertion">Insertion point</a></li>
+          <li><a href="#dev-existing">What the app already does</a></li>
+          <li><a href="#dev-porting">Native porting map</a></li>
+          <li><a href="#dev-platform">Platform considerations</a></li>
+          <li><a href="#dev-validation">Validation matrix</a></li>
+          <li><a href="#dev-nongoals">Non-goals (v1)</a></li>
+          <li><a href="#dev-flags">Feature flag architecture</a></li>
+          <li><a href="#dev-related">Related docs</a></li>
+        </ul>
+      </nav>
+      <h3 id="help-dev-portfolio">Product portfolio — what this doc applies to</h3>
+      <table class="compare" style="width:100%;font-size:0.88em">
+        <tr><th>Cochlear product / app</th><th>Role today</th><th>Relevance to this engine</th></tr>
+        <tr>
+          <td><strong>Nucleus® Smart App</strong> + <strong>Nucleus®</strong> / <strong>Kanso® 2</strong> sound processors</td>
+          <td>Device control, programs, volume, MFi / ASHA <strong>direct streaming</strong> of calls and media to CI processors</td>
+          <td><strong>Primary integration target.</strong> Music pre-processing would run on the phone <em>before</em> audio is routed to the hearing-device / CI streaming path.</td>
+        </tr>
+        <tr>
+          <td><strong>Kanso® 2 Sound Processor</strong></td>
+          <td>Off-the-ear CI processor; paired and controlled via <strong>Nucleus Smart App</strong> (not a separate app)</td>
+          <td>Same streaming insertion point as Nucleus 7/8 — processor firmware and SmartSound™ processing unchanged.</td>
+        </tr>
+        <tr>
+          <td><strong>Cochlear™ CoPilot</strong> mobile app</td>
+          <td>Rehabilitation / listening-skills education — no live audio path to hardware</td>
+          <td><strong>Out of scope.</strong> No DSP insertion point; different product category.</td>
+        </tr>
+        <tr>
+          <td><strong>Osia® Smart App</strong> + Osia® 2 processor</td>
+          <td>Active bone-conduction implant; app control + True Wireless™ accessory streaming</td>
+          <td><strong>Not validated by this reference.</strong> Different physiology and coding; would need Osia-specific study and DSP targets — not the 16-ch CI vocoder surrogate.</td>
+        </tr>
+        <tr>
+          <td><strong>Baha® Smart App</strong> + Baha® 6 Max</td>
+          <td>Bone-conduction device; in-app bass/mid/treble; True Wireless™ Streaming Hub</td>
+          <td><strong>Not validated by this reference.</strong> Acoustic BC path ≠ cochlear envelope coding; separate product decision if similar ideas were explored.</td>
+        </tr>
+      </table>
+      <p>Trademarks (Nucleus, Kanso, Osia, Baha, Cochlear, SmartSound, True Wireless) belong to their respective owners. This open reference is independent.</p>
+      <h3 id="help-dev-insertion">Signal-chain insertion point (Nucleus / Kanso CI streaming)</h3>
+      <pre class="chain-diagram">
+Media app (Spotify, Apple Music, etc.)
+  → OS audio mixer
+  → [ INSERT: CI music pre-processor ]  ← this engine (native port)
+  → MFi hearing-device route (iOS) / ASHA LE route (Android)
+  → Nucleus / Kanso sound processor
+  → SmartSound™ iQ + implant coding (unchanged in firmware)
+      </pre>
+      <p>The reference browser app uses <code>Web Audio API</code> (<code>audioGraph.js</code>) for the same logical chain ending at <code>AudioContext.destination</code>. In production you would tap <strong>before</strong> the platform routes audio to the paired CI processor, not inside processor firmware or over the clinic fitting radio link.</p>
+      <h3 id="help-dev-existing">What Nucleus Smart App already does (do not duplicate)</h3>
+      <ul>
+        <li>Pairing, programs, volume, battery/status, Find My Processor, Sound Check</li>
+        <li>Clinic-driven MAP / fitting outcomes reflected as <strong>processor programs</strong> (SmartSound iQ with SCAN, ForwardFocus, etc.)</li>
+        <li>Streaming <strong>control plane</strong> — not per-sample media DSP on the music bus today</li>
+      </ul>
+      <p>This engine proposes a new <strong>media-plane</strong> feature: optional upstream mastering when the user streams music — complementary to existing programs, not a replacement for Custom Sound® fitting or clinical MAP tools.</p>
+      <h3 id="help-dev-porting">Native porting map (reference → production module)</h3>
+      <table class="compare" style="width:100%;font-size:0.88em">
+        <tr><th>Reference module</th><th>Native target</th><th>Notes for app teams</th></tr>
+        <tr><td><code>audioGraph.js</code></td><td>iOS <code>AVAudioEngine</code> graph; Android <code>Oboe</code> / <code>AAudio</code> or <code>AudioTrack</code> effects</td><td>Live playback path; meet real-time + battery budget on phone</td></tr>
+        <tr><td><code>offlinePipeline.js</code></td><td>Offline bounce / export; optional background worker</td><td>Used by auto-tune and WAV export; can run off UI thread</td></tr>
+        <tr><td><code>autoTuner.js</code> + <code>ciMetrics.js</code></td><td>Native worker / GCD queue; 625-combo search</td><td>CPU-heavy; gate on charger or user opt-in</td></tr>
+        <tr><td><code>mapProfiles.js</code></td><td>Import from proprietary fitting store via <strong>partner API</strong></td><td>JSON template today; production needs validated MAP read path</td></tr>
+        <tr><td><code>presets.js</code> / session snapshot</td><td>App settings bundle + cloud sync (if approved)</td><td>Align with existing Cochlear Account / device prefs patterns</td></tr>
+        <tr><td><code>vocoderDiagnostic.js</code></td><td>R&amp;D / developer mode only</td><td>Do not ship as default user path without clinical review</td></tr>
+        <tr><td><code>visualizer.js</code></td><td>Optional debug UI or stripped for production</td><td>Display-only; not required for shipped music mode</td></tr>
+      </table>
+      <h3 id="help-dev-platform">Platform engineering considerations</h3>
+      <ul>
+        <li><strong>iOS</strong> — Music enhancement must coexist with <code>MPRemoteCommandCenter</code>, Bluetooth handoff, and the MFi hearing-aid audio route. Test on devices paired to Nucleus 7/8 and Kanso 2; measure end-to-end latency vs lip-sync tolerance.</li>
+        <li><strong>Android</strong> — ASHA direct streaming path differs from iOS; verify on Cochlear-published compatibility list. Audio focus and call interruption behavior must match existing Smart App patterns.</li>
+        <li><strong>Scope of processing</strong> — Apply only to <strong>media / music streams</strong> the product intends to enhance — not telephony codecs, clinic fitting sessions, or accessory firmware update channels.</li>
+        <li><strong>Stereo width default 0%</strong> — mono collapse before processing aligns with unilateral CI and many bimodal setups; preserve user override.</li>
+        <li><strong>No cloud audio</strong> — processing on-device matches typical Cochlear privacy posture; MAP/fitting PHI stays in existing secure stores.</li>
+        <li><strong>Regulatory</strong> — treat as new SaMD / feature under your QMS; this reference is not cleared software.</li>
+      </ul>
+      <h3 id="help-dev-validation">Validation matrix (what you would run internally)</h3>
+      <ol>
+        <li><strong>Functional</strong> — bit-exact or bounded-diff parity: native live graph vs <code>offlinePipeline.js</code> on golden files (<code>npm test</code> parity script is a starting pattern).</li>
+        <li><strong>Hardware</strong> — blind A/B: raw vs enhanced media streamed to Nucleus / Kanso processors across SmartSound programs.</li>
+        <li><strong>Coder interaction</strong> — confirm enhancement does not push levels that trigger unintended AGC / limiting on processor input.</li>
+        <li><strong>Battery / thermal</strong> — auto-tune and continuous enhancement while streaming; Kanso 2 off-the-ear wearables are battery-sensitive.</li>
+        <li><strong>Regression</strong> — pairing, ForwardFocus, accessory streaming, and firmware update flows unchanged.</li>
+      </ol>
+      <h3 id="help-dev-nongoals">Explicit non-goals for v1 integration</h3>
+      <ul>
+        <li>Modifying sound-processor firmware or implant MAP fitting tools</li>
+        <li>Replacing SmartSound iQ / SCAN scene analysis on the processor</li>
+        <li>Embedding a WebView of this demo as the production music feature</li>
+        <li>Extending the same vocoder surrogate to Osia or Baha without separate validation</li>
+        <li>CoPilot content or rehabilitation UX changes</li>
+      </ul>
+      <h3 id="help-dev-flags">Suggested feature flag architecture</h3>
+      <pre class="chain-diagram">
+UserSettings.musicEnhancementEnabled (default off in pilot)
+  → load MAP-derived profile from clinical store OR literature preset
+  → apply preset (Music / Speech / genre) + optional auto-tune on device
+  → route processed PCM to existing CI streaming sink
+  → telemetry: opt-in anonymized preset + outcome surveys (IRB / privacy review)
+      </pre>
+      <h3 id="help-dev-related">Related in-app docs</h3>
+      <p>
+        <strong>Industry &amp; partnership guide</strong> (commercial framing) ·
+        <strong>Technical signal chain</strong> (module list) ·
+        <a href="paper.html" target="_blank">Technical paper</a> (validation Phases A–C)
+      </p>
     `
   },
   technical: {
@@ -608,7 +891,7 @@ Source (file / mic / playlist queue)
       </ul>
       <h4>Offline auto-tune loop</h4>
       <pre class="chain-diagram">
-Extract 12 s segment (centered)
+Extract up to 12 s from Optimize region (In/Out) or track center
 Baseline: raw → offline vocoder → score metrics
 For each (harmonicDrive, compThreshold, clarityLift, transposeMix) in 5×5×5×5 grid:
   segment → offline enhancement (ring-mod transposition)

@@ -5,7 +5,8 @@
   "main": "app.js",
   "scripts": {
     "validate": "node scripts/validate.mjs",
-    "test": "node scripts/validate.mjs && node scripts/parity-test.mjs"
+    "test": "node scripts/validate.mjs && node scripts/parity-test.mjs",
+    "generate:pdf": "python3 scripts/generate-overview-pdf.py"
   },
   "keywords": [],
   "author": "",

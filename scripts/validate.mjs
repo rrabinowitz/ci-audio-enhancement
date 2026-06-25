@@ -3,7 +3,7 @@
  * Run: npm test  (or node scripts/validate.mjs)
  */
 
-import { readFileSync, readdirSync } from 'fs';
+import { readFileSync, readdirSync, existsSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath, pathToFileURL } from 'url';
 import { INFO_TOPICS, MENU_CONTENT } from '../helpContent.js';
@@ -64,6 +64,11 @@ if (missingMenus.length) {
 }
 if (importErrors.length) {
   console.error('Module import issues:', importErrors.join('; '));
+  failed = true;
+}
+
+if (!existsSync(join(root, 'CI-Audio-Enhancement-Overview.pdf'))) {
+  console.error('Missing CI-Audio-Enhancement-Overview.pdf — run npm run generate:pdf');
   failed = true;
 }
 

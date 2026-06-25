@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 """Generate CI-Audio-Enhancement-Overview.pdf from structured content."""
 
+from pathlib import Path
+
 from fpdf import FPDF
 
-ROOT = "/Users/robertrabinowitz/Developer/ci-audio-enhancement"
-OUT = f"{ROOT}/CI-Audio-Enhancement-Overview.pdf"
+ROOT = Path(__file__).resolve().parent.parent
+OUT = ROOT / "CI-Audio-Enhancement-Overview.pdf"
 
 BLUE = (11, 87, 164)
 DARK = (26, 35, 50)

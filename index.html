@@ -1169,6 +1169,23 @@
       margin: 0 auto 1rem;
     }
 
+    .evaluation-notice {
+      max-width: 680px;
+      margin: 0 auto 0.85rem;
+      padding: 0.55rem 0.85rem;
+      font-size: 0.8rem;
+      line-height: 1.45;
+      color: var(--text-secondary);
+      background: color-mix(in srgb, var(--accent-orange) 12%, var(--bg-secondary));
+      border: 1px solid color-mix(in srgb, var(--accent-orange) 35%, var(--border));
+      border-radius: 10px;
+      text-align: left;
+    }
+
+    .evaluation-notice strong {
+      color: var(--text-primary);
+    }
+
     .quickstart {
       display: inline-flex;
       flex-wrap: wrap;
@@ -2080,9 +2097,16 @@
         bass excitation, clarity lift, and high-frequency transposition, tuned for how CIs
         represent sound.
       </p>
+      <p class="evaluation-notice" role="note">
+        <strong>Evaluation proof-of-concept.</strong> Not a medical device, not FDA/CE cleared, and
+        <strong>not affiliated with or endorsed by Cochlear</strong> or any implant manufacturer.
+        For R&amp;D review and listening demos only — hardware listener studies are required before
+        efficacy claims.
+      </p>
       <div class="quickstart">
         <span class="quickstart-label">New here?</span>
         <ol class="quickstart-steps">
+          <li>On iPhone/Safari: tap <strong>Start Audio Engine</strong> first</li>
           <li>Tap <strong>Full Mix</strong></li>
           <li>Press <strong>Play</strong></li>
           <li>Tap <strong>Original</strong> / <strong>Enhanced</strong> to compare</li>
@@ -2479,7 +2503,7 @@
   </div>
 
   <script type="module">
-    const APP_VERSION = '28';
+    const APP_VERSION = '29';
     import(`./app.js?v=${APP_VERSION}`).catch((error) => {
       console.error('CI Audio Enhancement failed to load:', error);
       const banner = document.getElementById('appLoadError');

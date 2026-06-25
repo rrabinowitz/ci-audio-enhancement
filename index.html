@@ -1279,11 +1279,13 @@
       order: 1;
     }
 
-    .panel-grid > [data-panel-id="enhancement-controls"] {
+    /* Mobile default: show the visualizer right after Transport so meters are
+       visible while playing; desktop restores Enhancement Controls first below. */
+    .panel-grid > [data-panel-id="visualizer"] {
       order: 2;
     }
 
-    .panel-grid > [data-panel-id="visualizer"] {
+    .panel-grid > [data-panel-id="enhancement-controls"] {
       order: 3;
     }
 
@@ -1297,6 +1299,18 @@
 
     .panel-grid > [data-panel-id="diagnostic-vocoder"] {
       order: 6;
+    }
+
+    /* Desktop order override (placed after the defaults so it wins the cascade
+       at >=1100px): Transport -> Enhancement Controls -> Visualizer. */
+    @media (min-width: 1100px) {
+      .panel-grid > [data-panel-id="enhancement-controls"] {
+        order: 2;
+      }
+
+      .panel-grid > [data-panel-id="visualizer"] {
+        order: 3;
+      }
     }
 
     .panel {

@@ -4,7 +4,7 @@
  * and high-frequency transposition. Visualizer uses a separate analyser tap.
  */
 
-import { getProfileById, redistributeDeadRegionWeights } from './mapProfiles.js?v=19';
+import { getProfileById, redistributeDeadRegionWeights } from './mapProfiles.js?v=20';
 
 function dbToLinear(db) {
   return Math.pow(10, db / 20);
@@ -199,6 +199,42 @@ export class CIAudioEngine {
         resumePromise.catch(() => {});
       }
     }
+  }
+
+  /**
+   * Explicit one-time unlock for a dedicated "Start Audio Engine" button.
+   * Safari/iOS only reliably keeps an AudioContext running if real audio is
+   * triggered directly inside a user gesture — resume() alone is not always
+   * enough. This creates the context, resumes it, and plays a 1-sample silent
+   * buffer through the destination, all synchronously within the gesture.
+   * Must be called directly from a click/tap handler before any await.
+   */
+  unlockAudio() {
+    this._ensureContextAndGraph();
+    const ctx = this.audioContext;
+
+    if (ctx.state === 'suspended' || ctx.state === 'interrupted') {
+      const resumePromise = ctx.resume();
+      if (resumePromise && typeof resumePromise.catch === 'function') {
+        resumePromise.catch(() => {});
+      }
+    }
+
+    // Canonical iOS Web Audio unlock: play a short silent buffer in-gesture.
+    try {
+      const silent = ctx.createBuffer(1, 1, ctx.sampleRate);
+      const source = ctx.createBufferSource();
+      source.buffer = silent;
+      source.connect(ctx.destination);
+      source.start(0);
+      source.stop(ctx.currentTime + 0.001);
+    } catch {
+      // Non-fatal: resume() above is the primary path.
+    }
+  }
+
+  isContextRunning() {
+    return Boolean(this.audioContext) && this.audioContext.state === 'running';
   }
 
   _buildStereoWidthNode() {

@@ -271,6 +271,7 @@ export const INFO_TOPICS = {
       <p>The interface adapts to the screen it runs on — phone, tablet, laptop, or desktop — in any modern browser (Chrome, Safari, Firefox, Edge) on macOS, Windows, iOS, or Android.</p>
       <h4>On phones and narrow windows</h4>
       <ul>
+        <li><strong>🔊 Start Audio Engine</strong> — on Safari and iPhone/iPad, tap this button (top of the Transport panel) once before playing. iOS only unlocks sound from a direct tap; the button hides itself afterward.</li>
         <li><strong>☰ Menu button</strong> — the top menus collapse into a single <strong>☰ Menu</strong> button. Tap it to open the menu list, tap a section (Using the App, Science, For Industry, Roadmap, Tools) to expand it, then pick an item. Tapping a choice or anywhere outside closes the menu.</li>
         <li><strong>Single-column stack</strong> — panels stack vertically and fill the width.</li>
         <li><strong>Sticky transport bar</strong> — playback controls stay reachable while scrolling.</li>
@@ -515,8 +516,10 @@ export const MENU_CONTENT = {
       <dl>
         <dt>Menus, buttons, or ⓘ popups do nothing</dt>
         <dd>Usually means JavaScript failed to load — a red banner appears at the top when the app module cannot start, or the status line shows <strong>Initialization error</strong> (e.g. a missing engine method after a code update). Open the browser console (F12) for details. <strong>Hard-refresh</strong> with <strong>Cmd+Shift+R</strong> (Mac) or <strong>Ctrl+Shift+R</strong> (Windows) so all JS modules reload — only refreshing <code>app.js</code> is not enough if the browser cached an older dependency. Run <code>npm test</code> in the repo to validate help topics and module syntax. The app requires HTTP (<code>python3 -m http.server 8765</code>), not <code>file://</code>.</dd>
+        <dt>No sound on Safari / iPhone, or you have to tap a button twice</dt>
+        <dd>Tap the blue <strong>🔊 Start Audio Engine</strong> button at the top of the Transport panel first — this unlocks audio inside a direct tap, which Safari and iOS require. The button disappears once audio is enabled. Then load a demo and press <strong>Play</strong>. Chrome and Edge usually don’t need it, but it’s safe to tap on any browser.</dd>
         <dt>Demo load error: Audio output is blocked (context state: interrupted)</dt>
-        <dd><strong>Safari</strong> uses a non-standard <code>interrupted</code> audio state. Tap <strong>Play</strong> or click anywhere on the page to unlock audio, then load the demo again. After a code update, hard-refresh (<strong>Cmd+Shift+R</strong>). Chrome and Edge are less prone to this message.</dd>
+        <dd><strong>Safari</strong> uses a non-standard <code>interrupted</code> audio state. Tap <strong>🔊 Start Audio Engine</strong> (or <strong>Play</strong>) to unlock audio, then load the demo again. If sound stops after a phone call or switching apps, tap <strong>Start Audio Engine</strong> again. After a code update, hard-refresh (<strong>Cmd+Shift+R</strong>). Chrome and Edge are less prone to this message.</dd>
         <dt>No sound after loading</dt>
         <dd>Playback requires a user gesture (click Play). Check Volume in the transport bar — confirm it is not set to −24 dB.</dd>
         <dt>Visualizations unchanged when moving sliders</dt>
@@ -579,7 +582,7 @@ export const MENU_CONTENT = {
       <div class="faq-item"><h4>What does stereo width do?</h4>
       <p>Collapses stereo toward mono before enhancement — default 0% for unilateral CI users. 100% retains more side information before the mono processing bus. Applies to export as well.</p></div>
       <div class="faq-item"><h4>Can I use this on a phone?</h4>
-      <p>Yes — on phones the menus collapse into a single <strong>☰ Menu</strong> button, panels stack in one column, the transport bar stays sticky, and buttons/sliders use 44px touch targets. On laptops and desktops the same page expands into a two-column dashboard. It works in Chrome, Safari, Firefox, and Edge on macOS, Windows, iOS, and Android. Add to home screen via the PWA manifest for a standalone icon. ES modules still require HTTP (local server or deployed URL), not <code>file://</code>.</p></div>
+      <p>Yes — on phones the menus collapse into a single <strong>☰ Menu</strong> button, panels stack in one column, the transport bar stays sticky, and buttons/sliders use 44px touch targets. <strong>On Safari/iPhone, tap 🔊 Start Audio Engine once</strong> before playing (iOS only unlocks sound from a direct tap). On laptops and desktops the same page expands into a two-column dashboard. It works in Chrome, Safari, Firefox, and Edge on macOS, Windows, iOS, and Android. Add to home screen via the PWA manifest for a standalone icon. ES modules still require HTTP (local server or deployed URL), not <code>file://</code>.</p></div>
       <div class="faq-item"><h4>What is Optimize region (In / Out)?</h4>
       <p>Sliders under the transport scrubber bracket the section of your track that <strong>Optimize for CI</strong> analyzes (4–12 seconds). Default (full track) uses the center 12 seconds. Useful on long songs — set In/Out on a chorus before optimizing.</p></div>
       <div class="faq-item"><h4>What is Loudness-match when bypassing?</h4>

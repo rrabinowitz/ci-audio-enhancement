@@ -1215,6 +1215,33 @@
       gap: 0.85rem;
     }
 
+    .start-audio-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.5rem 0.85rem;
+      padding: 0.75rem 0.9rem;
+      background: rgba(88, 166, 255, 0.1);
+      border: 1px solid var(--accent);
+      border-radius: 10px;
+    }
+
+    .start-audio-btn {
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    .start-audio-hint {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      flex: 1;
+      min-width: 12rem;
+    }
+
+    body.audio-unlocked .start-audio-row {
+      display: none;
+    }
+
     .transport-row {
       display: flex;
       flex-wrap: wrap;
@@ -1983,6 +2010,10 @@
         <button type="button" class="info-btn" data-info-topic="transport" title="About transport controls" aria-label="About transport controls">i</button>
       </div>
       <div class="transport">
+        <div class="start-audio-row" id="startAudioRow">
+          <button type="button" class="btn btn-primary start-audio-btn" id="startAudioBtn">🔊 Start Audio Engine</button>
+          <span class="start-audio-hint">Tap once to enable sound (required on Safari/iPhone). Then load a demo and press Play.</span>
+        </div>
         <div class="transport-row">
           <div class="file-input-wrapper">
             <span class="transport-btn-group">
@@ -2353,7 +2384,7 @@
   </div>
 
   <script type="module">
-    const APP_VERSION = '19';
+    const APP_VERSION = '20';
     import(`./app.js?v=${APP_VERSION}`).catch((error) => {
       console.error('CI Audio Enhancement failed to load:', error);
       const banner = document.getElementById('appLoadError');

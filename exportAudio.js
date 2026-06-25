@@ -2,7 +2,7 @@ import {
   processEnhancement,
   processVocoder,
   floatArrayToAudioBuffer
-} from './offlinePipeline.js?v=19';
+} from './offlinePipeline.js?v=20';
 
 function encodeWavFromAudioBuffer(audioBuffer) {
   const numChannels = audioBuffer.numberOfChannels;

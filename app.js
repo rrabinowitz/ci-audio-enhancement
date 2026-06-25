@@ -1,25 +1,25 @@
-import { CIAudioEngine, getVisualizationBandCenters } from './audioGraph.js?v=19';
-import { VocoderDiagnostic } from './vocoderDiagnostic.js?v=19';
+import { CIAudioEngine, getVisualizationBandCenters } from './audioGraph.js?v=20';
+import { VocoderDiagnostic } from './vocoderDiagnostic.js?v=20';
 import {
   getProfileList,
   getProfileById,
   parseMapProfileJson,
   exportMapProfileJson
-} from './mapProfiles.js?v=19';
-import { optimizeForCI } from './autoTuner.js?v=19';
-import { initHelpUi, openModal } from './help.js?v=19';
-import { buildDemoBuffer, getDemoMeta } from './demoTrack.js?v=19';
-import { Visualizer, countSaturatedChannels, updateCompVu } from './visualizer.js?v=19';
-import { estimateCompressorGr, computePreviewDelta, estimateBandEnergies } from './processingPreview.js?v=19';
-import { exportProcessedWav, downloadBlob } from './exportAudio.js?v=19';
-import { Playlist } from './playlist.js?v=19';
-import { ParamHistory } from './paramHistory.js?v=19';
-import { buildPresetDiffHtml } from './presetDiff.js?v=19';
+} from './mapProfiles.js?v=20';
+import { optimizeForCI } from './autoTuner.js?v=20';
+import { initHelpUi, openModal } from './help.js?v=20';
+import { buildDemoBuffer, getDemoMeta } from './demoTrack.js?v=20';
+import { Visualizer, countSaturatedChannels, updateCompVu } from './visualizer.js?v=20';
+import { estimateCompressorGr, computePreviewDelta, estimateBandEnergies } from './processingPreview.js?v=20';
+import { exportProcessedWav, downloadBlob } from './exportAudio.js?v=20';
+import { Playlist } from './playlist.js?v=20';
+import { ParamHistory } from './paramHistory.js?v=20';
+import { buildPresetDiffHtml } from './presetDiff.js?v=20';
 import {
   buildSessionSnapshot,
   parseSessionSnapshot,
   downloadSessionJson
-} from './sessionSnapshot.js?v=19';
+} from './sessionSnapshot.js?v=20';
 import {
   getBuiltinPresetList,
   getPresetById,
@@ -28,7 +28,7 @@ import {
   captureCurrentParams,
   exportPresetJson,
   parsePresetJson
-} from './presets.js?v=19';
+} from './presets.js?v=20';
 
 const CHANNEL_COUNT = 16;
 const VIZ_MIN_HZ = 250;
@@ -45,6 +45,7 @@ const vocoder = new VocoderDiagnostic({
 
 const audioFileInput = document.getElementById('audioFileInput');
 const chooseFileBtn = document.getElementById('chooseFileBtn');
+const startAudioBtn = document.getElementById('startAudioBtn');
 const loadDemoButtons = document.querySelectorAll('[data-demo-id]');
 const micBtn = document.getElementById('micBtn');
 const exportWavBtn = document.getElementById('exportWavBtn');
@@ -169,33 +170,46 @@ let userPresets = loadUserPresets();
 let activePresetId = 'default';
 let audioReady = false;
 
-async function ensureAudioReady() {
-  // Resume the AudioContext synchronously, before any await, while the user
-  // gesture is still active. If we resume after an await the browser can
-  // leave resume() pending until the next click, which is the root cause of
-  // the "press the button twice before it works" bug.
-  engine.ensureContextForGesture();
-
-  if (!audioReady) {
-    await engine.init();
-    await engine.ensureContextRunning();
-    await engine.setVocoder(vocoder);
-    engine.setTransposeMix(Number(transposeMixSlider.value));
-    engine.setMasterGain(Number(masterGainSlider.value));
-    engine.setAnalyserSmoothing(Number(vizSmoothingSlider.value));
-    engine.setEnhancementBypassed(enhancementBypassCheckbox.checked);
-    engine.setVocoderEnabled(vocoderEnableCheckbox.checked);
-    engine.setVocoderDryWet(Number(vocoderDryWetSlider.value));
-    engine.setStereoWidth(Number(stereoWidthSlider.value));
-    if (typeof engine.setAbLoudnessMatchEnabled === 'function') {
-      engine.setAbLoudnessMatchEnabled(abLoudnessMatchCheckbox?.checked ?? true);
-    }
-    applyCurrentMapProfile();
-    updateLatencyDisplay();
-    audioReady = true;
+function markAudioUnlockedIfRunning() {
+  if (engine.isContextRunning?.()) {
+    document.body.classList.add('audio-unlocked');
   }
+}
 
+// Build the audio node graph and apply one-time configuration. This does NOT
+// require a running AudioContext, so it is safe to call at startup (before any
+// user gesture). Resuming the context — which browsers only allow inside a
+// gesture — is handled separately by ensureAudioReady().
+async function setupEngineGraph() {
+  if (audioReady) {
+    return;
+  }
+  await engine.init();
+  await engine.setVocoder(vocoder);
+  engine.setTransposeMix(Number(transposeMixSlider.value));
+  engine.setMasterGain(Number(masterGainSlider.value));
+  engine.setAnalyserSmoothing(Number(vizSmoothingSlider.value));
+  engine.setEnhancementBypassed(enhancementBypassCheckbox.checked);
+  engine.setVocoderEnabled(vocoderEnableCheckbox.checked);
+  engine.setVocoderDryWet(Number(vocoderDryWetSlider.value));
+  engine.setStereoWidth(Number(stereoWidthSlider.value));
+  if (typeof engine.setAbLoudnessMatchEnabled === 'function') {
+    engine.setAbLoudnessMatchEnabled(abLoudnessMatchCheckbox?.checked ?? true);
+  }
+  applyCurrentMapProfile();
+  updateLatencyDisplay();
+  audioReady = true;
+}
+
+// Gesture-time path: must be called from inside a click/tap handler. Resume the
+// AudioContext synchronously, before any await, while user activation is still
+// active. If we resume after an await the browser can leave resume() pending
+// until the next click — the "press the button twice before it works" bug.
+async function ensureAudioReady() {
+  engine.ensureContextForGesture();
+  await setupEngineGraph();
   await engine.ensureContextRunning();
+  markAudioUnlockedIfRunning();
 }
 
 function applyPreset(preset) {
@@ -699,7 +713,11 @@ async function loadPlaylistItem(item, autoplay = false) {
     return false;
   }
 
-  await ensureAudioReady();
+  // Loading a buffer for display/scrubbing only needs the graph built, not a
+  // running context. Resuming (which requires a user gesture) is deferred to
+  // autoplay below or to the Play button, so this stays safe at startup on
+  // Safari where there is no gesture yet.
+  await setupEngineGraph();
   const loopDefault = item.source === 'demo';
   await engine.loadAudioBuffer(item.audioBuffer, {
     loopEnabled: loopCheckbox.checked || loopDefault
@@ -722,6 +740,8 @@ async function loadPlaylistItem(item, autoplay = false) {
   renderPlaylist();
 
   if (autoplay) {
+    await engine.ensureContextRunning();
+    markAudioUnlockedIfRunning();
     await engine.play();
     setStatus(`Playing: ${loadedFileName}`, 'playing');
     updateStatusPill();
@@ -1176,7 +1196,11 @@ async function initializeEngine() {
   buildElectrodeGrid();
   applyCurrentMapProfile();
   playlist.subscribe(() => renderPlaylist());
-  await ensureAudioReady();
+  // Build the graph at load. Do NOT resume the context here — Safari blocks
+  // resume() outside a user gesture and would throw, aborting the rest of
+  // startup (visualization loop, status). The context is resumed later from
+  // the Start Audio Engine button or the first Play/demo tap.
+  await setupEngineGraph();
   playlist.restoreFromSession((demoId) => buildDemoBuffer(engine.getAudioContext(), demoId));
   renderPlaylist();
   const restored = playlist.getCurrentItem();
@@ -1307,6 +1331,20 @@ exportWavBtn.addEventListener('click', async () => {
   }
 });
 
+startAudioBtn?.addEventListener('click', async () => {
+  // Unlock synchronously inside the gesture (Safari/iOS requirement).
+  engine.unlockAudio();
+  document.body.classList.add('audio-unlocked');
+  try {
+    await ensureAudioReady();
+    setStatus('Audio engine ready — load a demo or file, then press Play');
+  } catch (error) {
+    console.error(error);
+    document.body.classList.remove('audio-unlocked');
+    setStatus(`Could not start audio: ${error.message}. Tap “Start Audio Engine” again.`, 'error');
+  }
+});
+
 playPauseBtn.addEventListener('click', async () => {
   try {
     if (engine.getIsPlaying()) {
@@ -1328,6 +1366,9 @@ playPauseBtn.addEventListener('click', async () => {
     updateStatusPill();
   } catch (error) {
     console.error(error);
+    if (!engine.isContextRunning?.()) {
+      document.body.classList.remove('audio-unlocked');
+    }
     setStatus(`Playback error: ${error.message}`, 'error');
   }
 });

@@ -756,12 +756,10 @@
         flex-wrap: nowrap;
       }
 
-      .panel-transport {
-        position: sticky;
-        top: 0;
-        z-index: 40;
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
-      }
+      /* NOTE: The Transport panel must NOT be position:sticky on mobile.
+         It is taller than the viewport, so sticking it to top:0 pins it over
+         the whole screen and hides every panel below it (visualizer, controls).
+         Let it scroll normally so the rest of the page is reachable. */
 
       .btn,
       .btn-primary,
@@ -2517,7 +2515,7 @@
   </div>
 
   <script type="module">
-    const APP_VERSION = '30';
+    const APP_VERSION = '31';
     import(`./app.js?v=${APP_VERSION}`).catch((error) => {
       console.error('CI Audio Enhancement failed to load:', error);
       const banner = document.getElementById('appLoadError');

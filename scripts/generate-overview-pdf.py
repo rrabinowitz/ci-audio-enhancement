@@ -209,7 +209,7 @@ def main():
             "Built-in demos - DSP Check plus Bass Focus, Melody / Harmony, and Full Mix music probes.",
             "Playlist and session JSON - multi-track queue; full settings export/import.",
             "Speech/Music modes and stereo width - one-click presets; mono collapse default.",
-            "Mobile PWA - collapsible panels, sticky transport, installable manifest.",
+            "Mobile PWA - collapsible panels, single-column layout, installable manifest.",
             "Presets and A/B - Classical, Rock, Jazz; Original / Enhanced; WAV and optional vocoder export.",
         ],
         "Enhancement path",

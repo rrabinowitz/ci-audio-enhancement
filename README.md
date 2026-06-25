@@ -18,7 +18,7 @@ Browser-based music pre-processor for cochlear implant users. Runs entirely clie
 - **Microphone input** — live enhancement chain via getUserMedia
 - **Diagnostic vocoder** — 16-channel noise vocoder for developer A/B (bypassed by default)
 - **Electrode maps** — literature presets + JSON import/export
-- **Mobile UI** — ☰ hamburger menu, single-column stack, sticky transport, 44px touch targets, PWA manifest
+- **Mobile UI** — ☰ hamburger menu, single-column stack, 44px touch targets, PWA manifest
 - **Desktop UI** — two-column dashboard at wide widths; full inline menu bar
 - **Roadmap** — live / partial / planned features with ✓ on completed requirements
 - **Theme** — dark/light toggle

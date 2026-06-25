@@ -1,10 +1,10 @@
-import { scoreCIBuffer, extractAnalysisSegment, formatMetricDelta } from './ciMetrics.js?v=30';
+import { scoreCIBuffer, extractAnalysisSegment, formatMetricDelta } from './ciMetrics.js?v=31';
 import {
   processEnhancement,
   processVocoder,
   audioBufferToFloatArray,
   floatArrayToAudioBuffer
-} from './offlinePipeline.js?v=30';
+} from './offlinePipeline.js?v=31';
 
 const HARMONIC_DRIVE_VALUES = [0.35, 0.5, 0.65, 0.8, 0.95];
 const COMP_THRESHOLD_VALUES = [-50, -44, -38, -32, -26];

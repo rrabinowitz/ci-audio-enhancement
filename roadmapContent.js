@@ -228,7 +228,7 @@ export const ROADMAP_ITEMS = [
     requirements: [
       '✓ Responsive grids and transport wrap at breakpoints',
       '✓ Collapsible panel sections with remember state',
-      '✓ 44px touch targets; sticky mini-transport bar',
+      '✓ 44px touch targets; single-column stack',
       '✓ iOS safe-area + PWA manifest'
     ]
   },

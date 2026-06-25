@@ -13,6 +13,7 @@ export const INFO_TOPICS = {
         <li><strong>Export Processed WAV</strong> — offline render; check <strong>Include diagnostic vocoder</strong> for vocoded WAV (<code>-vocoded.wav</code>) vs enhancement-only (<code>-processed.wav</code>).</li>
         <li><strong>Playlist</strong> — <strong>Add files to queue…</strong> (multi-select), click rows to switch, auto-advance when Loop is off.</li>
         <li><strong>Play / Pause</strong> — resume from the current scrubber position.</li>
+        <li><strong>Raw / Enhanced</strong> — in the transport bar next to Loop: hear the <strong>unprocessed</strong> demo or upload vs the <strong>CI music enhancement</strong> chain while playback continues. Same as <strong>Bypass Enhancement</strong> in Enhancement Controls. Use with <strong>Loudness-match when bypassing</strong> (default on) for a fair level-matched A/B.</li>
         <li><strong>Stop</strong> — stops playback and returns to the start.</li>
         <li><strong>⏮ / −5s / +5s</strong> — jump to start, rewind, or fast-forward five seconds.</li>
         <li><strong>Scrubber</strong> — seek to any point; elapsed and total time appear at the sides.</li>
@@ -147,6 +148,7 @@ export const INFO_TOPICS = {
     body: `
       <p>This app targets <strong>music streaming to cochlear implants</strong> — bass salience, melody contour, harmony, timbre, rhythm, and separability after CI re-coding. Manufacturer apps already optimise speech; this demo battery exists to test <strong>music preprocessing</strong> without uploading copyrighted files.</p>
       <p>All demos are <strong>synthetic, deterministic, license-free, and generated in the browser</strong>. They are not meant to be beautiful songs; each one foregrounds a specific CI music problem so engineers can hear the A/B and watch the meters respond.</p>
+      <p><strong>Raw vs Enhanced:</strong> load any demo, press <strong>Play</strong> with <strong>Loop</strong> on, then tap <strong>Raw</strong> / <strong>Enhanced</strong> in the transport bar to hear the unprocessed synthetic file vs the CI music enhancement chain. Normal-hearing listeners can use this to understand what the processing changes.</p>
       <h4>DSP Check (4 s, mono)</h4>
       <p><strong>What it is:</strong> A minimal synthetic fixture — 60 Hz sub-bass square, C-major arpeggio (one note per second), kick, and hi-hat. Both channels are identical.</p>
       <p><strong>Why those sounds:</strong> Each layer hits a specific processing stage: sub-bass → harmonic excitation; melody → mid-band clarity and MAP shaping; hi-hat → high-band compression and transposition; kick → low-band GR meters and rhythm metrics.</p>
@@ -369,11 +371,16 @@ export const INFO_TOPICS = {
     `
   },
   'enhancement-bypass': {
-    title: 'Bypass Enhancement',
+    title: 'Raw vs Enhanced (A/B)',
     body: `
-      <p>Routes raw, unprocessed audio to the output bus, skipping the enhancement chain but not the optional vocoder.</p>
-      <p>The gold processing preview collapses to a flat bypass shape when enabled.</p>
-      <p><strong>A/B protocol:</strong> with <strong>Loudness-match when bypassing</strong> enabled, toggle bypass to compare raw vs enhanced at similar level. With diagnostic vocoder at 100% simulated, compare through the same CI-like codec.</p>
+      <p>Hear the same demo or uploaded file <strong>with</strong> or <strong>without</strong> the CI music enhancement chain — useful for normal-hearing listeners comparing what changes.</p>
+      <h4>Transport bar (easiest)</h4>
+      <p>Next to <strong>Loop</strong>, tap <strong>Hear: Enhanced</strong> or <strong>Raw</strong> while a demo or file is playing. Switch back and forth on a looped passage to compare bass salience, melody clarity, and overall musical organization.</p>
+      <h4>Enhancement Controls (same setting)</h4>
+      <p><strong>Bypass Enhancement</strong> checkbox — identical to the transport <strong>Raw</strong> button. When checked, audio routes around compression, harmonic excitation, clarity lift, and transposition (optional diagnostic vocoder still applies if enabled). The gold processing preview collapses to a flat bypass shape when enabled.</p>
+      <h4>Fair comparison</h4>
+      <p>With <strong>Loudness-match when bypassing</strong> enabled (default), toggling Raw/Enhanced adjusts the raw path so perceived level matches the enhanced path — you judge quality, not just loudness. Uncheck for level-accurate raw vs enhanced.</p>
+      <p><strong>Developer note:</strong> with diagnostic vocoder at 100% simulated blend, Raw/Enhanced compares through the same CI-like codec surrogate.</p>
     `
   },
   'auto-tune': {

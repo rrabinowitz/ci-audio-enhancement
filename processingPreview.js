@@ -3,7 +3,7 @@
  * Updates immediately when controls move — does not require audio playback.
  */
 
-import { redistributeDeadRegionWeights } from './mapProfiles.js?v=23';
+import { redistributeDeadRegionWeights } from './mapProfiles.js?v=24';
 
 export function computeProcessingPreview(mapProfile, params) {
   const redistributed = redistributeDeadRegionWeights(mapProfile.electrodes);

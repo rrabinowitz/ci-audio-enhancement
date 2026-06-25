@@ -1,25 +1,25 @@
-import { CIAudioEngine, getVisualizationBandCenters } from './audioGraph.js?v=23';
-import { VocoderDiagnostic } from './vocoderDiagnostic.js?v=23';
+import { CIAudioEngine, getVisualizationBandCenters } from './audioGraph.js?v=24';
+import { VocoderDiagnostic } from './vocoderDiagnostic.js?v=24';
 import {
   getProfileList,
   getProfileById,
   parseMapProfileJson,
   exportMapProfileJson
-} from './mapProfiles.js?v=23';
-import { optimizeForCI } from './autoTuner.js?v=23';
-import { initHelpUi, openModal } from './help.js?v=23';
-import { buildDemoBuffer, getDemoMeta } from './demoTrack.js?v=23';
-import { Visualizer, countSaturatedChannels, updateCompVu } from './visualizer.js?v=23';
-import { estimateCompressorGr, computePreviewDelta, estimateBandEnergies } from './processingPreview.js?v=23';
-import { exportProcessedWav, downloadBlob } from './exportAudio.js?v=23';
-import { Playlist } from './playlist.js?v=23';
-import { ParamHistory } from './paramHistory.js?v=23';
-import { buildPresetDiffHtml } from './presetDiff.js?v=23';
+} from './mapProfiles.js?v=24';
+import { optimizeForCI } from './autoTuner.js?v=24';
+import { initHelpUi, openModal } from './help.js?v=24';
+import { buildDemoBuffer, getDemoMeta } from './demoTrack.js?v=24';
+import { Visualizer, countSaturatedChannels, updateCompVu } from './visualizer.js?v=24';
+import { estimateCompressorGr, computePreviewDelta, estimateBandEnergies } from './processingPreview.js?v=24';
+import { exportProcessedWav, downloadBlob } from './exportAudio.js?v=24';
+import { Playlist } from './playlist.js?v=24';
+import { ParamHistory } from './paramHistory.js?v=24';
+import { buildPresetDiffHtml } from './presetDiff.js?v=24';
 import {
   buildSessionSnapshot,
   parseSessionSnapshot,
   downloadSessionJson
-} from './sessionSnapshot.js?v=23';
+} from './sessionSnapshot.js?v=24';
 import {
   getBuiltinPresetList,
   getPresetById,
@@ -28,7 +28,7 @@ import {
   captureCurrentParams,
   exportPresetJson,
   parsePresetJson
-} from './presets.js?v=23';
+} from './presets.js?v=24';
 
 const CHANNEL_COUNT = 16;
 const VIZ_MIN_HZ = 250;
@@ -142,6 +142,8 @@ const queueFileInput = document.getElementById('queueFileInput');
 const exportVocoderCheckbox = document.getElementById('exportVocoderCheckbox');
 const speechModeBtn = document.getElementById('speechModeBtn');
 const musicModeBtn = document.getElementById('musicModeBtn');
+const listenEnhancedBtn = document.getElementById('listenEnhancedBtn');
+const listenRawBtn = document.getElementById('listenRawBtn');
 const stereoWidthSlider = document.getElementById('stereoWidth');
 const stereoWidthValue = document.getElementById('stereoWidthValue');
 const exportSessionBtn = document.getElementById('exportSessionBtn');
@@ -355,6 +357,7 @@ function applyParamSnapshot(snapshot) {
   });
   enhancementBypassCheckbox.checked = Boolean(snapshot.bypassed);
   engine.setEnhancementBypassed(enhancementBypassCheckbox.checked);
+  updateListenAbButtons();
   markCustomPreset();
   visualizer?.resetMeterProfiles();
 }
@@ -963,6 +966,7 @@ async function applySessionSnapshot(snapshot) {
     applyParamsToUi(snapshot.enhancement);
     enhancementBypassCheckbox.checked = Boolean(snapshot.enhancement.bypassed);
     engine.setEnhancementBypassed(enhancementBypassCheckbox.checked);
+    updateListenAbButtons();
   }
 
   if (snapshot.masterGainDb !== undefined) {
@@ -1507,20 +1511,54 @@ paramSliders.forEach((slider) => {
   });
 });
 
+function updateListenAbButtons() {
+  const bypassed = enhancementBypassCheckbox?.checked ?? false;
+  listenEnhancedBtn?.classList.toggle('active', !bypassed);
+  listenRawBtn?.classList.toggle('active', bypassed);
+}
+
+function setEnhancementBypassState(bypassed, { recordHistory = false } = {}) {
+  if (recordHistory && bypassGestureStart) {
+    paramHistory.push(bypassGestureStart);
+    updateUndoRedoButtons();
+    bypassGestureStart = null;
+  }
+  if (enhancementBypassCheckbox) {
+    enhancementBypassCheckbox.checked = bypassed;
+  }
+  engine.setEnhancementBypassed(bypassed);
+  updateListenAbButtons();
+  updateSliderDisplays();
+  if (recordHistory) {
+    markCustomPreset();
+  }
+}
+
 let bypassGestureStart = null;
 enhancementBypassCheckbox?.addEventListener('pointerdown', () => {
   bypassGestureStart = captureParamSnapshot();
 });
 enhancementBypassCheckbox?.addEventListener('change', () => {
-  if (bypassGestureStart) {
-    paramHistory.push(bypassGestureStart);
-    updateUndoRedoButtons();
-  }
-  bypassGestureStart = null;
-  engine.setEnhancementBypassed(enhancementBypassCheckbox.checked);
-  updateSliderDisplays();
-  markCustomPreset();
+  setEnhancementBypassState(enhancementBypassCheckbox.checked, { recordHistory: true });
 });
+
+listenEnhancedBtn?.addEventListener('click', () => {
+  if (!enhancementBypassCheckbox?.checked) {
+    return;
+  }
+  bypassGestureStart = captureParamSnapshot();
+  setEnhancementBypassState(false, { recordHistory: true });
+});
+
+listenRawBtn?.addEventListener('click', () => {
+  if (enhancementBypassCheckbox?.checked) {
+    return;
+  }
+  bypassGestureStart = captureParamSnapshot();
+  setEnhancementBypassState(true, { recordHistory: true });
+});
+
+updateListenAbButtons();
 
 abLoudnessMatchCheckbox?.addEventListener('change', () => {
   if (typeof engine.setAbLoudnessMatchEnabled === 'function') {

@@ -681,6 +681,39 @@
       background: rgba(88, 166, 255, 0.12);
     }
 
+    .listen-ab-group {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      flex-wrap: wrap;
+    }
+
+    .listen-ab-label {
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+      margin-right: 0.15rem;
+    }
+
+    .listen-ab-btn {
+      min-height: 44px;
+      min-width: 44px;
+      padding: 0.4rem 0.75rem;
+      font-size: 0.82rem;
+    }
+
+    .listen-ab-btn.active {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: rgba(88, 166, 255, 0.12);
+      font-weight: 600;
+    }
+
+    .listen-ab-btn.listen-raw.active {
+      border-color: #d29922;
+      color: #e3b341;
+      background: rgba(210, 153, 34, 0.12);
+    }
+
     .export-options-row {
       display: flex;
       flex-wrap: wrap;
@@ -2004,7 +2037,7 @@
         <ol class="quickstart-steps">
           <li>Tap <strong>Full Mix</strong></li>
           <li>Press <strong>Play</strong></li>
-          <li>Toggle <strong>Bypass</strong> to compare</li>
+          <li>Tap <strong>Raw</strong> / <strong>Enhanced</strong> to compare</li>
         </ol>
         <button type="button" class="quickstart-link" data-menu-content="instructions">Full instructions</button>
         <button type="button" class="info-btn" data-info-topic="mobile-layout" title="About mobile layout, two-column desktop view, and PWA" aria-label="About mobile layout and PWA">i</button>
@@ -2063,6 +2096,12 @@
             Loop
             <button type="button" class="info-btn" data-info-topic="transport" title="About loop and transport" aria-label="About loop and transport">i</button>
           </label>
+          <span class="listen-ab-group" id="listenAbGroup" aria-label="Listen to raw or enhanced audio">
+            <span class="listen-ab-label">Hear:</span>
+            <button type="button" class="btn listen-ab-btn listen-enhanced active" id="listenEnhancedBtn" title="Hear the CI music enhancement chain (default)">Enhanced</button>
+            <button type="button" class="btn listen-ab-btn listen-raw" id="listenRawBtn" title="Hear the unprocessed demo or upload — same file, no enhancement">Raw</button>
+            <button type="button" class="info-btn" data-info-topic="enhancement-bypass" title="About raw vs enhanced A/B" aria-label="About raw vs enhanced A/B">i</button>
+          </span>
         </div>
         <div class="transport-scrubber">
           <span class="time-label" id="timeCurrent">0:00</span>
@@ -2395,7 +2434,7 @@
   </div>
 
   <script type="module">
-    const APP_VERSION = '23';
+    const APP_VERSION = '24';
     import(`./app.js?v=${APP_VERSION}`).catch((error) => {
       console.error('CI Audio Enhancement failed to load:', error);
       const banner = document.getElementById('appLoadError');

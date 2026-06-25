@@ -2,7 +2,7 @@
  * Shared vocoder band layout derived from a MAP profile.
  */
 
-import { MIN_HZ, MAX_HZ, redistributeDeadRegionWeights } from './mapProfiles.js?v=23';
+import { MIN_HZ, MAX_HZ, redistributeDeadRegionWeights } from './mapProfiles.js?v=24';
 
 export function getBandEdgesFromProfile(profile) {
   const centers = profile.electrodes.map((electrode) => electrode.centerHz);

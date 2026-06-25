@@ -1,4 +1,4 @@
-import { MIN_HZ, MAX_HZ, CHANNEL_COUNT, redistributeDeadRegionWeights } from './mapProfiles.js?v=14';
+import { MIN_HZ, MAX_HZ, CHANNEL_COUNT, redistributeDeadRegionWeights } from './mapProfiles.js?v=15';
 
 function getBandEdges(channelCount, minHz, maxHz) {
   const edges = [];

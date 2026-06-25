@@ -4,7 +4,7 @@
  * and high-frequency transposition. Visualizer uses a separate analyser tap.
  */
 
-import { getProfileById, redistributeDeadRegionWeights } from './mapProfiles.js?v=14';
+import { getProfileById, redistributeDeadRegionWeights } from './mapProfiles.js?v=15';
 
 function dbToLinear(db) {
   return Math.pow(10, db / 20);
@@ -146,12 +146,28 @@ export class CIAudioEngine {
       throw new Error('Audio engine is not initialized');
     }
 
-    if (this.audioContext.state === 'suspended') {
-      await this.audioContext.resume();
+    // Safari adds a non-standard "interrupted" state (e.g. another audio session
+    // took over, or the context was just created). It recovers via resume(), the
+    // same as "suspended". The state transition is async, so resume + poll.
+    const needsResume = () =>
+      this.audioContext.state === 'suspended' ||
+      this.audioContext.state === 'interrupted';
+
+    for (let attempt = 0; attempt < 3 && needsResume(); attempt++) {
+      try {
+        await this.audioContext.resume();
+      } catch {
+        // resume() can reject if called outside a user gesture; fall through to poll.
+      }
+
+      const deadline = Date.now() + 250;
+      while (this.audioContext.state !== 'running' && Date.now() < deadline) {
+        await new Promise((resolve) => setTimeout(resolve, 25));
+      }
     }
 
     if (this.audioContext.state !== 'running') {
-      throw new Error(`Audio output is blocked (context state: ${this.audioContext.state})`);
+      throw new Error(`Audio output is blocked (context state: ${this.audioContext.state}). Tap Play or click the page, then try again.`);
     }
   }
 

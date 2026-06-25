@@ -1,25 +1,25 @@
-import { CIAudioEngine, getVisualizationBandCenters } from './audioGraph.js?v=14';
-import { VocoderDiagnostic } from './vocoderDiagnostic.js?v=14';
+import { CIAudioEngine, getVisualizationBandCenters } from './audioGraph.js?v=15';
+import { VocoderDiagnostic } from './vocoderDiagnostic.js?v=15';
 import {
   getProfileList,
   getProfileById,
   parseMapProfileJson,
   exportMapProfileJson
-} from './mapProfiles.js?v=14';
-import { optimizeForCI } from './autoTuner.js?v=14';
-import { initHelpUi, openModal } from './help.js?v=14';
-import { buildDemoBuffer, getDemoMeta } from './demoTrack.js?v=14';
-import { Visualizer, countSaturatedChannels, updateCompVu } from './visualizer.js?v=14';
-import { estimateCompressorGr, computePreviewDelta, estimateBandEnergies } from './processingPreview.js?v=14';
-import { exportProcessedWav, downloadBlob } from './exportAudio.js?v=14';
-import { Playlist } from './playlist.js?v=14';
-import { ParamHistory } from './paramHistory.js?v=14';
-import { buildPresetDiffHtml } from './presetDiff.js?v=14';
+} from './mapProfiles.js?v=15';
+import { optimizeForCI } from './autoTuner.js?v=15';
+import { initHelpUi, openModal } from './help.js?v=15';
+import { buildDemoBuffer, getDemoMeta } from './demoTrack.js?v=15';
+import { Visualizer, countSaturatedChannels, updateCompVu } from './visualizer.js?v=15';
+import { estimateCompressorGr, computePreviewDelta, estimateBandEnergies } from './processingPreview.js?v=15';
+import { exportProcessedWav, downloadBlob } from './exportAudio.js?v=15';
+import { Playlist } from './playlist.js?v=15';
+import { ParamHistory } from './paramHistory.js?v=15';
+import { buildPresetDiffHtml } from './presetDiff.js?v=15';
 import {
   buildSessionSnapshot,
   parseSessionSnapshot,
   downloadSessionJson
-} from './sessionSnapshot.js?v=14';
+} from './sessionSnapshot.js?v=15';
 import {
   getBuiltinPresetList,
   getPresetById,
@@ -28,7 +28,7 @@ import {
   captureCurrentParams,
   exportPresetJson,
   parsePresetJson
-} from './presets.js?v=14';
+} from './presets.js?v=15';
 
 const CHANNEL_COUNT = 16;
 const VIZ_MIN_HZ = 250;
@@ -172,6 +172,9 @@ let audioReady = false;
 async function ensureAudioReady() {
   if (!audioReady) {
     await engine.init();
+    // Resume immediately after the context exists, while the user-gesture
+    // activation is still valid (Safari consumes it across later awaits).
+    await engine.ensureContextRunning();
     await engine.setVocoder(vocoder);
     engine.setTransposeMix(Number(transposeMixSlider.value));
     engine.setMasterGain(Number(masterGainSlider.value));

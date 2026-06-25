@@ -2023,13 +2023,13 @@
           <span class="start-audio-hint">Tap once to enable sound (required on Safari/iPhone). Then load a demo and press Play.</span>
         </div>
         <div class="transport-row">
-          <div class="file-input-wrapper">
-            <span class="transport-btn-group">
+          <span class="transport-btn-group">
+            <span class="file-input-wrapper">
               <button class="btn" id="chooseFileBtn" type="button">Choose Audio File</button>
-            <button type="button" class="info-btn" data-info-topic="user-audio" title="About uploaded audio files" aria-label="About uploaded audio files">i</button>
+              <input type="file" id="audioFileInput" accept="audio/*">
             </span>
-            <input type="file" id="audioFileInput" accept="audio/*">
-          </div>
+            <button type="button" class="info-btn" data-info-topic="user-audio" title="About uploaded audio files — which music files to choose" aria-label="About uploaded audio files — which music files to choose">i</button>
+          </span>
           <span class="transport-btn-group demo-tracks-group">
             <button class="btn btn-demo" type="button" data-demo-id="dsp-check" title="Engineering fixture — proves each DSP stage">DSP Check</button>
             <button class="btn btn-demo" type="button" data-demo-id="bass-focus" title="Sparse music probe — demonstrates bass salience and missing-fundamental cues">Bass Focus</button>
@@ -2395,7 +2395,7 @@
   </div>
 
   <script type="module">
-    const APP_VERSION = '22';
+    const APP_VERSION = '23';
     import(`./app.js?v=${APP_VERSION}`).catch((error) => {
       console.error('CI Audio Enhancement failed to load:', error);
       const banner = document.getElementById('appLoadError');

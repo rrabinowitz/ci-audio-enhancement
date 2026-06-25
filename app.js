@@ -1,25 +1,25 @@
-import { CIAudioEngine, getVisualizationBandCenters } from './audioGraph.js?v=22';
-import { VocoderDiagnostic } from './vocoderDiagnostic.js?v=22';
+import { CIAudioEngine, getVisualizationBandCenters } from './audioGraph.js?v=23';
+import { VocoderDiagnostic } from './vocoderDiagnostic.js?v=23';
 import {
   getProfileList,
   getProfileById,
   parseMapProfileJson,
   exportMapProfileJson
-} from './mapProfiles.js?v=22';
-import { optimizeForCI } from './autoTuner.js?v=22';
-import { initHelpUi, openModal } from './help.js?v=22';
-import { buildDemoBuffer, getDemoMeta } from './demoTrack.js?v=22';
-import { Visualizer, countSaturatedChannels, updateCompVu } from './visualizer.js?v=22';
-import { estimateCompressorGr, computePreviewDelta, estimateBandEnergies } from './processingPreview.js?v=22';
-import { exportProcessedWav, downloadBlob } from './exportAudio.js?v=22';
-import { Playlist } from './playlist.js?v=22';
-import { ParamHistory } from './paramHistory.js?v=22';
-import { buildPresetDiffHtml } from './presetDiff.js?v=22';
+} from './mapProfiles.js?v=23';
+import { optimizeForCI } from './autoTuner.js?v=23';
+import { initHelpUi, openModal } from './help.js?v=23';
+import { buildDemoBuffer, getDemoMeta } from './demoTrack.js?v=23';
+import { Visualizer, countSaturatedChannels, updateCompVu } from './visualizer.js?v=23';
+import { estimateCompressorGr, computePreviewDelta, estimateBandEnergies } from './processingPreview.js?v=23';
+import { exportProcessedWav, downloadBlob } from './exportAudio.js?v=23';
+import { Playlist } from './playlist.js?v=23';
+import { ParamHistory } from './paramHistory.js?v=23';
+import { buildPresetDiffHtml } from './presetDiff.js?v=23';
 import {
   buildSessionSnapshot,
   parseSessionSnapshot,
   downloadSessionJson
-} from './sessionSnapshot.js?v=22';
+} from './sessionSnapshot.js?v=23';
 import {
   getBuiltinPresetList,
   getPresetById,
@@ -28,7 +28,7 @@ import {
   captureCurrentParams,
   exportPresetJson,
   parsePresetJson
-} from './presets.js?v=22';
+} from './presets.js?v=23';
 
 const CHANNEL_COUNT = 16;
 const VIZ_MIN_HZ = 250;

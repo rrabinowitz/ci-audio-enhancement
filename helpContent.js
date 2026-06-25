@@ -237,7 +237,7 @@ export const INFO_TOPICS = {
   'loudness-matched-ab': {
     title: 'Loudness-Matched A/B',
     body: `
-      <p>When <strong>Loudness-match when bypassing</strong> is checked (default on), toggling <strong>Bypass Enhancement</strong> temporarily adjusts the raw path so perceived level matches the enhanced path — fairer for judging quality, not just loudness.</p>
+      <p>The <strong>Match loudness</strong> checkbox (next to <strong>Hear: Enhanced / Raw</strong> in the transport bar, default on) makes the raw path match the enhanced path's perceived level when you switch to <strong>Raw</strong> — fairer for judging quality, not just loudness.</p>
       <ul>
         <li>Uses short-term energy from the 16-channel input vs enhanced analyzers.</li>
         <li>Makeup gain is clamped (0.25×–4×) and resets when bypass is turned off.</li>

@@ -714,6 +714,21 @@
       background: rgba(210, 153, 34, 0.12);
     }
 
+    .loudness-match-inline {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+      min-height: 44px;
+      cursor: pointer;
+    }
+
+    .loudness-match-inline input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+    }
+
     .export-options-row {
       display: flex;
       flex-wrap: wrap;
@@ -2075,10 +2090,6 @@
             <button class="btn" id="micBtn" type="button">Use Microphone</button>
             <button type="button" class="info-btn" data-info-topic="transport" title="About microphone input" aria-label="About microphone input">i</button>
           </span>
-          <span class="export-wav-group">
-            <button class="btn" id="exportWavBtn" type="button" disabled>Export Processed WAV</button>
-            <button type="button" class="info-btn" data-info-topic="export-wav" title="About WAV export" aria-label="About WAV export">i</button>
-          </span>
           <div class="transport-meta">
             <span class="status-pill" id="statusPill">IDLE</span>
             <span class="latency-label" id="latencyLabel">Latency: —</span>
@@ -2100,7 +2111,11 @@
             <span class="listen-ab-label">Hear:</span>
             <button type="button" class="btn listen-ab-btn listen-enhanced active" id="listenEnhancedBtn" title="Hear the CI music enhancement chain (default)">Enhanced</button>
             <button type="button" class="btn listen-ab-btn listen-raw" id="listenRawBtn" title="Hear the unprocessed demo or upload — same file, no enhancement">Raw</button>
-            <button type="button" class="info-btn" data-info-topic="enhancement-bypass" title="About raw vs enhanced A/B" aria-label="About raw vs enhanced A/B">i</button>
+            <label class="loudness-match-inline" title="Match raw and enhanced loudness so you compare quality, not volume">
+              <input type="checkbox" id="abLoudnessMatch" checked>
+              Match loudness
+            </label>
+            <button type="button" class="info-btn" data-info-topic="loudness-matched-ab" title="About raw vs enhanced A/B and loudness matching" aria-label="About raw vs enhanced A/B and loudness matching">i</button>
           </span>
         </div>
         <div class="transport-scrubber">
@@ -2124,6 +2139,10 @@
           <span class="transport-volume-label value" id="masterGainValue">0.0 dB</span>
         </div>
         <div class="export-options-row">
+          <span class="export-wav-group">
+            <button class="btn" id="exportWavBtn" type="button" disabled>Export Processed WAV</button>
+            <button type="button" class="info-btn" data-info-topic="export-wav" title="About WAV export" aria-label="About WAV export">i</button>
+          </span>
           <label class="checkbox-inline">
             <input type="checkbox" id="exportVocoderCheckbox">
             Include diagnostic vocoder in WAV export
@@ -2287,16 +2306,9 @@
         </div>
       </div>
       <div class="toggle-row">
-        <input type="checkbox" id="abLoudnessMatch" checked>
-        <label for="abLoudnessMatch" class="label-with-info">
-          Loudness-match when bypassing (fair A/B)
-          <button type="button" class="info-btn" data-info-topic="loudness-matched-ab" title="About loudness-matched A/B" aria-label="About loudness-matched A/B">i</button>
-        </label>
-      </div>
-      <div class="toggle-row">
         <input type="checkbox" id="enhancementBypass">
         <label for="enhancementBypass" class="label-with-info">
-          Bypass Enhancement (hear raw audio for A/B comparison)
+          Bypass Enhancement (same as Raw / Enhanced in the transport bar)
           <button type="button" class="info-btn" data-info-topic="enhancement-bypass" title="About bypass enhancement" aria-label="About bypass enhancement">i</button>
         </label>
       </div>
@@ -2434,7 +2446,7 @@
   </div>
 
   <script type="module">
-    const APP_VERSION = '24';
+    const APP_VERSION = '25';
     import(`./app.js?v=${APP_VERSION}`).catch((error) => {
       console.error('CI Audio Enhancement failed to load:', error);
       const banner = document.getElementById('appLoadError');

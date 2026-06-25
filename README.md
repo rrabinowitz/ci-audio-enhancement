@@ -5,7 +5,7 @@ Browser-based music pre-processor for cochlear implant users. Runs entirely clie
 ## Features
 
 - **Enhancement chain** — MAP spectral shaper, 3-band compression, harmonic bass excitation, clarity lift, ring-mod frequency transposition
-- **Built-in demos** — **DSP Check** (engineering) + **Music Eval** (musical A/B); see ⓘ help topics
+- **Built-in demos** — **DSP Check** engineering fixture + music probes (**Bass Focus**, **Melody / Harmony**, **Full Mix**); see ⓘ help topics
 - **Your uploads** — local MP3/WAV/FLAC; optimize region, export, playlist (not persisted across reload)
 - **Speech / Music mode** — one-click presets with localStorage memory
 - **Stereo width** — mono collapse toward CI-friendly processing (default 0%)
@@ -53,7 +53,7 @@ Vercel assigns a URL like `https://ci-audio-enhancement.vercel.app`.
 ## Tester notes
 
 - Use Chrome or Edge for development; **Safari** (macOS/iOS) is supported — tap Play if you see an `interrupted` audio error.
-- **Quick test:** **Music Eval** → Play → **Music mode** → loudness-matched bypass A/B. Upload your own file for real tuning.
+- **Quick test:** **Full Mix** → Play → **Music mode** → loudness-matched bypass A/B; then try **Bass Focus** and **Melody / Harmony** for targeted music probes. Upload your own files for real tuning.
 - Run `npm test` — validates help topics, module imports, and offline pipeline smoke test.
 - Hard-refresh (`Cmd+Shift+R`) after updates — the app shows a red banner if JavaScript fails to load.
 - All processing stays on the device; nothing is uploaded.
@@ -88,7 +88,7 @@ In-app: **Using the App** (instructions, FAQ, help), **Science**, **For Industry
 | `mapProfiles.js` | Electrode map presets + JSON import |
 | `presets.js` | Enhancement presets + localStorage |
 | `visualizer.js` | Spectrum, channel contrast, enhancement profile, band energy |
-| `demoTrack.js` | Built-in **DSP Check** (engineering) and **Music Eval** (musical) demos |
+| `demoTrack.js` | Built-in **DSP Check** engineering fixture plus **Bass Focus**, **Melody / Harmony**, and **Full Mix** music demos |
 | `manifest.json` | PWA install metadata |
 | `roadmapContent.js` | Product roadmap entries |
 | `helpContent.js` | Instructions, FAQ, help, technical text |

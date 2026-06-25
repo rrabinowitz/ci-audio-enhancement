@@ -2,12 +2,33 @@
  * Built-in synthetic demo tracks (no upload required).
  *
  * - dsp-check: engineering fixture — proves each DSP stage and meter
- * - music-eval: musical loop — proves music enjoyment (rhythm, harmony, stereo)
+ * - bass-focus: music probe — missing-fundamental / bass salience
+ * - melody-harmony: music probe — melodic contour, chord separability, timbre
+ * - music-eval: full musical loop — whole-chain A/B
  */
 
 function hashNoise(seed) {
   const x = Math.sin(seed * 12.9898 + 78.233) * 43758.5453;
   return x - Math.floor(x) - 0.5;
+}
+
+function adsr(timeInNote, noteDuration, attack, decay, sustain, release) {
+  if (timeInNote < attack) {
+    return timeInNote / attack;
+  }
+  if (timeInNote < attack + decay) {
+    const phase = (timeInNote - attack) / decay;
+    return 1 + (sustain - 1) * phase;
+  }
+  if (timeInNote > noteDuration - release) {
+    const phase = (noteDuration - timeInNote) / release;
+    return Math.max(0, sustain * phase);
+  }
+  return sustain;
+}
+
+function softSaw(phase) {
+  return (2 / Math.PI) * Math.atan(2.4 * Math.sin(phase) + 0.7 * Math.sin(2 * phase) + 0.25 * Math.sin(3 * phase));
 }
 
 function buildDspCheckBuffer(audioContext) {
@@ -51,8 +72,119 @@ function buildDspCheckBuffer(audioContext) {
 }
 
 /**
- * 8 s pop/lo-fi groove at 120 BPM (4 bars). Am → F → C → G.
- * Stereo: keys left, lead right, bass/drums center — for stereo-width and music A/B.
+ * 8 s sparse groove. Low fundamentals sit near/below the usable CI bass
+ * region while upper harmonics remain available for missing-fundamental cues.
+ */
+function buildBassFocusBuffer(audioContext) {
+  const sampleRate = audioContext.sampleRate;
+  const durationSec = 8;
+  const length = Math.floor(sampleRate * durationSec);
+  const buffer = audioContext.createBuffer(2, length, sampleRate);
+  const left = buffer.getChannelData(0);
+  const right = buffer.getChannelData(1);
+  const beatSec = 0.5;
+  const bassPattern = [41.2, 41.2, 55.0, 61.7, 73.4, 61.7, 55.0, 49.0];
+
+  for (let i = 0; i < length; i++) {
+    const t = i / sampleRate;
+    const step = Math.floor(t / beatSec) % bassPattern.length;
+    const beatPhase = (t % beatSec) / beatSec;
+    const halfBeatPhase = (t % (beatSec / 2)) / (beatSec / 2);
+    const fundamental = bassPattern[step];
+
+    const bassEnv = beatPhase < 0.7 ? Math.exp(-beatPhase / 0.42) : 0;
+    const sub = Math.sin(2 * Math.PI * fundamental * t);
+    const harmonicStack =
+      0.62 * Math.sin(2 * Math.PI * fundamental * 2 * t) +
+      0.38 * Math.sin(2 * Math.PI * fundamental * 3 * t) +
+      0.22 * Math.sin(2 * Math.PI * fundamental * 4 * t);
+    const bass = bassEnv * (0.42 * sub + 0.24 * harmonicStack);
+
+    const kickPhase = t % 1.0;
+    const kickEnv = kickPhase < 0.16 ? Math.exp(-kickPhase / 0.04) : 0;
+    const kickSweep = 58 - 18 * Math.min(1, kickPhase / 0.16);
+    const kick = 0.28 * kickEnv * Math.sin(2 * Math.PI * kickSweep * t);
+
+    const ghost = step % 2 === 1 && beatPhase < 0.18 ? 0.055 * Math.exp(-beatPhase / 0.06) * Math.sin(2 * Math.PI * 185 * t) : 0;
+    const hat = halfBeatPhase < 0.05 ? 0.038 * Math.exp(-halfBeatPhase / 0.016) * hashNoise(i * 0.29) : 0;
+    const lowPad = 0.035 * Math.sin(2 * Math.PI * fundamental * 2 * t + 0.2 * Math.sin(2 * Math.PI * 0.3 * t));
+
+    const mix = Math.tanh((bass + kick + ghost + hat + lowPad) * 1.05);
+    left[i] = mix + 0.015 * hat;
+    right[i] = mix - 0.015 * hat;
+  }
+
+  return buffer;
+}
+
+/**
+ * 8 s musical probe focused on pitch contour and harmony: sustained chords,
+ * moving lead, vibrato, attacks, and upper harmonics without a dense drum bed.
+ */
+function buildMelodyHarmonyBuffer(audioContext) {
+  const sampleRate = audioContext.sampleRate;
+  const durationSec = 8;
+  const length = Math.floor(sampleRate * durationSec);
+  const buffer = audioContext.createBuffer(2, length, sampleRate);
+  const left = buffer.getChannelData(0);
+  const right = buffer.getChannelData(1);
+  const noteSec = 0.5;
+  const chordSec = 2;
+  const chords = [
+    [220.0, 261.63, 329.63],
+    [196.0, 246.94, 329.63],
+    [174.61, 220.0, 293.66],
+    [196.0, 246.94, 392.0]
+  ];
+  const melody = [
+    440.0, 493.88, 523.25, 587.33,
+    659.25, 587.33, 523.25, 493.88,
+    440.0, 392.0, 440.0, 523.25,
+    587.33, 659.25, 587.33, 523.25
+  ];
+
+  for (let i = 0; i < length; i++) {
+    const t = i / sampleRate;
+    const chordIndex = Math.floor(t / chordSec) % chords.length;
+    const chordPhase = t % chordSec;
+    const noteIndex = Math.floor(t / noteSec) % melody.length;
+    const notePhase = t % noteSec;
+    const vibrato = 1 + 0.006 * Math.sin(2 * Math.PI * 5.4 * t);
+    const chordEnv = adsr(chordPhase, chordSec, 0.04, 0.18, 0.58, 0.35);
+    const leadEnv = adsr(notePhase, noteSec, 0.018, 0.08, 0.62, 0.08);
+
+    let chord = 0;
+    chords[chordIndex].forEach((freq, idx) => {
+      const detune = 1 + (idx - 1) * 0.0025;
+      chord +=
+        0.1 * softSaw(2 * Math.PI * freq * detune * t) +
+        0.045 * Math.sin(2 * Math.PI * freq * 2 * t) +
+        0.025 * Math.sin(2 * Math.PI * freq * 3 * t);
+    });
+
+    const leadFreq = melody[noteIndex] * vibrato;
+    const lead =
+      0.22 * Math.sin(2 * Math.PI * leadFreq * t) +
+      0.11 * Math.sin(2 * Math.PI * leadFreq * 2 * t) +
+      0.055 * Math.sin(2 * Math.PI * leadFreq * 3 * t) +
+      0.025 * Math.sin(2 * Math.PI * leadFreq * 5 * t);
+
+    const pick = notePhase < 0.045 ? 0.035 * Math.exp(-notePhase / 0.012) * hashNoise(i * 0.33) : 0;
+    const bassRoot = chords[chordIndex][0] / 2;
+    const bass = 0.075 * Math.sin(2 * Math.PI * bassRoot * t) + 0.035 * Math.sin(2 * Math.PI * bassRoot * 2 * t);
+
+    const mixL = chordEnv * chord * 0.72 + leadEnv * lead * 0.22 + bass + pick * 0.35;
+    const mixR = chordEnv * chord * 0.28 + leadEnv * lead * 0.82 + bass + pick;
+    left[i] = Math.tanh(mixL * 0.9);
+    right[i] = Math.tanh(mixR * 0.9);
+  }
+
+  return buffer;
+}
+
+/**
+ * 8 s pop/lo-fi groove at 120 BPM (4 bars). Am -> F -> C -> G.
+ * Stereo: keys left, lead right, bass/drums center — for whole-chain music A/B.
  */
 function buildMusicEvalBuffer(audioContext) {
   const sampleRate = audioContext.sampleRate;
@@ -107,7 +239,9 @@ function buildMusicEvalBuffer(audioContext) {
     const bass =
       0.26 *
       bassGate *
-      (Math.sin(2 * Math.PI * bassFreq * t) + 0.45 * Math.sin(2 * Math.PI * bassFreq * 2 * t));
+      (Math.sin(2 * Math.PI * bassFreq * t) +
+        0.45 * Math.sin(2 * Math.PI * bassFreq * 2 * t) +
+        0.18 * softSaw(2 * Math.PI * bassFreq * 3 * t));
 
     const chordAttack = barPhase < 0.06 ? Math.exp(-barPhase / 0.045) : 0;
     const chordSustain = barPhase >= 0.06 && barPhase < 0.85 ? 0.18 * Math.exp(-(barPhase - 0.06) / 0.55) : 0;
@@ -123,12 +257,14 @@ function buildMusicEvalBuffer(audioContext) {
     const notePhase = (t % eighthSec) / eighthSec;
     const melFreq = melodyHz[noteIdx];
     const melEnv = 0.2 + 0.8 * Math.exp(-notePhase / 0.32);
+    const leadVibrato = 1 + 0.004 * Math.sin(2 * Math.PI * 5.8 * t);
     const lead =
       melEnv *
       0.19 *
-      (Math.sin(2 * Math.PI * melFreq * t) +
+      (Math.sin(2 * Math.PI * melFreq * leadVibrato * t) +
         0.38 * Math.sin(2 * Math.PI * melFreq * 2 * t) +
-        0.14 * Math.sin(2 * Math.PI * melFreq * 3 * t));
+        0.14 * Math.sin(2 * Math.PI * melFreq * 3 * t) +
+        0.045 * Math.sin(2 * Math.PI * melFreq * 5 * t));
 
     const crash =
       bar === 3 && barPhase < 0.35 ? 0.14 * Math.exp(-barPhase / 0.12) * hashNoise(i * 0.41) : 0;
@@ -159,10 +295,26 @@ export const DEMO_TRACKS = {
     loopDefault: true,
     build: buildDspCheckBuffer
   },
+  'bass-focus': {
+    id: 'bass-focus',
+    buttonLabel: 'Bass Focus',
+    playlistLabel: 'Demo — Bass Focus (8 s)',
+    durationSec: 8,
+    loopDefault: true,
+    build: buildBassFocusBuffer
+  },
+  'melody-harmony': {
+    id: 'melody-harmony',
+    buttonLabel: 'Melody / Harmony',
+    playlistLabel: 'Demo — Melody / Harmony (8 s)',
+    durationSec: 8,
+    loopDefault: true,
+    build: buildMelodyHarmonyBuffer
+  },
   'music-eval': {
     id: 'music-eval',
-    buttonLabel: 'Music Eval',
-    playlistLabel: 'Demo — Music Eval (8 s)',
+    buttonLabel: 'Full Mix',
+    playlistLabel: 'Demo — Full Mix (8 s)',
     durationSec: 8,
     loopDefault: true,
     build: buildMusicEvalBuffer

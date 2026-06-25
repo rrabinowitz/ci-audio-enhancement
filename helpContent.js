@@ -2,11 +2,13 @@ export const INFO_TOPICS = {
   transport: {
     title: 'Transport & File Loading',
     body: `
-      <p>Load common audio files (MP3, WAV, FLAC, etc.) from the local device, or use the built-in <strong>DSP Check</strong> / <strong>Music Eval</strong> demos (see ⓘ <strong>Built-in demo tracks</strong>). All decoding occurs in the browser; audio is not uploaded.</p>
+      <p>Load common audio files (MP3, WAV, FLAC, etc.) from the local device, or use the built-in music demo battery: <strong>DSP Check</strong>, <strong>Bass Focus</strong>, <strong>Melody / Harmony</strong>, and <strong>Full Mix</strong> (see ⓘ <strong>Built-in demo tracks</strong>). All decoding occurs in the browser; audio is not uploaded.</p>
       <ul>
         <li><strong>Choose Audio File</strong> — your own library track (MP3, WAV, FLAC, etc.); see ⓘ <strong>Your uploaded audio</strong>.</li>
         <li><strong>DSP Check</strong> — 4-second engineering fixture; loop enabled automatically.</li>
-        <li><strong>Music Eval</strong> — 8-second stereo groove; loop enabled automatically.</li>
+        <li><strong>Bass Focus</strong> — sparse 8-second music probe for low fundamentals, missing-fundamental cues, kick/bass salience.</li>
+        <li><strong>Melody / Harmony</strong> — 8-second music probe for melody tracking, chord separability, sustained timbre, and upper harmonics.</li>
+        <li><strong>Full Mix</strong> — 8-second stereo groove for whole-chain music A/B; loop enabled automatically.</li>
         <li><strong>Use Microphone</strong> — live input through the enhancement chain (permission required). Status pill reads <strong>MIC LIVE</strong>.</li>
         <li><strong>Export Processed WAV</strong> — offline render; check <strong>Include diagnostic vocoder</strong> for vocoded WAV (<code>-vocoded.wav</code>) vs enhancement-only (<code>-processed.wav</code>).</li>
         <li><strong>Playlist</strong> — <strong>Add files to queue…</strong> (multi-select), click rows to switch, auto-advance when Loop is off.</li>
@@ -110,7 +112,7 @@ export const INFO_TOPICS = {
     body: `
       <p>Built-in profiles: Default, Speech intelligibility, Music enjoyment, Classical, Rock, Jazz. Each sets harmonic drive, compression threshold, clarity lift, and transpose mix.</p>
       <ul>
-        <li><strong>Compare presets</strong> — table of slider differences between any two profiles (default: Speech vs Music).</li>
+        <li><strong>Compare presets</strong> — table of slider differences between any two profiles (Music, Classical, Rock, Jazz, Speech, or saved presets).</li>
         <li><strong>Undo / Redo</strong> — step back through manual slider changes (⌘/Ctrl+Z, ⇧⌘/Ctrl+Z); cleared on preset load or session import.</li>
         <li><strong>Save as preset</strong> — stores current sliders to localStorage with a custom name.</li>
         <li><strong>Export preset</strong> — downloads JSON for sharing or study reproducibility.</li>
@@ -143,39 +145,60 @@ export const INFO_TOPICS = {
   'demo-tracks': {
     title: 'Built-in Demo Tracks',
     body: `
-      <p>This app targets <strong>music streaming to cochlear implants</strong> — rhythm, harmony, bass salience, and separability after CI re-coding. Manufacturer apps already optimise <strong>speech</strong>; these demos help you test <strong>music preprocessing</strong> without uploading files.</p>
+      <p>This app targets <strong>music streaming to cochlear implants</strong> — bass salience, melody contour, harmony, timbre, rhythm, and separability after CI re-coding. Manufacturer apps already optimise speech; this demo battery exists to test <strong>music preprocessing</strong> without uploading copyrighted files.</p>
+      <p>All demos are <strong>synthetic, deterministic, license-free, and generated in the browser</strong>. They are not meant to be beautiful songs; each one foregrounds a specific CI music problem so engineers can hear the A/B and watch the meters respond.</p>
       <h4>DSP Check (4 s, mono)</h4>
       <p><strong>What it is:</strong> A minimal synthetic fixture — 60 Hz sub-bass square, C-major arpeggio (one note per second), kick, and hi-hat. Both channels are identical.</p>
       <p><strong>Why those sounds:</strong> Each layer hits a specific processing stage: sub-bass → harmonic excitation; melody → mid-band clarity and MAP shaping; hi-hat → high-band compression and transposition; kick → low-band GR meters and rhythm metrics.</p>
       <p><strong>Use it to:</strong> Confirm the pipeline, visualizations, auto-tune, and GR meters work; verify gold preview when paused; run a quick 625-combo optimize. Not meant to sound like real music.</p>
-      <h4>Music Eval (8 s, stereo, 120 BPM)</h4>
-      <p><strong>What it is:</strong> A short Am–F–C–G groove — electric-style bass, Rhodes-like chords (panned left), lead hook (panned right), kick/snare/hi-hat, and a bar-4 crash. Loops cleanly for hands-free A/B.</p>
-      <p><strong>Why those sounds:</strong> Mirrors real music-streaming challenges: sub-bass kick you may not resolve as pitch; chord + lead separation; stereo width (try the width slider at 0% vs 50%); sustained mids and HF transients for compression and transposition.</p>
-      <p><strong>Use it to:</strong> Hear whether <strong>Music mode</strong> improves groove and melody vs <strong>Bypass Enhancement</strong>; compare Speech vs Music presets; test stereo narrowing; queue both demos back-to-back in the playlist. This is the demo to show stakeholders <em>musical</em> intent.</p>
+      <h4>Bass Focus (8 s, stereo)</h4>
+      <p><strong>What it is:</strong> A sparse groove with fundamentals around 41–73 Hz, kick, light hat, and upper harmonic structure.</p>
+      <p><strong>Why those sounds:</strong> Low fundamentals are often weak or ambiguous through CI processing. The enhancement should make bass <em>identity</em> and rhythmic foundation easier to follow through harmonic excitation, not simply louder.</p>
+      <p><strong>Use it to:</strong> Toggle <strong>Bypass Enhancement</strong> while listening for bass pitch/contour, kick definition, and whether low-mid harmonic cues become more usable. Watch low-band energy and harmonic generation readouts.</p>
+      <h4>Melody / Harmony (8 s, stereo)</h4>
+      <p><strong>What it is:</strong> A cleaner musical passage with sustained chords, moving lead melody, vibrato, note attacks, bass roots, and upper harmonics.</p>
+      <p><strong>Why those sounds:</strong> Melody contour, chord quality, and timbre are major music-listening pain points for CI users. This probe foregrounds clarity lift, MAP shaping, and high-frequency transposition without hiding the result behind a dense drum bed.</p>
+      <p><strong>Use it to:</strong> Listen for clearer lead contour, better chord separation, and less smeared upper detail. Try <strong>Music mode</strong>, then adjust <strong>Clarity Lift</strong> and <strong>Freq Transposition Mix</strong>.</p>
+      <h4>Full Mix (8 s, stereo, 120 BPM)</h4>
+      <p><strong>What it is:</strong> A short Am–F–C–G groove — bass, chords (panned left), lead hook (panned right), kick/snare/hi-hat, crash, stereo width, vibrato, and richer attacks. Loops cleanly for hands-free A/B.</p>
+      <p><strong>Why those sounds:</strong> Tests the whole chain together: bass foundation, chord/lead separation, stereo-to-mono width handling, sustained mids, HF transients, compression, and transposition.</p>
+      <p><strong>Use it to:</strong> Demonstrate the overall music experience: <strong>Music mode</strong> vs <strong>Bypass Enhancement</strong>, loudness-matched A/B, stereo width at 0% vs 50%, and optional diagnostic vocoder blend.</p>
       <h4>Suggested test flow</h4>
       <ol>
         <li><strong>DSP Check</strong> → Play → confirm meters and spectrum respond → run <strong>Optimize for CI</strong> once.</li>
-        <li><strong>Music Eval</strong> → <strong>Music mode</strong> → Play with Loop on → toggle <strong>Bypass Enhancement</strong> for A/B.</li>
+        <li><strong>Bass Focus</strong> → <strong>Music mode</strong> → toggle <strong>Bypass Enhancement</strong>; listen for bass pitch/contour and kick definition.</li>
+        <li><strong>Melody / Harmony</strong> → toggle bypass; listen for lead contour, chord separation, and upper-harmonic clarity.</li>
+        <li><strong>Full Mix</strong> → Play with Loop on → loudness-matched bypass A/B for the whole-chain music demo.</li>
         <li>Optional: enable diagnostic vocoder at 50–100% simulated blend to hear CI-like smearing (developer tool, not clinical proof).</li>
         <li>Load your own library files for genre-specific tuning — demos are starting points only.</li>
       </ol>
-      <p>Both demos regenerate from code on page reload (playlist remembers names and order). Loop is enabled automatically when you load either demo.</p>
-      <p><strong>Your own files</strong> — use <strong>Choose Audio File</strong> or <strong>Add files to queue…</strong> for genre-specific tuning. See ⓘ <strong>Your uploaded audio</strong> for how uploads differ from demos.</p>
+      <p>All built-in demos regenerate from code on page reload (playlist remembers names and order). Loop is enabled automatically when you load any demo.</p>
+      <p><strong>Your own files</strong> — use <strong>Choose Audio File</strong> or <strong>Add files to queue…</strong> for real-world genre testing. See ⓘ <strong>Your uploaded audio</strong> for what to upload and why.</p>
     `
   },
   'user-audio': {
     title: 'Your Uploaded Audio',
     body: `
-      <p>This app is a <strong>music pre-processor</strong> for material you already stream to a CI — not a speech-therapy tool. Built-in demos are synthetic starting points; <strong>your uploaded tracks</strong> are how you tune for real listening.</p>
+      <p>This app is a <strong>music pre-processor</strong> for material you already stream to a CI — not a speech-therapy tool. Built-in demos are synthetic probes; <strong>your uploaded music</strong> is how you test real listening material and genre-specific tuning.</p>
       <h4>What it is</h4>
       <p>Any common audio file from your device (MP3, WAV, FLAC, M4A, etc.). Decoding runs entirely in the browser — files are <strong>not uploaded</strong> to a server. The full file is held in memory for playback, optimization, and WAV export.</p>
       <h4>Why use your own files</h4>
       <ul>
-        <li><strong>Genre</strong> — electronic, classical, and rock stress different bands; demos cannot cover your library.</li>
+        <li><strong>Genre</strong> — electronic, classical, jazz, rock, pop, acoustic, and film-score material stress different bands; demos cannot cover your library.</li>
         <li><strong>Mix / mastering</strong> — commercial loudness, stereo width, and sub-bass vary; tuning should match what you actually stream.</li>
         <li><strong>Validation</strong> — stakeholders and study protocols need recognizable material, not only synthetic fixtures.</li>
         <li><strong>Playlist workflow</strong> — queue several uploads and auto-advance when Loop is off.</li>
       </ul>
+      <h4>Best uploads for testing this music DSP</h4>
+      <ul>
+        <li><strong>Bass-heavy tracks</strong> — electronic, hip-hop, pop, organ, or bass guitar passages with notes below ~100 Hz. Listen for bass pitch/contour becoming easier to follow, not just louder.</li>
+        <li><strong>Melody-forward tracks</strong> — lead guitar, violin, piano melody, synth lead, or vocal-free instrumental hooks. Listen for contour, note attacks, and whether the tune is easier to track.</li>
+        <li><strong>Harmony-rich tracks</strong> — piano, guitar chords, strings, jazz voicings, or layered synth pads. Listen for chord separation and reduced smear.</li>
+        <li><strong>Dense full mixes</strong> — rock/pop choruses with drums, bass, chords, and lead together. Listen for whether the enhancement helps musical organization without harshness.</li>
+        <li><strong>Dynamic acoustic music</strong> — classical, jazz trio, acoustic guitar, or lightly mastered material. Listen for timbre and dynamics, and compare genre presets.</li>
+        <li><strong>Familiar personal tracks</strong> — songs the listener knows well. Recognition matters: if the listener knows the bassline or melody, A/B differences are easier to judge.</li>
+      </ul>
+      <p>Avoid judging only from one song. A good music test set includes at least one bass-heavy track, one melody-forward track, one harmony-rich track, and one dense full mix.</p>
       <h4>How to use uploads</h4>
       <ol>
         <li><strong>Choose Audio File</strong> — loads into the current playlist slot (replaces that row).</li>
@@ -186,12 +209,14 @@ export const INFO_TOPICS = {
         <li><strong>Export Processed WAV</strong> and <strong>Export session JSON</strong> per study reproducibility.</li>
       </ol>
       <h4>After a page reload</h4>
-      <p>Uploaded file <strong>audio is not persisted</strong> — only names and order in sessionStorage. Re-select files from disk. Built-in demos (<strong>DSP Check</strong>, <strong>Music Eval</strong>) regenerate automatically.</p>
+      <p>Uploaded file <strong>audio is not persisted</strong> — only names and order in sessionStorage. Re-select files from disk. Built-in demos (<strong>DSP Check</strong>, <strong>Bass Focus</strong>, <strong>Melody / Harmony</strong>, <strong>Full Mix</strong>) regenerate automatically.</p>
       <h4>Demos vs uploads — quick pick</h4>
       <ul>
         <li><strong>DSP Check</strong> — verify meters, auto-tune, and visualizations (engineering).</li>
-        <li><strong>Music Eval</strong> — hear musical intent with Music mode vs bypass (stakeholder demo).</li>
-        <li><strong>Your files</strong> — real tuning and export for listening on implant hardware.</li>
+        <li><strong>Bass Focus</strong> — test bass restoration and missing-fundamental cues.</li>
+        <li><strong>Melody / Harmony</strong> — test pitch contour, chords, timbre, and high-frequency clarity.</li>
+        <li><strong>Full Mix</strong> — hear the complete music-processing chain with Music mode vs bypass.</li>
+        <li><strong>Your files</strong> — real tuning and export for listening on implant hardware or standard streaming chains.</li>
       </ul>
     `
   },
@@ -204,7 +229,7 @@ export const INFO_TOPICS = {
         <li><strong>Minimum length</strong> — at least <strong>4 seconds</strong>; up to <strong>12 seconds</strong> from the selected window is analyzed.</li>
         <li><strong>Label</strong> — shows the time range and duration; warns if too short.</li>
       </ul>
-      <p>Tip: load <strong>Music Eval</strong> or your own track, set In/Out on the loudest section, then optimize — results apply to the whole chain when you play.</p>
+      <p>Tip: load <strong>Full Mix</strong>, <strong>Bass Focus</strong>, or your own track, set In/Out on the section you care about, then optimize — results apply to the whole chain when you play.</p>
     `
   },
   'loudness-matched-ab': {
@@ -227,7 +252,7 @@ export const INFO_TOPICS = {
         <li><strong>0% (default)</strong> — mid-only (L+R)/2 mono collapse.</li>
         <li><strong>100%</strong> — retains more side information before summing to the mono enhancement bus.</li>
       </ul>
-      <p>Applies to stereo files and live microphone input. Mono files are unaffected. Export uses the same width setting. Try <strong>Music Eval</strong> at 0% vs 50% width — keys and lead are panned L/R.</p>
+      <p>Applies to stereo files and live microphone input. Mono files are unaffected. Export uses the same width setting. Try <strong>Full Mix</strong> or <strong>Melody / Harmony</strong> at 0% vs 50% width — chords and lead are panned L/R.</p>
     `
   },
   playlist: {
@@ -240,7 +265,7 @@ export const INFO_TOPICS = {
         <li><strong>Click a row</strong> — load that track.</li>
         <li><strong>×</strong> — remove a track from the queue.</li>
       </ul>
-      <p>When <strong>Loop</strong> is off, playback advances to the next queue item automatically. Queue metadata persists in sessionStorage for the browser tab; re-add file items after a full page reload. Built-in demos (<strong>DSP Check</strong>, <strong>Music Eval</strong>) regenerate from code — load both and switch rows to compare engineering vs musical test material.</p>
+      <p>When <strong>Loop</strong> is off, playback advances to the next queue item automatically. Queue metadata persists in sessionStorage for the browser tab; re-add file items after a full page reload. Built-in demos (<strong>DSP Check</strong>, <strong>Bass Focus</strong>, <strong>Melody / Harmony</strong>, <strong>Full Mix</strong>) regenerate from code — queue them to move from engineering check to targeted music probes to full-mix A/B.</p>
     `
   },
   'session-snapshot': {
@@ -296,7 +321,7 @@ export const INFO_TOPICS = {
     title: 'Enhancement Controls Overview',
     body: `
       <p>These sliders adjust the live Web Audio processing chain. The optimization target is <strong>salience after CI re-coding</strong> — rhythm, melody, consonants, and separability under ~16 channels — rather than natural timbre on conventional speakers.</p>
-      <p><strong>Speech / Music mode</strong> — quick-switch buttons apply built-in profiles; choice is remembered between sessions. Use <strong>Music Eval</strong> with <strong>Music mode</strong> for musical A/B (this app targets music streaming, not clinical speech).</p>
+      <p><strong>Speech / Music mode</strong> — quick-switch buttons apply built-in profiles; choice is remembered between sessions. For this music-focused demo, use <strong>Full Mix</strong>, <strong>Bass Focus</strong>, or <strong>Melody / Harmony</strong> with <strong>Music mode</strong> for A/B. Speech mode remains available as a contrast/reference preset, not the main product goal.</p>
       <p><strong>Preset dropdown</strong> — Default, Speech, Music, Classical, Rock, Jazz + saved custom presets (localStorage / JSON import).</p>
       <p><strong>Stereo width</strong> — collapses stereo toward mono before processing (default 0% for unilateral CI).</p>
       <p><strong>Optimize for CI</strong> runs a 625-combination offline search on the <strong>Optimize region</strong> (or center 12 s). <strong>Compare presets</strong>, <strong>Undo</strong>/<strong>Redo</strong>, and <strong>Loudness-match when bypassing</strong> support tuning workflow.</p>
@@ -450,14 +475,20 @@ export const MENU_CONTENT = {
         </ul>
       </nav>
       <h3 id="help-new-here">New here?</h3>
-      <p>This is a <strong>music pre-processor</strong> for material you stream to a cochlear implant — not a speech-therapy or clinical MAP-fitting tool. The blue callout under the title shows the fastest path: <strong>Music Eval</strong> → <strong>Play</strong> → toggle <strong>Bypass Enhancement</strong> (with <strong>Loudness-match when bypassing</strong> on). Every panel and major control has a ⓘ icon; <strong>For Industry ▾</strong> links the overview, PDF, and technical paper. On wide screens the control panels arrange in two columns; on phones use the <strong>☰ Menu</strong> button for docs.</p>
-      <h3 id="help-quick-start">Quick start (Music Eval demo)</h3>
+      <p>This is a <strong>music pre-processor</strong> for material you stream to a cochlear implant — not a speech-therapy or clinical MAP-fitting tool. The blue callout under the title shows the fastest path: <strong>Full Mix</strong> → <strong>Play</strong> → toggle <strong>Bypass Enhancement</strong> (with <strong>Loudness-match when bypassing</strong> on). Every panel and major control has a ⓘ icon; <strong>For Industry ▾</strong> links the overview, PDF, and technical paper. On wide screens the control panels arrange in two columns; on phones use the <strong>☰ Menu</strong> button for docs.</p>
+      <h3 id="help-quick-start">Quick start (Full Mix demo)</h3>
       <ol>
-        <li><strong>Music Eval</strong> — 8-second stereo groove; loop starts automatically; appears in the playlist as <em>Demo — Music Eval (8 s)</em>.</li>
+        <li><strong>Full Mix</strong> — 8-second stereo groove; loop starts automatically; appears in the playlist as <em>Demo — Full Mix (8 s)</em>.</li>
         <li><strong>Play</strong> — enhancement is active by default.</li>
-        <li><strong>Music mode</strong> — one-click preset tuned for rhythm and timbral salience (not clinical speech).</li>
+        <li><strong>Music mode</strong> — one-click preset tuned for rhythm, bass salience, melody clarity, and timbre.</li>
         <li><strong>A/B</strong> — enable <strong>Loudness-match when bypassing</strong>, then toggle <strong>Bypass Enhancement</strong> with Loop on.</li>
         <li>Optional: <strong>Optimize for CI</strong> on this clip, then re-compare bypass vs enhanced.</li>
+      </ol>
+      <h3 id="help-targeted-music">Targeted music probes</h3>
+      <ol>
+        <li><strong>Bass Focus</strong> — listen for bass pitch/contour, kick definition, and low-mid harmonic cues with bypass on/off.</li>
+        <li><strong>Melody / Harmony</strong> — listen for lead contour, chord separation, note attacks, and upper-harmonic clarity.</li>
+        <li><strong>Full Mix</strong> — use after the probes to judge whether the complete chain improves musical organization.</li>
       </ol>
       <h3 id="help-eng-check">Engineering check (DSP Check demo)</h3>
       <ol>
@@ -478,14 +509,14 @@ export const MENU_CONTENT = {
         <li><strong>Optimize region</strong> — set In/Out under the scrubber on a representative chorus or verse (≥ 4 s).</li>
         <li><strong>Electrode map</strong> — select a preset or import participant JSON.</li>
         <li><strong>Optimize for CI</strong> — ~30–90 s; metric cards should show numeric scores.</li>
-        <li><strong>Compare presets</strong> — Speech vs Music table, then fine-tune; use <strong>Undo</strong> while exploring.</li>
+        <li><strong>Compare presets</strong> — compare Music, Classical, Rock, Jazz, or saved profiles, then fine-tune; use <strong>Undo</strong> while exploring.</li>
         <li><strong>A/B</strong> — <strong>Loudness-match when bypassing</strong> + Bypass Enhancement.</li>
         <li><strong>Export</strong> — WAV per track + session JSON for settings.</li>
       </ol>
       <h3 id="help-demos-only">Demos only (no upload yet)</h3>
       <ol>
-        <li><strong>Music Eval</strong> or <strong>DSP Check</strong> — instant material; see ⓘ <strong>Built-in demo tracks</strong>.</li>
-        <li><strong>Stereo width</strong> — try Music Eval at 0% vs 50%.</li>
+        <li><strong>DSP Check</strong>, <strong>Bass Focus</strong>, <strong>Melody / Harmony</strong>, or <strong>Full Mix</strong> — instant material; see ⓘ <strong>Built-in demo tracks</strong>.</li>
+        <li><strong>Stereo width</strong> — try <strong>Full Mix</strong> or <strong>Melody / Harmony</strong> at 0% vs 50%.</li>
         <li><strong>Loop and scrub</strong> — Loop for repeated passages; −5s/+5s to focus.</li>
       </ol>
       <h3 id="help-study">Study and research preparation</h3>
@@ -527,17 +558,17 @@ export const MENU_CONTENT = {
         <dt>Profile / band meters seem static during playback</dt>
         <dd>Expected for steady presets — enhancement mostly applies a consistent reshape. Lower <strong>Meter stability</strong> for faster response, or watch GR meters for dynamics. Change sliders while paused to see the gold preview jump immediately.</dd>
         <dt>Blue spectrum bars flat during playback</dt>
-        <dd>Confirm the status pill reads PLAYING and Volume is sufficient. Hard-refresh the page (Cmd+Shift+R). Test with <strong>Music Eval</strong> or <strong>DSP Check</strong>.</dd>
+        <dd>Confirm the status pill reads PLAYING and Volume is sufficient. Hard-refresh the page (Cmd+Shift+R). Test with <strong>Full Mix</strong> or <strong>DSP Check</strong>.</dd>
         <dt>Auto-tune complete but metric cards show dashes (—)</dt>
         <dd>Indicates a failed optimization run. Hard-refresh and re-run Optimize. Composite scores typically display values in the 3.5–6.0 range.</dd>
         <dt>Vocoder at 100% silent or very quiet</dt>
         <dd>Expected output is a buzzy, band-limited signal. Increase Volume or reduce blend to 50% initially. Hard-refresh if the issue persists.</dd>
         <dt>Optimize button disabled</dt>
-        <dd>Load an audio file or a built-in demo (<strong>DSP Check</strong> or <strong>Music Eval</strong>) first.</dd>
+        <dd>Load an audio file or a built-in demo (<strong>DSP Check</strong>, <strong>Bass Focus</strong>, <strong>Melody / Harmony</strong>, or <strong>Full Mix</strong>) first.</dd>
         <dt>Optimization slow</dt>
         <dd>625 combinations over a 12-second segment is CPU-intensive. Typical duration is 30–90 s depending on hardware.</dd>
         <dt>Playlist item shows unavailable after reload</dt>
-        <dd>File audio buffers are not persisted across full page reloads — only names and order in sessionStorage. Re-add files with <strong>Add files to queue…</strong> or <strong>Choose Audio File</strong>. Built-in demos (<strong>DSP Check</strong>, <strong>Music Eval</strong>) regenerate from code automatically.</dd>
+        <dd>File audio buffers are not persisted across full page reloads — only names and order in sessionStorage. Re-add files with <strong>Add files to queue…</strong> or <strong>Choose Audio File</strong>. Built-in demos (<strong>DSP Check</strong>, <strong>Bass Focus</strong>, <strong>Melody / Harmony</strong>, <strong>Full Mix</strong>) regenerate from code automatically.</dd>
         <dt>Session import failed</dt>
         <dd>Ensure the JSON was exported from this app (version 1 snapshot). Import restores settings only — load audio separately afterward.</dd>
         <dt>Export sounds different from live playback</dt>
@@ -570,11 +601,11 @@ export const MENU_CONTENT = {
 
       <h3 id="help-faq-using">Using the app, demos &amp; A/B</h3>
       <div class="faq-item"><h4>Which demo should I use first?</h4>
-      <p>Start with <strong>Music Eval</strong> if you want to hear musical intent (Music mode vs bypass). Use <strong>DSP Check</strong> if you are verifying meters, auto-tune, or visualization behavior. Queue both in the playlist to compare.</p></div>
+      <p>Start with <strong>Full Mix</strong> if you want the fastest whole-chain music A/B (Music mode vs bypass). Use <strong>Bass Focus</strong> for bass restoration, <strong>Melody / Harmony</strong> for pitch/chord/timbre clarity, and <strong>DSP Check</strong> for meters, auto-tune, or visualization behavior. Queue them in that order for a structured demo.</p></div>
       <div class="faq-item"><h4>What is the difference between demo tracks and my uploaded files?</h4>
-      <p><strong>DSP Check</strong> and <strong>Music Eval</strong> are synthetic, in-browser fixtures — no upload, always available, regenerate after reload. They prove engineering (meters, auto-tune) and musical intent (Music mode A/B). <strong>Your uploaded files</strong> are real library material for genre-specific tuning and WAV export; they stay in memory only until you reload the page. See ⓘ <strong>Built-in demo tracks</strong> and ⓘ <strong>Your uploaded audio</strong>.</p></div>
-      <div class="faq-item"><h4>What are DSP Check and Music Eval?</h4>
-      <p><strong>DSP Check</strong> (4 s, mono) is an engineering fixture: sub-bass, arpeggio, kick, and hi-hat — each layer exercises one part of the chain and the meters. <strong>Music Eval</strong> (8 s, stereo groove) is the musical demo: bass, chords, lead, drums, and stereo panning so you can hear whether <strong>Music mode</strong> improves rhythm and separation for CI streaming. See ⓘ <strong>Built-in demo tracks</strong> for the full how and why.</p></div>
+      <p>The built-in demos are synthetic, in-browser music fixtures — no upload, always available, regenerate after reload. <strong>DSP Check</strong> verifies the engineering path; <strong>Bass Focus</strong>, <strong>Melody / Harmony</strong>, and <strong>Full Mix</strong> demonstrate different music-processing problems. <strong>Your uploaded files</strong> are real library material for genre-specific tuning and WAV export; they stay in memory only until you reload the page. See ⓘ <strong>Built-in demo tracks</strong> and ⓘ <strong>Your uploaded audio</strong>.</p></div>
+      <div class="faq-item"><h4>What are the built-in music demos?</h4>
+      <p><strong>DSP Check</strong> is an engineering fixture. <strong>Bass Focus</strong> isolates low fundamentals and missing-fundamental cues. <strong>Melody / Harmony</strong> foregrounds lead contour, chord separation, and timbre. <strong>Full Mix</strong> combines bass, drums, chords, lead, and stereo panning for a complete Music mode vs bypass A/B. See ⓘ <strong>Built-in demo tracks</strong> for the full how and why.</p></div>
       <div class="faq-item"><h4>How do Speech mode and Music mode buttons work?</h4>
       <p>They apply the built-in Speech or Music presets in one click. Your choice is saved in localStorage. Moving any slider manually switches to Custom (current).</p></div>
       <div class="faq-item"><h4>What is the playlist for?</h4>
@@ -588,7 +619,7 @@ export const MENU_CONTENT = {
       <div class="faq-item"><h4>What is Loudness-match when bypassing?</h4>
       <p>When checked (default), toggling <strong>Bypass Enhancement</strong> temporarily adjusts the raw path so level matches the enhanced path — a fairer A/B for quality, not just loudness. Uncheck for level-accurate raw vs enhanced.</p></div>
       <div class="faq-item"><h4>What does Compare presets do?</h4>
-      <p>Opens a table showing how harmonic drive, compression threshold, clarity lift, and transpose mix differ between any two presets (default: Speech vs Music). Use before fine-tuning sliders.</p></div>
+      <p>Opens a table showing how harmonic drive, compression threshold, clarity lift, and transpose mix differ between any two presets. Use it to compare Music, Classical, Rock, Jazz, saved profiles, or the Speech reference preset before fine-tuning sliders.</p></div>
       <div class="faq-item"><h4>Can I undo slider changes?</h4>
       <p>Yes — <strong>Undo</strong> / <strong>Redo</strong> buttons (or ⌘/Ctrl+Z and ⇧⌘/Ctrl+Z) step through manual slider edits. History clears when you load a preset or import a session JSON.</p></div>
       <div class="faq-item"><h4>Can I save or print the in-app guides?</h4>
@@ -647,7 +678,7 @@ export const MENU_CONTENT = {
       <p>Cochlear implants provide excellent speech perception for many users but music often suffers: weak bass, blurred timbre, poor pitch resolution above ~300–500 Hz, and limited dynamic range after envelope extraction.</p>
       <p>Commercial CI companion apps offer volume, programs, and sometimes coarse tone controls — not harmonic regeneration, transposition, vocoder-aware auto-tuning, MAP-personalized mastering, or researcher-facing diagnostics.</p>
       <p>Phone EQ assumes normal hearing with intact temporal fine structure. CI users receive ~16–22 channels of slowly varying envelopes — a fundamentally different representation.</p>
-      <p>This engine implements multi-band compression, harmonic bass excitation, clarity lift, ring-mod transposition, MAP shaping, profile-based visualizers, two built-in demos (<strong>DSP Check</strong> engineering fixture + <strong>Music Eval</strong> stereo groove), playlist queue, session JSON, stereo width control, Speech/Music mode memory, optimize region, loudness-matched A/B, compare presets, undo/redo, microphone input, WAV export (optional vocoder), mobile collapsible UI, PWA manifest, and offline vocoder-in-the-loop optimization.</p>
+      <p>This engine implements multi-band compression, harmonic bass excitation, clarity lift, ring-mod transposition, MAP shaping, profile-based visualizers, a synthetic music demo battery (<strong>DSP Check</strong>, <strong>Bass Focus</strong>, <strong>Melody / Harmony</strong>, <strong>Full Mix</strong>), playlist queue, session JSON, stereo width control, Speech/Music mode memory, optimize region, loudness-matched A/B, compare presets, undo/redo, microphone input, WAV export (optional vocoder), mobile collapsible UI, PWA manifest, and offline vocoder-in-the-loop optimization.</p>
       <p><a href="paper.html" target="_blank"><strong>Technical paper →</strong></a> Signal-chain diagrams, overtone-series mechanism, double-compression theory, validation phases, and research collaboration guidelines. See <strong>For Industry ▾ → Industry &amp; partnership guide</strong> (commercial) and <strong>Cochlear platform developer guide</strong> (companion-app engineering).</p>
     `
   },
@@ -690,10 +721,11 @@ export const MENU_CONTENT = {
       <h3 id="help-ind-demo">5-minute live demo script (for stakeholder meetings)</h3>
       <ol>
         <li>Open deployed demo URL or local server — confirm status line is ready (not an initialization error).</li>
-        <li><strong>Music Eval</strong> → <strong>Play</strong> → <strong>Music mode</strong> — “This is the music-tuned preset; rhythm and separation are the design target, not speaker fidelity.”</li>
+        <li><strong>Full Mix</strong> → <strong>Play</strong> → <strong>Music mode</strong> — “This is the whole-chain music demo; rhythm, bass salience, melody, and separation are the design targets, not speaker fidelity.”</li>
+        <li><strong>Bass Focus</strong> and <strong>Melody / Harmony</strong> — show targeted probes for the two hardest music questions: low-frequency foundation and pitch/chord clarity.</li>
         <li>Enable <strong>Loudness-match when bypassing</strong> → toggle <strong>Bypass Enhancement</strong> with Loop on — fair A/B vs raw stream.</li>
-        <li><strong>Compare presets</strong> — show Speech vs Music slider differences in one table.</li>
-        <li>Optional: <strong>Optimize for CI</strong> on Music Eval (~30–90 s) — metric cards show vocoder-surrogate scores (engineering proxy, not clinical endpoints).</li>
+        <li><strong>Compare presets</strong> — show Music, Classical, Rock, Jazz, saved profiles, or the Speech reference preset in one table.</li>
+        <li>Optional: <strong>Optimize for CI</strong> on Full Mix or Bass Focus (~30–90 s) — metric cards show vocoder-surrogate scores (engineering proxy, not clinical endpoints).</li>
         <li>Close with <strong>For Industry ▾ → Download overview (PDF)</strong> and <strong>Technical paper</strong> for R&amp;D follow-up.</li>
       </ol>
       <h3 id="help-ind-eq">Why not “just add EQ” to the companion app?</h3>
@@ -876,7 +908,7 @@ Source (file / mic / playlist queue)
       <ul>
         <li><strong>Session JSON</strong> — <code>sessionSnapshot.js</code> export/import of all UI settings (no audio).</li>
         <li><strong>WAV export</strong> — <code>exportAudio.js</code> offline enhancement; optional <code>processVocoder</code> pass.</li>
-        <li><strong>Built-in demos</strong> — <code>demoTrack.js</code> generates <strong>DSP Check</strong> (4 s mono fixture) and <strong>Music Eval</strong> (8 s stereo groove); playlist stores <code>demoId</code> for reload.</li>
+        <li><strong>Built-in demos</strong> — <code>demoTrack.js</code> generates <strong>DSP Check</strong> (4 s mono fixture), <strong>Bass Focus</strong>, <strong>Melody / Harmony</strong>, and <strong>Full Mix</strong> (8 s music probes); playlist stores <code>demoId</code> for reload.</li>
         <li><strong>Playlist</strong> — <code>playlist.js</code> in-memory queue + sessionStorage metadata.</li>
       </ul>
       <h4>Visualization panels</h4>

@@ -4,7 +4,7 @@
  * and high-frequency transposition. Visualizer uses a separate analyser tap.
  */
 
-import { getProfileById, redistributeDeadRegionWeights } from './mapProfiles.js?v=20';
+import { getProfileById, redistributeDeadRegionWeights } from './mapProfiles.js?v=22';
 
 function dbToLinear(db) {
   return Math.pow(10, db / 20);
@@ -116,6 +116,9 @@ export class CIAudioEngine {
     }
 
     this.audioContext = new AudioContext();
+    this.audioContext.addEventListener?.('statechange', () => {
+      this._notifyContextState();
+    });
 
     this.enhancementInput = this.audioContext.createGain();
     this.enhancementOutput = this.audioContext.createGain();
@@ -191,50 +194,76 @@ export class CIAudioEngine {
    */
   ensureContextForGesture() {
     this._ensureContextAndGraph();
-    const state = this.audioContext.state;
-    if (state === 'suspended' || state === 'interrupted') {
-      // Fire-and-forget within the gesture; do not await here.
-      const resumePromise = this.audioContext.resume();
-      if (resumePromise && typeof resumePromise.catch === 'function') {
-        resumePromise.catch(() => {});
-      }
-    }
+    this._unlockInGesture();
   }
 
   /**
-   * Explicit one-time unlock for a dedicated "Start Audio Engine" button.
-   * Safari/iOS only reliably keeps an AudioContext running if real audio is
-   * triggered directly inside a user gesture — resume() alone is not always
-   * enough. This creates the context, resumes it, and plays a 1-sample silent
-   * buffer through the destination, all synchronously within the gesture.
-   * Must be called directly from a click/tap handler before any await.
+   * Explicit one-time unlock for the dedicated "Start Audio Engine" button.
+   * Identical to the gesture path: every audio-starting tap gets the full
+   * silent-buffer unlock so Safari/iOS reliably leaves the "interrupted" state.
    */
   unlockAudio() {
     this._ensureContextAndGraph();
-    const ctx = this.audioContext;
+    this._unlockInGesture();
+  }
 
-    if (ctx.state === 'suspended' || ctx.state === 'interrupted') {
-      const resumePromise = ctx.resume();
+  /**
+   * Robust in-gesture unlock. MUST be called synchronously from a user gesture,
+   * before any await. Safari/iOS will not leave the "interrupted"/"suspended"
+   * state from resume() alone — it needs real audio started inside the gesture.
+   * So we play a 1-sample silent buffer FIRST (this is what actually kicks the
+   * iOS audio session awake), THEN call resume(). Doing only resume() is the
+   * root cause of the "have to press the button two or three times" bug.
+   */
+  _unlockInGesture() {
+    const ctx = this.audioContext;
+    if (!ctx || ctx.state === 'running') {
+      return;
+    }
+
+    // 1) Silent buffer in-gesture — transitions iOS interrupted/suspended.
+    try {
+      if (!this._silentUnlockBuffer || this._silentUnlockBuffer.sampleRate !== ctx.sampleRate) {
+        this._silentUnlockBuffer = ctx.createBuffer(1, 1, ctx.sampleRate);
+      }
+      const source = ctx.createBufferSource();
+      source.buffer = this._silentUnlockBuffer;
+      source.connect(ctx.destination);
+      source.start(0);
+    } catch {
+      // Non-fatal: resume() below is the secondary path.
+    }
+
+    // 2) resume() fire-and-forget; ensureContextRunning() awaits/polls later.
+    try {
+      const resumePromise = ctx.resume?.();
       if (resumePromise && typeof resumePromise.catch === 'function') {
         resumePromise.catch(() => {});
       }
-    }
-
-    // Canonical iOS Web Audio unlock: play a short silent buffer in-gesture.
-    try {
-      const silent = ctx.createBuffer(1, 1, ctx.sampleRate);
-      const source = ctx.createBufferSource();
-      source.buffer = silent;
-      source.connect(ctx.destination);
-      source.start(0);
-      source.stop(ctx.currentTime + 0.001);
     } catch {
-      // Non-fatal: resume() above is the primary path.
+      // Ignore; polling in ensureContextRunning() reports the final state.
     }
   }
 
   isContextRunning() {
     return Boolean(this.audioContext) && this.audioContext.state === 'running';
+  }
+
+  /**
+   * Subscribe to AudioContext state changes (running / suspended / interrupted).
+   * Lets the UI re-show the Start Audio Engine button if Safari interrupts the
+   * session (e.g. after a phone call or switching apps) and hide it once running.
+   */
+  onContextStateChange(listener) {
+    if (typeof listener === 'function') {
+      this._contextStateListener = listener;
+    }
+  }
+
+  _notifyContextState() {
+    if (typeof this._contextStateListener === 'function') {
+      this._contextStateListener(this.audioContext ? this.audioContext.state : 'closed');
+    }
   }
 
   _buildStereoWidthNode() {

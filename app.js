@@ -1,25 +1,25 @@
-import { CIAudioEngine, getVisualizationBandCenters } from './audioGraph.js?v=20';
-import { VocoderDiagnostic } from './vocoderDiagnostic.js?v=20';
+import { CIAudioEngine, getVisualizationBandCenters } from './audioGraph.js?v=22';
+import { VocoderDiagnostic } from './vocoderDiagnostic.js?v=22';
 import {
   getProfileList,
   getProfileById,
   parseMapProfileJson,
   exportMapProfileJson
-} from './mapProfiles.js?v=20';
-import { optimizeForCI } from './autoTuner.js?v=20';
-import { initHelpUi, openModal } from './help.js?v=20';
-import { buildDemoBuffer, getDemoMeta } from './demoTrack.js?v=20';
-import { Visualizer, countSaturatedChannels, updateCompVu } from './visualizer.js?v=20';
-import { estimateCompressorGr, computePreviewDelta, estimateBandEnergies } from './processingPreview.js?v=20';
-import { exportProcessedWav, downloadBlob } from './exportAudio.js?v=20';
-import { Playlist } from './playlist.js?v=20';
-import { ParamHistory } from './paramHistory.js?v=20';
-import { buildPresetDiffHtml } from './presetDiff.js?v=20';
+} from './mapProfiles.js?v=22';
+import { optimizeForCI } from './autoTuner.js?v=22';
+import { initHelpUi, openModal } from './help.js?v=22';
+import { buildDemoBuffer, getDemoMeta } from './demoTrack.js?v=22';
+import { Visualizer, countSaturatedChannels, updateCompVu } from './visualizer.js?v=22';
+import { estimateCompressorGr, computePreviewDelta, estimateBandEnergies } from './processingPreview.js?v=22';
+import { exportProcessedWav, downloadBlob } from './exportAudio.js?v=22';
+import { Playlist } from './playlist.js?v=22';
+import { ParamHistory } from './paramHistory.js?v=22';
+import { buildPresetDiffHtml } from './presetDiff.js?v=22';
 import {
   buildSessionSnapshot,
   parseSessionSnapshot,
   downloadSessionJson
-} from './sessionSnapshot.js?v=20';
+} from './sessionSnapshot.js?v=22';
 import {
   getBuiltinPresetList,
   getPresetById,
@@ -28,7 +28,7 @@ import {
   captureCurrentParams,
   exportPresetJson,
   parsePresetJson
-} from './presets.js?v=20';
+} from './presets.js?v=22';
 
 const CHANNEL_COUNT = 16;
 const VIZ_MIN_HZ = 250;
@@ -170,10 +170,16 @@ let userPresets = loadUserPresets();
 let activePresetId = 'default';
 let audioReady = false;
 
+// Single source of truth for the Start Audio Engine button visibility: the
+// button is hidden only while the AudioContext is actually "running". If Safari
+// later interrupts the session, the statechange listener re-shows it.
+function syncAudioUnlockUi() {
+  const running = engine.isContextRunning?.();
+  document.body.classList.toggle('audio-unlocked', Boolean(running));
+}
+
 function markAudioUnlockedIfRunning() {
-  if (engine.isContextRunning?.()) {
-    document.body.classList.add('audio-unlocked');
-  }
+  syncAudioUnlockUi();
 }
 
 // Build the audio node graph and apply one-time configuration. This does NOT
@@ -410,7 +416,7 @@ function openPresetCompareModal() {
     .map((p) => `<option value="${p.id}">${p.name}</option>`)
     .join('');
   const body = `
-    <p>Compare enhancement slider values between two presets (Speech vs Music, genre profiles, or your saved presets).</p>
+    <p>Compare enhancement slider values between music, genre, saved, or reference presets before fine-tuning.</p>
     <div class="preset-diff-controls" style="display:flex;flex-wrap:wrap;gap:0.75rem;margin:0.75rem 0">
       <label>Preset A <select id="diffPresetA">${options}</select></label>
       <label>Preset B <select id="diffPresetB">${options}</select></label>
@@ -1196,6 +1202,9 @@ async function initializeEngine() {
   buildElectrodeGrid();
   applyCurrentMapProfile();
   playlist.subscribe(() => renderPlaylist());
+  // Re-show / hide the Start Audio Engine button when Safari interrupts or
+  // resumes the audio session (phone call, app switch, route change).
+  engine.onContextStateChange?.(() => syncAudioUnlockUi());
   // Build the graph at load. Do NOT resume the context here — Safari blocks
   // resume() outside a user gesture and would throw, aborting the rest of
   // startup (visualization loop, status). The context is resumed later from
@@ -1332,15 +1341,20 @@ exportWavBtn.addEventListener('click', async () => {
 });
 
 startAudioBtn?.addEventListener('click', async () => {
-  // Unlock synchronously inside the gesture (Safari/iOS requirement).
+  // Unlock synchronously inside the gesture (Safari/iOS requirement) — silent
+  // buffer + resume happen before any await. Do NOT hide the button yet; only
+  // hide once the context is confirmed running (handled by syncAudioUnlockUi).
   engine.unlockAudio();
-  document.body.classList.add('audio-unlocked');
   try {
     await ensureAudioReady();
-    setStatus('Audio engine ready — load a demo or file, then press Play');
+    if (engine.isContextRunning?.()) {
+      setStatus('Audio engine ready — load a demo or file, then press Play');
+    } else {
+      setStatus('Tap “Start Audio Engine” once more to enable sound.', 'error');
+    }
   } catch (error) {
     console.error(error);
-    document.body.classList.remove('audio-unlocked');
+    syncAudioUnlockUi();
     setStatus(`Could not start audio: ${error.message}. Tap “Start Audio Engine” again.`, 'error');
   }
 });
@@ -1366,9 +1380,7 @@ playPauseBtn.addEventListener('click', async () => {
     updateStatusPill();
   } catch (error) {
     console.error(error);
-    if (!engine.isContextRunning?.()) {
-      document.body.classList.remove('audio-unlocked');
-    }
+    syncAudioUnlockUi();
     setStatus(`Playback error: ${error.message}`, 'error');
   }
 });

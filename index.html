@@ -429,6 +429,14 @@
       padding: 0.45rem 0.65rem;
     }
 
+    .demo-track-note {
+      flex-basis: 100%;
+      margin: -0.2rem 0 0;
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+      line-height: 1.35;
+    }
+
     .loop-region-row {
       display: flex;
       flex-wrap: wrap;
@@ -1994,7 +2002,7 @@
       <div class="quickstart">
         <span class="quickstart-label">New here?</span>
         <ol class="quickstart-steps">
-          <li>Tap <strong>Music Eval</strong></li>
+          <li>Tap <strong>Full Mix</strong></li>
           <li>Press <strong>Play</strong></li>
           <li>Toggle <strong>Bypass</strong> to compare</li>
         </ol>
@@ -2024,9 +2032,12 @@
           </div>
           <span class="transport-btn-group demo-tracks-group">
             <button class="btn btn-demo" type="button" data-demo-id="dsp-check" title="Engineering fixture — proves each DSP stage">DSP Check</button>
-            <button class="btn btn-demo" type="button" data-demo-id="music-eval" title="Musical loop — proves music enjoyment for CI streaming">Music Eval</button>
+            <button class="btn btn-demo" type="button" data-demo-id="bass-focus" title="Sparse music probe — demonstrates bass salience and missing-fundamental cues">Bass Focus</button>
+            <button class="btn btn-demo" type="button" data-demo-id="melody-harmony" title="Music probe — demonstrates melody tracking, harmony, and timbre clarity">Melody / Harmony</button>
+            <button class="btn btn-demo" type="button" data-demo-id="music-eval" title="Full musical loop — demonstrates whole-chain music A/B">Full Mix</button>
             <button type="button" class="info-btn" data-info-topic="demo-tracks" title="About built-in demo tracks" aria-label="About built-in demo tracks">i</button>
           </span>
+          <p class="demo-track-note">Synthetic music probes: DSP verification, bass restoration, melody/harmony clarity, and full-mix A/B. Use ⓘ to see exactly what to listen for.</p>
           <span class="transport-btn-group">
             <button class="btn" id="micBtn" type="button">Use Microphone</button>
             <button type="button" class="info-btn" data-info-topic="transport" title="About microphone input" aria-label="About microphone input">i</button>
@@ -2384,7 +2395,7 @@
   </div>
 
   <script type="module">
-    const APP_VERSION = '20';
+    const APP_VERSION = '22';
     import(`./app.js?v=${APP_VERSION}`).catch((error) => {
       console.error('CI Audio Enhancement failed to load:', error);
       const banner = document.getElementById('appLoadError');

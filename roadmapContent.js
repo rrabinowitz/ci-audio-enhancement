@@ -196,10 +196,12 @@ export const ROADMAP_ITEMS = [
     priority: 'low',
     status: 'available',
     title: 'Built-in demo tracks',
-    summary: 'DSP Check engineering fixture + Music Eval stereo groove — no upload required for first-run testing.',
+    summary: 'DSP Check engineering fixture + targeted music probes (Bass Focus, Melody / Harmony, Full Mix) — no upload required for first-run testing.',
     requirements: [
       '✓ DSP Check (4 s mono) — sub-bass, arpeggio, kick, hi-hat per DSP stage',
-      '✓ Music Eval (8 s stereo, 120 BPM Am–F–C–G) — bass, chords, lead, drums for music A/B',
+      '✓ Bass Focus (8 s stereo) — low fundamentals + missing-fundamental cues for bass restoration A/B',
+      '✓ Melody / Harmony (8 s stereo) — lead contour, chord separation, timbre, and upper-harmonic clarity',
+      '✓ Full Mix (8 s stereo, 120 BPM Am–F–C–G) — bass, chords, lead, drums for whole-chain music A/B',
       '✓ Labeled transport buttons + demo-tracks ⓘ help topic',
       '✓ playlist demoId persistence for correct reload'
     ]
@@ -314,7 +316,7 @@ export const ROADMAP_ITEMS = [
     priority: 'low',
     status: 'available',
     title: 'Preset comparison (diff view)',
-    summary: 'Show which sliders differ between two presets — e.g. Speech vs Music or custom A vs B.',
+    summary: 'Show which sliders differ between two presets — e.g. Music vs genre profiles, saved presets, or reference profiles.',
     requirements: [
       '✓ Delta table for four enhancement params',
       '✓ Compare presets button + modal with A/B dropdowns',

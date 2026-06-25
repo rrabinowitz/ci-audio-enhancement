@@ -1,5 +1,5 @@
-import { redistributeDeadRegionWeights } from './mapProfiles.js?v=20';
-import { getBandEdgesFromProfile } from './vocoderBands.js?v=20';
+import { redistributeDeadRegionWeights } from './mapProfiles.js?v=22';
+import { getBandEdgesFromProfile } from './vocoderBands.js?v=22';
 
 function createSeededNoise(seed) {
   let state = seed >>> 0;

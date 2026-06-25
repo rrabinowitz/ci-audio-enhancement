@@ -371,7 +371,7 @@ Frequency transposition:   Modulation patterns appear near ~4 kHz
     <h2 id="sec-13a">13a. Application Workflow &amp; Session Tooling</h2>
     <p>Beyond the core signal path, the reference application includes workflow features for tuning sessions and mobile use:</p>
     <ul>
-      <li><strong>Built-in demo tracks</strong> — <strong>DSP Check</strong> (4 s mono engineering fixture) and <strong>Music Eval</strong> (8 s stereo groove for music A/B); see ⓘ Built-in demo tracks.</li>
+      <li><strong>Built-in demo tracks</strong> — <strong>DSP Check</strong> (4 s mono engineering fixture), <strong>Bass Focus</strong> (bass/missing-fundamental probe), <strong>Melody / Harmony</strong> (pitch/chord/timbre probe), and <strong>Full Mix</strong> (8 s stereo groove for whole-chain music A/B); see ⓘ Built-in demo tracks.</li>
       <li><strong>Playlist queue</strong> — multi-track queue with auto-advance when loop is off; metadata persists in sessionStorage for the browser tab.</li>
       <li><strong>Speech / Music mode</strong> — one-click preset shortcuts with localStorage memory; manual slider edits revert to Custom.</li>
       <li><strong>Stereo width</strong> — M/S matrix collapses stereo toward mono before the enhancement bus (default 0% for unilateral CI); export uses the same width.</li>
@@ -379,7 +379,7 @@ Frequency transposition:   Modulation patterns appear near ~4 kHz
       <li><strong>WAV export</strong> — offline render with optional diagnostic vocoder pass (<code>-processed.wav</code> vs <code>-vocoded.wav</code>).</li>
       <li><strong>Optimize region</strong> — In/Out markers under the scrubber select the passage analyzed by CI Auto-Tune (default: center 12 s of the track).</li>
       <li><strong>Loudness-matched A/B</strong> — optional makeup gain when bypassing enhancement for fair raw vs enhanced comparison.</li>
-      <li><strong>Compare presets</strong> — side-by-side table of slider values between any two profiles (e.g. Speech vs Music).</li>
+      <li><strong>Compare presets</strong> — side-by-side table of slider values between any two profiles (Music, Classical, Rock, Jazz, saved profiles, or the Speech reference preset).</li>
       <li><strong>Undo / redo</strong> — step back through manual slider edits (⌘/Ctrl+Z); cleared on preset load or session import.</li>
       <li><strong>Mobile layout &amp; PWA</strong> — collapsible panels (auto-tune and vocoder collapsed on first visit), sticky transport, 44px touch targets, safe-area insets, and <code>manifest.json</code> for add-to-home-screen.</li>
     </ul>

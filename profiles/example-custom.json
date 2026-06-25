@@ -1,0 +1,24 @@
+{
+  "id": "example-custom",
+  "name": "Example custom import",
+  "description": "Template for audiologist-entered electrode data. Replace centerHz, status, and weight per channel.",
+  "source": "Custom JSON template",
+  "electrodes": [
+    { "centerHz": 281, "status": "active", "weight": 1.0 },
+    { "centerHz": 347, "status": "active", "weight": 1.0 },
+    { "centerHz": 429, "status": "weak", "weight": 0.6 },
+    { "centerHz": 531, "status": "active", "weight": 1.0 },
+    { "centerHz": 657, "status": "active", "weight": 1.1 },
+    { "centerHz": 813, "status": "active", "weight": 1.1 },
+    { "centerHz": 1006, "status": "active", "weight": 1.2 },
+    { "centerHz": 1245, "status": "active", "weight": 1.2 },
+    { "centerHz": 1540, "status": "active", "weight": 1.15 },
+    { "centerHz": 1905, "status": "dead", "weight": 0 },
+    { "centerHz": 2356, "status": "dead", "weight": 0 },
+    { "centerHz": 2914, "status": "active", "weight": 1.1 },
+    { "centerHz": 3604, "status": "active", "weight": 1.0 },
+    { "centerHz": 4458, "status": "active", "weight": 0.95 },
+    { "centerHz": 5515, "status": "active", "weight": 0.9 },
+    { "centerHz": 6822, "status": "weak", "weight": 0.7 }
+  ]
+}

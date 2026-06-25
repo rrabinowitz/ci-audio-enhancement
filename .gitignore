@@ -1,0 +1,5 @@
+.DS_Store
+.vercel
+*.log
+node_modules/
+package-lock.json

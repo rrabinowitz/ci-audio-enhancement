@@ -1,0 +1,1975 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#0d1117">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="manifest" href="manifest.json">
+  <title>CI Audio Enhancement Engine</title>
+  <style>
+    :root {
+      --bg-primary: #0d1117;
+      --bg-secondary: #161b22;
+      --bg-tertiary: #21262d;
+      --border: #30363d;
+      --text-primary: #e6edf3;
+      --text-secondary: #8b949e;
+      --accent: #58a6ff;
+      --accent-green: #3fb950;
+      --accent-orange: #d29922;
+      --accent-red: #f85149;
+      --slider-track: #30363d;
+      --slider-thumb: #58a6ff;
+    }
+
+    [data-theme="light"] {
+      --bg-primary: #ffffff;
+      --bg-secondary: #f6f8fa;
+      --bg-tertiary: #eaeef2;
+      --border: #d0d7de;
+      --text-primary: #1f2328;
+      --text-secondary: #656d76;
+      --accent: #0969da;
+      --accent-green: #1a7f37;
+      --accent-orange: #bf8700;
+      --accent-red: #cf222e;
+      --slider-track: #d0d7de;
+      --slider-thumb: #0969da;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+      line-height: 1.5;
+      padding-bottom: env(safe-area-inset-bottom, 0);
+    }
+
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 1rem 1.5rem 3rem;
+    }
+
+    /* Top navigation */
+    .top-nav {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg-secondary);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .top-nav-inner {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 0.5rem 1.5rem;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.35rem 0.75rem;
+    }
+
+    .top-nav-brand {
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: var(--text-primary);
+      margin-right: auto;
+    }
+
+    .app-load-error {
+      background: #3d1214;
+      border-bottom: 2px solid #f85149;
+      color: #ffdcd7;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 0.9rem;
+      padding: 0.75rem 1.25rem;
+      line-height: 1.45;
+    }
+
+    .app-load-error code {
+      background: rgba(0, 0, 0, 0.25);
+      padding: 0.1rem 0.35rem;
+      border-radius: 4px;
+    }
+
+    .nav-dropdown {
+      position: relative;
+    }
+
+    .nav-dropdown-toggle {
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--text-secondary);
+      padding: 0.4rem 0.65rem;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      cursor: pointer;
+    }
+
+    .nav-dropdown-toggle:hover,
+    .nav-dropdown.open .nav-dropdown-toggle {
+      background: var(--bg-tertiary);
+      border-color: var(--border);
+      color: var(--text-primary);
+    }
+
+    .nav-dropdown-menu {
+      display: none;
+      position: absolute;
+      top: calc(100% + 4px);
+      left: 0;
+      min-width: 240px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+      padding: 0.35rem;
+      z-index: 200;
+    }
+
+    .nav-dropdown.open .nav-dropdown-menu {
+      display: block;
+    }
+
+    .nav-dropdown-menu button,
+    .nav-dropdown-menu a {
+      display: block;
+      width: 100%;
+      text-align: left;
+      background: transparent;
+      border: none;
+      color: var(--text-primary);
+      padding: 0.5rem 0.65rem;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .nav-dropdown-menu button:hover,
+    .nav-dropdown-menu a:hover {
+      background: var(--bg-tertiary);
+    }
+
+    .nav-dropdown-menu .menu-desc {
+      display: block;
+      font-size: 0.72rem;
+      color: var(--text-secondary);
+      margin-top: 0.15rem;
+    }
+
+    .nav-roadmap-menu {
+      min-width: 360px;
+      max-width: min(92vw, 480px);
+      max-height: min(85vh, 640px);
+      overflow-y: auto;
+    }
+
+    .roadmap-menu-intro {
+      font-size: 0.72rem;
+      color: var(--text-secondary);
+      line-height: 1.45;
+      padding: 0.35rem 0.65rem 0.5rem;
+      margin: 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .roadmap-menu-intro .roadmap-badge {
+      margin-left: 0;
+      margin-right: 0.15rem;
+    }
+
+    .roadmap-item {
+      padding: 0.55rem 0.65rem 0.65rem;
+      border-radius: 6px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .roadmap-item:last-child {
+      border-bottom: none;
+    }
+
+    .roadmap-item-head {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.35rem;
+      margin-bottom: 0.2rem;
+    }
+
+    .roadmap-item-title {
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .roadmap-req-block {
+      margin-top: 0.45rem;
+    }
+
+    .roadmap-req-label {
+      display: block;
+      font-size: 0.65rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--text-secondary);
+      margin-bottom: 0.25rem;
+    }
+
+    .roadmap-req-list {
+      margin: 0;
+      padding-left: 1.1rem;
+      font-size: 0.72rem;
+      color: var(--text-secondary);
+      line-height: 1.45;
+    }
+
+    .roadmap-req-list li {
+      margin-bottom: 0.2rem;
+    }
+
+    .roadmap-req-list li:last-child {
+      margin-bottom: 0;
+    }
+
+    .nav-roadmap-section {
+      padding: 0.45rem 0.65rem 0.2rem;
+      font-size: 0.68rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--text-secondary);
+      border-top: 1px solid var(--border);
+    }
+
+    .nav-roadmap-section:first-child {
+      border-top: none;
+    }
+
+    .roadmap-badge {
+      display: inline-block;
+      font-size: 0.62rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      padding: 0.1rem 0.35rem;
+      border-radius: 4px;
+      margin-left: 0.35rem;
+      vertical-align: middle;
+    }
+
+    .roadmap-badge.available {
+      color: var(--accent-green);
+      background: rgba(63, 185, 80, 0.12);
+    }
+
+    .roadmap-badge.partial {
+      color: var(--accent-orange);
+      background: rgba(210, 153, 34, 0.12);
+    }
+
+    .roadmap-badge.planned {
+      color: var(--text-secondary);
+      background: var(--bg-tertiary);
+    }
+
+    .theme-toggle-btn {
+      margin-left: auto;
+      min-width: 2.25rem;
+      padding: 0.35rem 0.55rem;
+      font-size: 0.95rem;
+    }
+
+    .export-wav-group {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .transport-btn-group {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .demo-tracks-group {
+      flex-wrap: wrap;
+    }
+
+    .demo-tracks-group .btn-demo {
+      font-size: 0.82rem;
+      padding: 0.45rem 0.65rem;
+    }
+
+    .loop-region-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.5rem 0.75rem;
+      margin-top: 0.5rem;
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+    }
+
+    .loop-region-row input[type="range"] {
+      width: 120px;
+      max-width: 28vw;
+    }
+
+    .loop-region-label {
+      flex: 1 1 180px;
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+    }
+
+    .preset-diff-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+      margin-top: 0.5rem;
+    }
+
+    .preset-diff-table th,
+    .preset-diff-table td {
+      border: 1px solid var(--border);
+      padding: 0.4rem 0.55rem;
+      text-align: left;
+    }
+
+    .preset-diff-table th {
+      background: var(--bg-tertiary);
+    }
+
+    .preset-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .preset-toolbar-label {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin-right: 0.15rem;
+    }
+
+    .preset-toolbar select {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border);
+      color: var(--text-primary);
+      padding: 0.45rem 0.65rem;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      min-width: 200px;
+    }
+
+    .viz-controls-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      align-items: center;
+      margin-bottom: 0.75rem;
+    }
+
+    .viz-controls-row .control-group {
+      flex: 1;
+      min-width: 180px;
+    }
+
+    .viz-check-group {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      gap: 0.45rem;
+    }
+
+    .checkbox-inline {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      cursor: pointer;
+    }
+
+    .btn-ghost {
+      align-self: flex-start;
+      padding: 0.25rem 0.55rem;
+      font-size: 0.75rem;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text-secondary);
+      cursor: pointer;
+    }
+
+    .btn-ghost:hover {
+      color: var(--text-primary);
+      border-color: var(--accent);
+    }
+
+    .panel-heading-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      margin-left: auto;
+    }
+
+    .collapse-btn {
+      min-width: 2rem;
+      min-height: 2rem;
+      padding: 0.2rem 0.45rem;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: var(--bg-tertiary);
+      color: var(--text-secondary);
+      cursor: pointer;
+      font-size: 0.85rem;
+      line-height: 1;
+    }
+
+    .panel.is-collapsed .panel-body {
+      display: none;
+    }
+
+    .panel.is-collapsed .collapse-btn {
+      transform: rotate(-90deg);
+    }
+
+    .playlist-panel {
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .playlist-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .playlist-toolbar strong {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin-right: 0.25rem;
+    }
+
+    .playlist-list {
+      list-style: none;
+      max-height: 160px;
+      overflow-y: auto;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--bg-primary);
+    }
+
+    .playlist-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.55rem 0.65rem;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.85rem;
+      cursor: pointer;
+    }
+
+    .playlist-item:last-child {
+      border-bottom: none;
+    }
+
+    .playlist-item:hover {
+      background: var(--bg-tertiary);
+    }
+
+    .playlist-item.active {
+      background: rgba(88, 166, 255, 0.12);
+      border-left: 3px solid var(--accent);
+    }
+
+    .playlist-item.unavailable {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+
+    .playlist-item-index {
+      color: var(--text-secondary);
+      font-variant-numeric: tabular-nums;
+      min-width: 1.25rem;
+    }
+
+    .playlist-item-name {
+      flex: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .playlist-item-remove {
+      border: none;
+      background: transparent;
+      color: var(--text-secondary);
+      cursor: pointer;
+      font-size: 1rem;
+      line-height: 1;
+      padding: 0.2rem 0.35rem;
+    }
+
+    .playlist-empty {
+      padding: 0.75rem;
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+    }
+
+    .content-mode-row {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .content-mode-btn {
+      min-height: 44px;
+      min-width: 44px;
+      padding: 0.45rem 1rem;
+    }
+
+    .content-mode-btn.active {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: rgba(88, 166, 255, 0.12);
+    }
+
+    .export-options-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.75rem;
+      margin-top: 0.5rem;
+    }
+
+    .session-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    @media (max-width: 768px) {
+      .top-nav-inner {
+        padding-left: max(0.75rem, env(safe-area-inset-left));
+        padding-right: max(0.75rem, env(safe-area-inset-right));
+      }
+
+      .panel-transport {
+        position: sticky;
+        top: 0;
+        z-index: 40;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+      }
+
+      .btn,
+      .btn-primary,
+      .btn-icon,
+      .info-btn,
+      .collapse-btn {
+        min-height: 44px;
+        min-width: 44px;
+      }
+
+      input[type="range"] {
+        min-height: 44px;
+      }
+    }
+
+    .nav-paper-link {
+      color: var(--accent) !important;
+      font-weight: 500;
+    }
+
+    /* Panel headings with info icons */
+    .panel-heading {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .panel-heading h2 {
+      margin-bottom: 0;
+    }
+
+    .info-btn {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      border: 1px solid var(--accent);
+      background: transparent;
+      color: var(--accent);
+      font-size: 0.65rem;
+      font-weight: 700;
+      font-style: italic;
+      font-family: Georgia, serif;
+      line-height: 1;
+      cursor: pointer;
+      flex-shrink: 0;
+      padding: 0;
+    }
+
+    .info-btn:hover {
+      background: rgba(88, 166, 255, 0.15);
+    }
+
+    .label-with-info {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .control-group label .label-with-info {
+      display: inline-flex;
+    }
+
+    .label-with-info .info-btn {
+      width: 16px;
+      height: 16px;
+      font-size: 0.6rem;
+    }
+
+    .metric-card .label {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .metric-card .info-btn {
+      width: 14px;
+      height: 14px;
+      font-size: 0.55rem;
+    }
+
+    /* Modals */
+    body.modal-open {
+      overflow: hidden;
+    }
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.65);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      z-index: 1000;
+    }
+
+    .modal-overlay[hidden] {
+      display: none;
+    }
+
+    .modal-dialog {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      max-width: 640px;
+      width: 100%;
+      max-height: min(85vh, 720px);
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5);
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .modal-header h2 {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      text-transform: none;
+      letter-spacing: normal;
+      margin: 0;
+    }
+
+    .modal-close {
+      background: transparent;
+      border: none;
+      color: var(--text-secondary);
+      font-size: 1.5rem;
+      line-height: 1;
+      cursor: pointer;
+      padding: 0 0.25rem;
+    }
+
+    .modal-close:hover {
+      color: var(--text-primary);
+    }
+
+    .modal-body {
+      padding: 1.25rem;
+      overflow-y: auto;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    .modal-body h3 {
+      color: var(--text-primary);
+      font-size: 0.95rem;
+      margin: 1rem 0 0.5rem;
+    }
+
+    .modal-body h3:first-child {
+      margin-top: 0;
+    }
+
+    .modal-body ul,
+    .modal-body ol {
+      padding-left: 1.25rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .modal-body li {
+      margin-bottom: 0.35rem;
+    }
+
+    .modal-body p {
+      margin-bottom: 0.65rem;
+    }
+
+    .modal-body a {
+      color: var(--accent);
+    }
+
+    .modal-body .faq-item {
+      margin-bottom: 1rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .modal-body .faq-item:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .modal-body .faq-item h4 {
+      color: var(--text-primary);
+      font-size: 0.9rem;
+      margin-bottom: 0.35rem;
+    }
+
+    .modal-body .chain-diagram {
+      background: var(--bg-primary);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.75rem;
+      font-family: ui-monospace, monospace;
+      font-size: 0.72rem;
+      white-space: pre-wrap;
+      color: #c9d1d9;
+      margin: 0.5rem 0;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    header h1 {
+      font-size: 1.75rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.5rem;
+    }
+
+    header p {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      max-width: 640px;
+      margin: 0 auto;
+    }
+
+    .panel {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .panel h2 {
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-secondary);
+    }
+
+    .transport {
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+    }
+
+    .transport-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      align-items: center;
+    }
+
+    .transport-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+      align-items: center;
+    }
+
+    .btn-icon {
+      min-width: 2.5rem;
+      padding: 0.55rem 0.75rem;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .loop-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      user-select: none;
+      cursor: pointer;
+      margin-left: 0.25rem;
+    }
+
+    .loop-toggle input {
+      accent-color: var(--accent);
+      cursor: pointer;
+    }
+
+    .transport-scrubber {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 0.65rem;
+      align-items: center;
+    }
+
+    .time-label {
+      font-size: 0.78rem;
+      font-variant-numeric: tabular-nums;
+      color: var(--text-secondary);
+      min-width: 3.25rem;
+    }
+
+    .time-label.end {
+      text-align: right;
+    }
+
+    #positionSlider {
+      width: 100%;
+    }
+
+    #positionSlider:disabled {
+      opacity: 0.45;
+    }
+
+    .transport-volume {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 0.65rem;
+      align-items: center;
+    }
+
+    .transport-volume-label {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      min-width: 5.5rem;
+    }
+
+    .transport-volume-label .value {
+      font-variant-numeric: tabular-nums;
+      color: var(--accent);
+      font-size: 0.8rem;
+    }
+
+    #masterGain {
+      width: 100%;
+    }
+
+    .btn {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border);
+      color: var(--text-primary);
+      padding: 0.55rem 1.1rem;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s;
+    }
+
+    .btn:hover {
+      background: #2d333b;
+      border-color: #484f58;
+    }
+
+    .btn:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    .btn-primary {
+      background: #1f6feb;
+      border-color: #388bfd;
+    }
+
+    .btn-primary:hover {
+      background: #388bfd;
+    }
+
+    .file-input-wrapper {
+      position: relative;
+      overflow: hidden;
+      display: inline-block;
+    }
+
+    .file-input-wrapper input[type="file"] {
+      position: absolute;
+      left: 0;
+      top: 0;
+      opacity: 0;
+      width: 100%;
+      height: 100%;
+      cursor: pointer;
+    }
+
+    .status {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
+    .transport-meta {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.65rem;
+      margin-left: auto;
+    }
+
+    .status-pill {
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      padding: 0.25rem 0.55rem;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--bg-tertiary);
+      color: var(--text-secondary);
+    }
+
+    .status-pill.playing {
+      color: var(--accent-green);
+      border-color: #238636;
+      background: rgba(63, 185, 80, 0.12);
+    }
+
+    .status-pill.vocoder {
+      color: var(--accent-orange);
+      border-color: #6e4b00;
+      background: rgba(210, 153, 34, 0.12);
+    }
+
+    .latency-label {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .status.playing {
+      color: var(--accent-green);
+    }
+
+    .status.error {
+      color: var(--accent-red);
+    }
+
+    .visualizer-wrap {
+      position: relative;
+      background: var(--bg-primary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    #spectrumCanvas {
+      display: block;
+      width: 100%;
+      height: 180px;
+    }
+
+    #cochlearCanvas,
+    #deltaCanvas {
+      display: block;
+      width: 100%;
+      height: 120px;
+    }
+
+    #bandTraceCanvas {
+      display: block;
+      width: 100%;
+      height: 156px;
+    }
+
+    .viz-row {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.75rem;
+      margin-top: 0.75rem;
+    }
+
+    @media (min-width: 700px) {
+      .viz-row {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .viz-subpanel {
+      background: var(--bg-primary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .viz-subpanel h3 {
+      font-size: 0.72rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-secondary);
+      padding: 0.45rem 0.65rem;
+      border-bottom: 1px solid var(--border);
+      margin: 0;
+    }
+
+    .viz-subpanel-heading {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.35rem;
+      padding: 0.45rem 0.65rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .viz-subpanel-heading h3 {
+      border-bottom: none;
+      padding: 0;
+      flex: 1;
+    }
+
+    .viz-subpanel-heading .info-btn {
+      flex-shrink: 0;
+    }
+
+    .freq-info-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.75rem 1.25rem;
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      margin-top: 0.75rem;
+      padding: 0.55rem 0.65rem;
+      background: var(--bg-primary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }
+
+    .freq-info-row strong {
+      color: var(--text-primary);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .comp-vu-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.75rem;
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .comp-vu-item label {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.15rem;
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.35rem;
+    }
+
+    .comp-vu-item .label-row {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      flex-wrap: wrap;
+    }
+
+    .comp-vu-label {
+      font-variant-numeric: tabular-nums;
+      color: var(--accent-orange);
+      font-size: 0.66rem;
+      line-height: 1.3;
+    }
+
+    .btn.active {
+      border-color: var(--accent-green);
+      color: var(--accent-green);
+    }
+
+    .comp-vu {
+      height: 8px;
+      border-radius: 4px;
+      background: #21262d;
+      overflow: hidden;
+    }
+
+    .viz-labels {
+      display: grid;
+      grid-template-columns: repeat(16, 1fr);
+      padding: 0.35rem 0.5rem 0.5rem;
+      font-size: 0.6rem;
+      color: var(--text-secondary);
+      text-align: center;
+    }
+
+    .controls-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.25rem;
+    }
+
+    @media (min-width: 600px) {
+      .controls-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .control-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .control-group label {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      font-size: 0.9rem;
+    }
+
+    .control-group label span.value {
+      font-variant-numeric: tabular-nums;
+      color: var(--accent);
+      font-size: 0.85rem;
+    }
+
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 6px;
+      background: var(--slider-track);
+      border-radius: 3px;
+      outline: none;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 16px;
+      height: 16px;
+      background: var(--slider-thumb);
+      border-radius: 50%;
+      cursor: pointer;
+      border: 2px solid var(--bg-primary);
+    }
+
+    input[type="range"]::-moz-range-thumb {
+      width: 16px;
+      height: 16px;
+      background: var(--slider-thumb);
+      border-radius: 50%;
+      cursor: pointer;
+      border: 2px solid var(--bg-primary);
+    }
+
+    .toggle-row {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem 0;
+    }
+
+    .toggle-row input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--accent-orange);
+      cursor: pointer;
+    }
+
+    .toggle-row label {
+      font-size: 0.9rem;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .diagnostic-panel {
+      border-color: #3d2e00;
+      background: linear-gradient(135deg, #161b22 0%, #1a1408 100%);
+    }
+
+    .diagnostic-panel h2 {
+      color: var(--accent-orange);
+    }
+
+    .diagnostic-note {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      margin-bottom: 1rem;
+      padding: 0.6rem 0.75rem;
+      background: rgba(210, 153, 34, 0.08);
+      border-radius: 6px;
+      border-left: 3px solid var(--accent-orange);
+    }
+
+    .diagnostic-controls {
+      opacity: 0.45;
+      pointer-events: none;
+      transition: opacity 0.2s;
+    }
+
+    .diagnostic-controls.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .guide-panel {
+      border-color: #1f3d2a;
+      background: linear-gradient(135deg, #161b22 0%, #0f1a14 100%);
+    }
+
+    .guide-panel h2 {
+      color: var(--accent-green);
+    }
+
+    .guide-steps {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+    }
+
+    .guide-steps strong {
+      color: var(--text-primary);
+    }
+
+    .slider-hint {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .map-panel {
+      border-color: #1f2d3d;
+    }
+
+    .map-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .map-toolbar select {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border);
+      color: var(--text-primary);
+      padding: 0.45rem 0.65rem;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      min-width: 220px;
+    }
+
+    .map-description {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      margin-bottom: 1rem;
+    }
+
+    .electrode-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.65rem;
+    }
+
+    @media (min-width: 700px) {
+      .electrode-grid {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+
+    .electrode-card {
+      background: var(--bg-primary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.55rem 0.65rem;
+      font-size: 0.75rem;
+    }
+
+    .electrode-card.dead {
+      opacity: 0.55;
+      border-color: #5c2b2b;
+    }
+
+    .electrode-card.weak {
+      border-color: #5c4a2b;
+    }
+
+    .electrode-card header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.35rem;
+      text-align: left;
+    }
+
+    .electrode-card header strong {
+      font-size: 0.8rem;
+    }
+
+    .electrode-card select,
+    .electrode-card input[type="range"] {
+      width: 100%;
+      margin-top: 0.25rem;
+    }
+
+    .electrode-card select {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border);
+      color: var(--text-primary);
+      border-radius: 4px;
+      font-size: 0.72rem;
+      padding: 0.2rem;
+    }
+
+    .optimize-panel {
+      border-color: #2b1f3d;
+      background: linear-gradient(135deg, #161b22 0%, #140f1a 100%);
+    }
+
+    .optimize-panel h2 {
+      color: #bc8cff;
+    }
+
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.75rem;
+      margin-top: 1rem;
+    }
+
+    @media (min-width: 700px) {
+      .metrics-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    .metric-card {
+      background: var(--bg-primary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.75rem;
+    }
+
+    .metric-card .label {
+      font-size: 0.72rem;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .metric-card .value {
+      font-size: 1.15rem;
+      font-variant-numeric: tabular-nums;
+      margin-top: 0.2rem;
+      color: var(--text-primary);
+      min-height: 1.35rem;
+    }
+
+    .metric-card .delta {
+      font-size: 0.8rem;
+      margin-top: 0.15rem;
+    }
+
+    .metric-card .delta.positive {
+      color: var(--accent-green);
+    }
+
+    .metric-card .delta.negative {
+      color: var(--accent-red);
+    }
+
+    .metric-card .delta.neutral {
+      color: var(--text-secondary);
+    }
+
+    .optimize-progress {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin-top: 0.75rem;
+      min-height: 1.2rem;
+    }
+
+    .hidden-input {
+      display: none;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 2rem;
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+    }
+  </style>
+</head>
+<body>
+  <div id="appLoadError" class="app-load-error" hidden></div>
+  <nav class="top-nav">
+    <div class="top-nav-inner">
+      <span class="top-nav-brand">CI Enhancement Engine</span>
+
+      <div class="nav-dropdown">
+        <button type="button" class="nav-dropdown-toggle">Instructions ▾</button>
+        <div class="nav-dropdown-menu">
+          <button type="button" data-menu-content="instructions">
+            How to Use (detailed)
+            <span class="menu-desc">Built-in demos, presets, transport, A/B testing, study prep</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="nav-dropdown">
+        <button type="button" class="nav-dropdown-toggle">Help ▾</button>
+        <div class="nav-dropdown-menu">
+          <button type="button" data-menu-content="help">
+            Troubleshooting &amp; support
+            <span class="menu-desc">Visualizers, profile meters, auto-tune, volume, browsers, privacy</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="nav-dropdown">
+        <button type="button" class="nav-dropdown-toggle">FAQ ▾</button>
+        <div class="nav-dropdown-menu">
+          <button type="button" data-menu-content="faq">
+            Frequently asked questions
+            <span class="menu-desc">EQ vs CI pre-proc, gold/blue viz, profile meters, MAP, roadmap</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="nav-dropdown">
+        <button type="button" class="nav-dropdown-toggle">Roadmap ▾</button>
+        <div class="nav-dropdown-menu nav-roadmap-menu" id="roadmapMenu"></div>
+      </div>
+
+      <div class="nav-dropdown">
+        <button type="button" class="nav-dropdown-toggle">Science ▾</button>
+        <div class="nav-dropdown-menu">
+          <button type="button" data-menu-content="background">
+            Background overview
+            <span class="menu-desc">Why CI users need different processing</span>
+          </button>
+          <button type="button" data-menu-content="technical">
+            Technical signal chain
+            <span class="menu-desc">Architecture, ring-mod, preview viz, auto-tune, modules</span>
+          </button>
+          <a href="overview.html" target="_blank" class="nav-paper-link">
+            One-page overview (web)
+            <span class="menu-desc">Industry pitch — demo vs native app product path</span>
+          </a>
+          <a href="CI-Audio-Enhancement-Overview.pdf" download="CI-Audio-Enhancement-Overview.pdf" class="nav-paper-link">
+            Download one-page overview (PDF)
+            <span class="menu-desc">Single-page pitch for sharing</span>
+          </a>
+          <a href="paper.html" target="_blank" class="nav-paper-link">
+            Full technical paper
+            <span class="menu-desc">Overtone science, double compression, research protocol</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="nav-dropdown">
+        <button type="button" class="nav-dropdown-toggle">Documents ▾</button>
+        <div class="nav-dropdown-menu">
+          <a href="overview.html" target="_blank">
+            One-page overview
+            <span class="menu-desc">Industry pitch — demo vs product path</span>
+          </a>
+          <a href="CI-Audio-Enhancement-Overview.pdf" download="CI-Audio-Enhancement-Overview.pdf">
+            Download overview (PDF)
+            <span class="menu-desc">Single-page pitch for sharing</span>
+          </a>
+          <a href="paper.html" target="_blank">
+            Technical paper
+            <span class="menu-desc">Architecture, science, validation protocol</span>
+          </a>
+          <button type="button" id="exportSessionBtn">
+            Export session JSON
+            <span class="menu-desc">Full settings JSON — see FAQ “session JSON export”</span>
+          </button>
+          <button type="button" id="importSessionBtn">
+            Import session JSON
+            <span class="menu-desc">Restore a saved tuning session</span>
+          </button>
+        </div>
+      </div>
+
+      <input type="file" id="sessionFileInput" class="hidden-input" accept="application/json,.json">
+
+      <button type="button" class="btn theme-toggle-btn" id="themeToggleBtn" title="Toggle light/dark theme" aria-label="Toggle light/dark theme">☀</button>
+    </div>
+  </nav>
+
+  <div class="container">
+    <header>
+      <h1>CI Audio Enhancement Engine</h1>
+      <p>
+        Pre-processor for cochlear implant users. Multi-band compression, harmonic bass excitation,
+        clarity lift, and high-frequency transposition — preserving the waveform while maximizing
+        perceptual salience after CI re-coding.
+        <button type="button" class="info-btn" data-info-topic="mobile-layout" title="About mobile layout and PWA" aria-label="About mobile layout and PWA">i</button>
+      </p>
+    </header>
+
+    <section class="panel panel-transport" data-panel-id="transport">
+      <div class="panel-heading">
+        <h2>Transport</h2>
+        <button type="button" class="info-btn" data-info-topic="transport" title="About transport controls" aria-label="About transport controls">i</button>
+      </div>
+      <div class="transport">
+        <div class="transport-row">
+          <div class="file-input-wrapper">
+            <span class="transport-btn-group">
+              <button class="btn" id="chooseFileBtn" type="button">Choose Audio File</button>
+            <button type="button" class="info-btn" data-info-topic="user-audio" title="About uploaded audio files" aria-label="About uploaded audio files">i</button>
+            </span>
+            <input type="file" id="audioFileInput" accept="audio/*">
+          </div>
+          <span class="transport-btn-group demo-tracks-group">
+            <button class="btn btn-demo" type="button" data-demo-id="dsp-check" title="Engineering fixture — proves each DSP stage">DSP Check</button>
+            <button class="btn btn-demo" type="button" data-demo-id="music-eval" title="Musical loop — proves music enjoyment for CI streaming">Music Eval</button>
+            <button type="button" class="info-btn" data-info-topic="demo-tracks" title="About built-in demo tracks" aria-label="About built-in demo tracks">i</button>
+          </span>
+          <span class="transport-btn-group">
+            <button class="btn" id="micBtn" type="button">Use Microphone</button>
+            <button type="button" class="info-btn" data-info-topic="transport" title="About microphone input" aria-label="About microphone input">i</button>
+          </span>
+          <span class="export-wav-group">
+            <button class="btn" id="exportWavBtn" type="button" disabled>Export Processed WAV</button>
+            <button type="button" class="info-btn" data-info-topic="export-wav" title="About WAV export" aria-label="About WAV export">i</button>
+          </span>
+          <div class="transport-meta">
+            <span class="status-pill" id="statusPill">IDLE</span>
+            <span class="latency-label" id="latencyLabel">Latency: —</span>
+            <span class="status" id="statusLabel">No file loaded</span>
+          </div>
+        </div>
+        <div class="transport-controls">
+          <button class="btn btn-icon" id="toStartBtn" type="button" disabled title="Jump to start">⏮</button>
+          <button class="btn btn-icon" id="rewindBtn" type="button" disabled title="Rewind 5 seconds">−5s</button>
+          <button class="btn btn-primary" id="playPauseBtn" type="button" disabled>Play</button>
+          <button class="btn" id="stopBtn" type="button" disabled>Stop</button>
+          <button class="btn btn-icon" id="forwardBtn" type="button" disabled title="Fast-forward 5 seconds">+5s</button>
+          <label class="loop-toggle label-with-info">
+            <input type="checkbox" id="loopCheckbox">
+            Loop
+            <button type="button" class="info-btn" data-info-topic="transport" title="About loop and transport" aria-label="About loop and transport">i</button>
+          </label>
+        </div>
+        <div class="transport-scrubber">
+          <span class="time-label" id="timeCurrent">0:00</span>
+          <input type="range" id="positionSlider" min="0" max="1000" step="1" value="0" disabled>
+          <span class="time-label end" id="timeDuration">0:00</span>
+        </div>
+        <div class="loop-region-row" id="loopRegionRow">
+          <strong>Optimize region</strong>
+          <button type="button" class="info-btn" data-info-topic="optimize-region" title="About optimize region" aria-label="About optimize region">i</button>
+          <label>In <input type="range" id="loopInSlider" min="0" max="1000" step="1" value="0" disabled></label>
+          <label>Out <input type="range" id="loopOutSlider" min="0" max="1000" step="1" value="1000" disabled></label>
+          <span class="loop-region-label" id="loopRegionLabel">Full track — uses center 12 s</span>
+        </div>
+        <div class="transport-volume">
+          <label for="masterGain" class="transport-volume-label">
+            <span>Volume</span>
+            <button type="button" class="info-btn" data-info-topic="master-gain" title="About output volume" aria-label="About output volume">i</button>
+          </label>
+          <input type="range" id="masterGain" min="-24" max="6" step="0.5" value="0">
+          <span class="transport-volume-label value" id="masterGainValue">0.0 dB</span>
+        </div>
+        <div class="export-options-row">
+          <label class="checkbox-inline">
+            <input type="checkbox" id="exportVocoderCheckbox">
+            Include diagnostic vocoder in WAV export
+          </label>
+          <button type="button" class="info-btn" data-info-topic="export-wav" title="About WAV export options" aria-label="About WAV export options">i</button>
+        </div>
+        <div class="playlist-panel">
+          <div class="playlist-toolbar">
+            <strong>Playlist</strong>
+            <button type="button" class="info-btn" data-info-topic="playlist" title="About playlist queue" aria-label="About playlist queue">i</button>
+            <button class="btn" id="queueFilesBtn" type="button" disabled>Add files to queue…</button>
+            <button class="btn btn-ghost" id="clearQueueBtn" type="button" disabled>Clear queue</button>
+            <input type="file" id="queueFileInput" class="hidden-input" accept="audio/*" multiple>
+          </div>
+          <ol id="playlistList" class="playlist-list">
+            <li class="playlist-empty">Load a file or built-in demo to start a playlist.</li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-heading">
+        <h2>Input vs Enhanced (16 channels)</h2>
+        <button type="button" class="info-btn" data-info-topic="spectrum" title="About spectrum analyzer" aria-label="About spectrum analyzer">i</button>
+      </div>
+      <div class="viz-controls-row">
+        <div class="control-group">
+          <label for="vizSmoothing" class="label-with-info">
+            <span>Channel bar smoothing <button type="button" class="info-btn" data-info-topic="viz-controls" title="About visualization controls" aria-label="About visualization controls">i</button></span>
+            <span class="value" id="vizSmoothingValue">0.60</span>
+          </label>
+          <input type="range" id="vizSmoothing" min="0" max="0.95" step="0.05" value="0.6">
+          <div class="slider-hint">
+            <span>Responsive</span>
+            <span>Stable</span>
+          </div>
+        </div>
+        <div class="control-group">
+          <label for="meterStability" class="label-with-info">
+            <span>Meter stability <button type="button" class="info-btn" data-info-topic="viz-controls" title="About meter stability" aria-label="About meter stability">i</button></span>
+            <span class="value" id="meterStabilityValue">0.75</span>
+          </label>
+          <input type="range" id="meterStability" min="0.2" max="0.95" step="0.05" value="0.75">
+          <div class="slider-hint">
+            <span>Responsive</span>
+            <span>Steady profile</span>
+          </div>
+        </div>
+        <div class="control-group viz-check-group">
+          <span class="label-with-info" style="font-size: 0.85rem; color: var(--text-secondary);">
+            Reset meter averages
+            <button type="button" class="info-btn" data-info-topic="viz-controls" title="About reset meter averages" aria-label="About reset meter averages">i</button>
+          </span>
+          <button type="button" class="btn-ghost" id="meterResetBtn">Reset meter averages</button>
+        </div>
+      </div>
+      <div class="visualizer-wrap">
+        <canvas id="spectrumCanvas" width="928" height="180"></canvas>
+        <div class="viz-labels" id="vizLabels"></div>
+      </div>
+      <div class="freq-info-row" id="freqInfoRow">
+        <span>F0 est.: <strong id="f0Estimate">—</strong></span>
+        <span>Peak channel: <strong id="peakChannel">—</strong></span>
+        <span>Saturated bins: <strong id="satChannels">0</strong></span>
+        <span>Harmonic gen: <strong id="harmonicStatus">OFF</strong></span>
+        <button type="button" class="info-btn" data-info-topic="freq-info" title="About frequency readouts" aria-label="About frequency readouts">i</button>
+      </div>
+      <div class="viz-row">
+        <div class="viz-subpanel">
+          <div class="viz-subpanel-heading">
+            <h3>Channel Contrast (vs average)</h3>
+            <button type="button" class="info-btn" data-info-topic="channel-contrast" title="About channel contrast" aria-label="About channel contrast">i</button>
+          </div>
+          <canvas id="cochlearCanvas" width="456" height="120"></canvas>
+        </div>
+        <div class="viz-subpanel">
+          <div class="viz-subpanel-heading">
+            <h3>Enhancement Profile (% vs input)</h3>
+            <button type="button" class="info-btn" data-info-topic="enhancement-profile" title="About enhancement profile" aria-label="About enhancement profile">i</button>
+          </div>
+          <canvas id="deltaCanvas" width="456" height="120"></canvas>
+        </div>
+      </div>
+      <div class="viz-subpanel" style="margin-top: 0.75rem;">
+        <div class="viz-subpanel-heading">
+          <h3>Band Energy (input vs enhanced)</h3>
+          <button type="button" class="info-btn" data-info-topic="band-energy" title="About band energy comparison" aria-label="About band energy comparison">i</button>
+        </div>
+        <canvas id="bandTraceCanvas" width="928" height="156"></canvas>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-heading">
+        <h2>Enhancement Controls</h2>
+        <button type="button" class="info-btn" data-info-topic="enhancement-controls" title="About enhancement controls" aria-label="About enhancement controls">i</button>
+      </div>
+      <div class="content-mode-row">
+        <button type="button" class="btn content-mode-btn" id="speechModeBtn">Speech mode</button>
+        <button type="button" class="info-btn" data-info-topic="content-mode" title="About Speech/Music mode" aria-label="About Speech/Music mode">i</button>
+        <button type="button" class="btn content-mode-btn" id="musicModeBtn">Music mode</button>
+      </div>
+      <div class="preset-toolbar">
+        <span class="preset-toolbar-label">
+          Preset
+          <button type="button" class="info-btn" data-info-topic="presets" title="About enhancement presets" aria-label="About enhancement presets">i</button>
+        </span>
+        <select id="presetSelect" title="Load enhancement preset"></select>
+        <button class="btn" id="savePresetBtn" type="button">Save as preset</button>
+        <button class="btn" id="comparePresetsBtn" type="button">Compare presets</button>
+        <button class="btn btn-ghost" id="undoParamsBtn" type="button" disabled title="Undo slider change">Undo</button>
+        <button class="btn btn-ghost" id="redoParamsBtn" type="button" disabled title="Redo slider change">Redo</button>
+        <button class="btn" id="exportPresetBtn" type="button">Export preset</button>
+        <button class="btn" id="importPresetBtn" type="button">Import preset</button>
+        <input type="file" id="presetFileInput" class="hidden-input" accept="application/json,.json">
+      </div>
+      <div class="controls-grid">
+        <div class="control-group">
+          <label for="harmonicDrive" class="label-with-info">
+            <span>Harmonic Drive <button type="button" class="info-btn" data-info-topic="harmonic-drive" title="About harmonic drive" aria-label="About harmonic drive">i</button></span>
+            <span class="value" id="harmonicDriveValue">0.65</span>
+          </label>
+          <input type="range" id="harmonicDrive" min="0" max="1" step="0.01" value="0.65">
+        </div>
+        <div class="control-group">
+          <label for="compThreshold" class="label-with-info">
+            <span>Multi-Band Comp Threshold <button type="button" class="info-btn" data-info-topic="comp-threshold" title="About compression threshold" aria-label="About compression threshold">i</button></span>
+            <span class="value" id="compThresholdValue">-42 dB</span>
+          </label>
+          <input type="range" id="compThreshold" min="-60" max="-20" step="1" value="-42">
+        </div>
+        <div class="control-group">
+          <label for="clarityLift" class="label-with-info">
+            <span>Clarity Lift <button type="button" class="info-btn" data-info-topic="clarity-lift" title="About clarity lift" aria-label="About clarity lift">i</button></span>
+            <span class="value" id="clarityLiftValue">8.0 dB</span>
+          </label>
+          <input type="range" id="clarityLift" min="0" max="18" step="0.5" value="8">
+        </div>
+        <div class="control-group">
+          <label for="transposeMix" class="label-with-info">
+            <span>Freq Transposition Mix <button type="button" class="info-btn" data-info-topic="transpose-mix" title="About frequency transposition" aria-label="About frequency transposition">i</button></span>
+            <span class="value" id="transposeMixValue">40%</span>
+          </label>
+          <input type="range" id="transposeMix" min="0" max="1" step="0.01" value="0.4">
+          <div class="slider-hint">
+            <span>← Direct high band</span>
+            <span>Ring-mod transposed →</span>
+          </div>
+        </div>
+        <div class="control-group">
+          <label for="stereoWidth" class="label-with-info">
+            <span>Stereo width <button type="button" class="info-btn" data-info-topic="stereo-width" title="About stereo width" aria-label="About stereo width">i</button></span>
+            <span class="value" id="stereoWidthValue">0%</span>
+          </label>
+          <input type="range" id="stereoWidth" min="0" max="1" step="0.05" value="0">
+          <div class="slider-hint">
+            <span>Mono (CI default)</span>
+            <span>Wider image</span>
+          </div>
+        </div>
+      </div>
+      <div class="toggle-row">
+        <input type="checkbox" id="abLoudnessMatch" checked>
+        <label for="abLoudnessMatch" class="label-with-info">
+          Loudness-match when bypassing (fair A/B)
+          <button type="button" class="info-btn" data-info-topic="loudness-matched-ab" title="About loudness-matched A/B" aria-label="About loudness-matched A/B">i</button>
+        </label>
+      </div>
+      <div class="toggle-row">
+        <input type="checkbox" id="enhancementBypass">
+        <label for="enhancementBypass" class="label-with-info">
+          Bypass Enhancement (hear raw audio for A/B comparison)
+          <button type="button" class="info-btn" data-info-topic="enhancement-bypass" title="About bypass enhancement" aria-label="About bypass enhancement">i</button>
+        </label>
+      </div>
+      <div class="comp-vu-row">
+        <div class="comp-vu-item">
+          <label>
+            <span class="label-row">Low band GR <button type="button" class="info-btn" data-info-topic="comp-gr-meters" title="About gain-reduction meters" aria-label="About gain-reduction meters">i</button></span>
+            <span class="comp-vu-label" id="compVuLowLabel">idle</span>
+          </label>
+          <div class="comp-vu" id="compVuLow"></div>
+        </div>
+        <div class="comp-vu-item">
+          <label>
+            <span class="label-row">Mid band GR <button type="button" class="info-btn" data-info-topic="comp-gr-meters" title="About gain-reduction meters" aria-label="About gain-reduction meters">i</button></span>
+            <span class="comp-vu-label" id="compVuMidLabel">idle</span>
+          </label>
+          <div class="comp-vu" id="compVuMid"></div>
+        </div>
+        <div class="comp-vu-item">
+          <label>
+            <span class="label-row">High band GR <button type="button" class="info-btn" data-info-topic="comp-gr-meters" title="About gain-reduction meters" aria-label="About gain-reduction meters">i</button></span>
+            <span class="comp-vu-label" id="compVuHighLabel">idle</span>
+          </label>
+          <div class="comp-vu" id="compVuHigh"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel optimize-panel" data-panel-id="auto-tune">
+      <div class="panel-heading">
+        <h2>CI Auto-Tune (Vocoder-in-the-Loop)</h2>
+        <button type="button" class="info-btn" data-info-topic="auto-tune" title="About CI auto-tune" aria-label="About CI auto-tune">i</button>
+      </div>
+      <p class="map-description">
+        Analyzes a segment of loaded audio, evaluates 625 enhancement combinations (including transpose mix),
+        and selects settings that score highest after passing through the 16-channel vocoder with the active electrode map.
+        Optimization targets CI survivability, not conventional speaker fidelity.
+        After completion, metric cards display vocoded scores and percentage change vs baseline.
+      </p>
+      <div class="map-toolbar">
+        <button class="btn btn-primary" id="optimizeBtn" type="button" disabled>Optimize for CI</button>
+        <span class="optimize-progress" id="optimizeProgress">Load audio to enable optimization.</span>
+      </div>
+      <div class="metrics-grid" id="metricsGrid">
+        <div class="metric-card">
+          <div class="label">Composite score <button type="button" class="info-btn" data-info-topic="metric-composite" title="About composite score" aria-label="About composite score">i</button></div>
+          <div class="value" id="metricComposite">—</div>
+          <div class="delta neutral" id="deltaComposite">Run optimize to compare</div>
+        </div>
+        <div class="metric-card">
+          <div class="label">Modulation depth <button type="button" class="info-btn" data-info-topic="metric-modulation" title="About modulation depth" aria-label="About modulation depth">i</button></div>
+          <div class="value" id="metricModulation">—</div>
+          <div class="delta neutral" id="deltaModulation">—</div>
+        </div>
+        <div class="metric-card">
+          <div class="label">Usable band energy <button type="button" class="info-btn" data-info-topic="metric-usable" title="About usable band energy" aria-label="About usable band energy">i</button></div>
+          <div class="value" id="metricUsable">—</div>
+          <div class="delta neutral" id="deltaUsable">—</div>
+        </div>
+        <div class="metric-card">
+          <div class="label">Inter-band contrast <button type="button" class="info-btn" data-info-topic="metric-contrast" title="About inter-band contrast" aria-label="About inter-band contrast">i</button></div>
+          <div class="value" id="metricContrast">—</div>
+          <div class="delta neutral" id="deltaContrast">—</div>
+        </div>
+        <div class="metric-card">
+          <div class="label">Bass rhythm salience <button type="button" class="info-btn" data-info-topic="metric-bass" title="About bass rhythm salience" aria-label="About bass rhythm salience">i</button></div>
+          <div class="value" id="metricBass">—</div>
+          <div class="delta neutral" id="deltaBass">—</div>
+        </div>
+        <div class="metric-card">
+          <div class="label">Speech band salience <button type="button" class="info-btn" data-info-topic="metric-speech" title="About speech band salience" aria-label="About speech band salience">i</button></div>
+          <div class="value" id="metricSpeech">—</div>
+          <div class="delta neutral" id="deltaSpeech">—</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel map-panel">
+      <div class="panel-heading">
+        <h2>Electrode Map (MAP-Inspired)</h2>
+        <button type="button" class="info-btn" data-info-topic="electrode-map" title="About electrode map" aria-label="About electrode map">i</button>
+      </div>
+      <p class="map-description" id="mapDescription">
+        Clinical MAP exports are not publicly available. Built-in presets derive from published CI literature.
+        Custom maps can be imported as JSON; audiologists may complete <code>profiles/example-custom.json</code> with patient-specific data.
+      </p>
+      <div class="map-toolbar">
+        <select id="mapProfileSelect"></select>
+        <button class="btn" id="importMapBtn" type="button">Import JSON</button>
+        <button class="btn" id="exportMapBtn" type="button">Export JSON</button>
+        <input type="file" id="mapFileInput" class="hidden-input" accept="application/json,.json">
+      </div>
+      <div class="electrode-grid" id="electrodeGrid"></div>
+    </section>
+
+    <section class="panel diagnostic-panel" data-panel-id="diagnostic-vocoder">
+      <div class="panel-heading">
+        <h2>Diagnostic Vocoder</h2>
+        <button type="button" class="info-btn" data-info-topic="vocoder-diagnostic" title="About diagnostic vocoder" aria-label="About diagnostic vocoder">i</button>
+      </div>
+      <p class="diagnostic-note">
+        For normal-hearing developers only. Simulates CI hardware limitations via a
+        16-channel noise-band vocoder. Bypassed by default — enhancement chain is always active.
+      </p>
+      <div class="toggle-row">
+        <input type="checkbox" id="vocoderEnable">
+        <label for="vocoderEnable" class="label-with-info">
+          Enable CI Hardware Simulation (Diagnostic)
+          <button type="button" class="info-btn" data-info-topic="vocoder-enable" title="About enabling vocoder simulation" aria-label="About enabling vocoder simulation">i</button>
+        </label>
+      </div>
+      <div class="controls-grid diagnostic-controls" id="diagnosticControls">
+        <div class="control-group">
+          <label for="vocoderDryWet" class="label-with-info">
+            <span>Vocoder Blend (Enhanced ↔ Simulated) <button type="button" class="info-btn" data-info-topic="vocoder-blend" title="About vocoder blend" aria-label="About vocoder blend">i</button></span>
+            <span class="value" id="vocoderDryWetValue">0% simulated</span>
+          </label>
+          <input type="range" id="vocoderDryWet" min="0" max="1" step="0.01" value="0">
+          <div class="slider-hint">
+            <span>← Enhanced (pre-processed)</span>
+            <span>Simulated (CI vocoder) →</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      Use <strong>Instructions</strong>, <strong>Help</strong>, <strong>FAQ</strong>, <strong>Science</strong>, <strong>Roadmap</strong>, and <strong>Documents</strong> above.
+      <a href="overview.html" target="_blank">One-page overview</a> ·
+      <a href="CI-Audio-Enhancement-Overview.pdf" download="CI-Audio-Enhancement-Overview.pdf">Download PDF</a> ·
+      <a href="paper.html" target="_blank">Technical paper</a> · All processing is local in the browser.
+    </footer>
+  </div>
+
+  <script type="module">
+    const APP_VERSION = '14';
+    import(`./app.js?v=${APP_VERSION}`).catch((error) => {
+      console.error('CI Audio Enhancement failed to load:', error);
+      const banner = document.getElementById('appLoadError');
+      if (banner) {
+        banner.hidden = false;
+        banner.innerHTML = `
+          <strong>Application failed to load.</strong>
+          Menus and buttons will not work until this is fixed.
+          Hard-refresh with <code>Cmd+Shift+R</code> (Mac) or <code>Ctrl+Shift+R</code> (Windows).
+          If the problem persists, open the browser console (F12) and share the red error message.
+          <br><small>Technical: ${error?.message || error}</small>
+        `;
+      }
+    });
+  </script>
+</body>
+</html>

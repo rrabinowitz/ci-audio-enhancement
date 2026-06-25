@@ -1,0 +1,17 @@
+{
+  "name": "ci-audio-enhancement",
+  "version": "1.0.0",
+  "description": "Browser-based music pre-processor for cochlear implant users. Runs entirely client-side (Web Audio API); no server upload of audio.",
+  "main": "app.js",
+  "scripts": {
+    "validate": "node scripts/validate.mjs",
+    "test": "node scripts/validate.mjs && node scripts/parity-test.mjs"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "devDependencies": {
+    "puppeteer": "^23.11.1"
+  }
+}

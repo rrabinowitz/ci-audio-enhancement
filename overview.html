@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CI Audio Enhancement Engine — One-Page Overview</title>
+  <style>
+    @page {
+      size: letter;
+      margin: 0.42in 0.48in;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+      font-size: 8.1pt;
+      line-height: 1.32;
+      color: #1a2332;
+      background: #fff;
+    }
+
+    .page {
+      width: 7.54in;
+      margin: 0 auto;
+    }
+
+    .screen-bar {
+      font-size: 0.85rem;
+      padding: 0.65rem 1rem;
+      background: #eef4fb;
+      border-bottom: 1px solid #c8d9ef;
+      text-align: center;
+    }
+
+    .screen-bar a {
+      color: #0b57a4;
+      margin: 0 0.35rem;
+    }
+
+    .screen-bar .download {
+      font-weight: 600;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      gap: 0.75rem;
+      padding-bottom: 0.35rem;
+      border-bottom: 2.5px solid #0b57a4;
+      margin-bottom: 0.38rem;
+    }
+
+    .brand h1 {
+      font-size: 15.5pt;
+      line-height: 1.12;
+      color: #0b57a4;
+      font-weight: 700;
+    }
+
+    .brand .tagline {
+      margin-top: 0.15rem;
+      font-size: 8.6pt;
+      color: #445066;
+      max-width: 5.1in;
+    }
+
+    .meta {
+      text-align: right;
+      font-size: 7.2pt;
+      color: #5c6778;
+      flex-shrink: 0;
+    }
+
+    .meta strong {
+      display: block;
+      color: #1a2332;
+      font-size: 7.6pt;
+    }
+
+    .lead {
+      background: #f4f8fc;
+      border-left: 3px solid #0b57a4;
+      padding: 0.32rem 0.48rem;
+      margin-bottom: 0.38rem;
+      font-size: 8.3pt;
+      color: #243044;
+    }
+
+    .cols {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.42rem 0.55rem;
+      margin-bottom: 0.38rem;
+    }
+
+    section h2 {
+      font-size: 7.6pt;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #0b57a4;
+      margin-bottom: 0.2rem;
+      padding-bottom: 0.08rem;
+      border-bottom: 1px solid #d8e3f0;
+    }
+
+    ul {
+      padding-left: 0.88rem;
+    }
+
+    li {
+      margin-bottom: 0.12rem;
+    }
+
+    li strong {
+      color: #1a2332;
+    }
+
+    .compare-wrap {
+      margin-bottom: 0.38rem;
+    }
+
+    .compare-wrap h2 {
+      font-size: 7.6pt;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #0b57a4;
+      margin-bottom: 0.18rem;
+      padding-bottom: 0.08rem;
+      border-bottom: 1px solid #d8e3f0;
+    }
+
+    .compare {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 7.2pt;
+    }
+
+    .compare th,
+    .compare td {
+      border: 1px solid #d8e3f0;
+      padding: 0.16rem 0.3rem;
+      vertical-align: top;
+    }
+
+    .compare th {
+      background: #eef4fb;
+      color: #0b57a4;
+      font-weight: 600;
+      text-align: left;
+    }
+
+    .compare td:first-child {
+      font-weight: 600;
+      background: #fafbfd;
+      width: 26%;
+    }
+
+    .check {
+      color: #137333;
+      font-weight: 700;
+    }
+
+    .dash {
+      color: #9aa3b2;
+    }
+
+    .roadmap .priority {
+      display: inline-block;
+      font-size: 6.2pt;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: #0b57a4;
+      margin-right: 0.15rem;
+    }
+
+    footer {
+      display: grid;
+      grid-template-columns: 1.35fr 1fr;
+      gap: 0.45rem;
+      padding-top: 0.32rem;
+      border-top: 2px solid #0b57a4;
+    }
+
+    .cta {
+      background: #0b57a4;
+      color: #fff;
+      padding: 0.34rem 0.45rem;
+      border-radius: 3px;
+    }
+
+    .cta h2 {
+      color: #fff;
+      font-size: 7.6pt;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.18rem;
+    }
+
+    .cta li {
+      color: #e8f1fb;
+      font-size: 7.5pt;
+      margin-bottom: 0.1rem;
+    }
+
+    .disclaimer {
+      font-size: 6.8pt;
+      color: #5c6778;
+      line-height: 1.28;
+    }
+
+    .disclaimer p {
+      margin-bottom: 0.22rem;
+    }
+
+    .disclaimer strong {
+      color: #445066;
+    }
+
+    @media print {
+      .screen-bar {
+        display: none;
+      }
+
+      body {
+        print-color-adjust: exact;
+        -webkit-print-color-adjust: exact;
+      }
+
+      .page {
+        width: auto;
+        margin: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="screen-bar">
+    <a href="index.html">← Back to app</a>
+    <a href="paper.html">Technical paper</a>
+    <a class="download" href="CI-Audio-Enhancement-Overview.pdf" download>Download PDF</a>
+  </div>
+
+  <div class="page">
+    <header>
+      <div class="brand">
+        <h1>CI Audio Enhancement Engine</h1>
+        <p class="tagline">Music pre-processing upstream of the implant stream — designed for how CIs represent sound. The browser app is an evaluation demo; production would integrate into a manufacturer’s native mobile app.</p>
+      </div>
+      <div class="meta">
+        <strong>One-page overview</strong>
+        Proof-of-concept · v1.4<br>
+        For industry evaluation
+      </div>
+    </header>
+
+    <p class="lead">
+      CI users report strong speech outcomes but poor music enjoyment. Phone EQ and companion apps optimize speech-in-noise — not upstream music mastering for envelope-based, channel-limited hearing. This engine provides purpose-built DSP, MAP-aware personalization, and research tooling. The value is the processing approach — not the web browser itself.
+    </p>
+
+    <div class="cols">
+      <section>
+        <h2>The opportunity</h2>
+        <ul>
+          <li><strong>Unmet need:</strong> Music via CIs often sounds weak, muddy, and rhythmically flat.</li>
+          <li><strong>Root cause:</strong> ~16–22 envelope channels — detail is lost before phone EQ helps.</li>
+          <li><strong>Positioning:</strong> Upstream of Bluetooth streaming; complements clinical MAP fitting.</li>
+          <li><strong>Privacy:</strong> All processing on-device; no audio uploaded.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Demo today · product path</h2>
+        <ul>
+          <li><strong>Today:</strong> Browser web app for demo, studies, and open review (Web Audio API).</li>
+          <li><strong>Production:</strong> Native iOS/Android module in the CI companion app.</li>
+          <li><strong>Where it runs:</strong> On the phone, upstream of wireless stream to processor.</li>
+          <li><strong>What transfers:</strong> Algorithms, presets, MAP mapping, auto-tune — not the browser.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>What the demo shows today</h2>
+        <ul>
+          <li><strong>MAP-aware shaping</strong> — 16-channel profiles, JSON import, dead-region redistribution.</li>
+          <li><strong>Multi-band compression</strong> — low / mid / high dynamics for CI range.</li>
+          <li><strong>Harmonic bass excitation</strong> — overtone correlates for envelope coding.</li>
+          <li><strong>High-frequency transposition</strong> — treble relocated to mid bands.</li>
+          <li><strong>CI Auto-Tune</strong> — 625 combinations scored via 16-channel vocoder surrogate (incl. transpose mix).</li>
+          <li><strong>Built-in demos</strong> — DSP Check (engineering) + Music Eval (stereo groove for music A/B).</li>
+          <li><strong>Playlist &amp; session</strong> — multi-track queue; export/import full tuning JSON.</li>
+          <li><strong>Speech / Music modes</strong> — one-click presets with memory.</li>
+          <li><strong>Stereo width</strong> — mono collapse for unilateral CI (default).</li>
+          <li><strong>Mobile PWA</strong> — collapsible panels, sticky transport, installable manifest.</li>
+          <li><strong>Presets &amp; A/B</strong> — Classical, Rock, Jazz; bypass; WAV + optional vocoder export.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Enhancement path</h2>
+        <ul class="roadmap">
+          <li><span class="priority">High</span><strong>Audiogram personalisation</strong> — per-channel gain, compression, clarity.</li>
+          <li><span class="priority">High</span><strong>Per-band vocoder transposition</strong> — cleaner than ring mod on tonal music.</li>
+          <li><span class="priority">High</span><strong>TFS encoder</strong> — AM sidebands at the fundamental for pitch cues.</li>
+          <li><span class="priority">Med</span><strong>Live mic input</strong> — ✓ concerts, TV, conversation through the chain.</li>
+          <li><span class="priority">Med</span><strong>Export processed WAV</strong> — ✓ pre-process a personal library.</li>
+          <li><span class="priority">Med</span><strong>Session snapshot JSON</strong> — ✓ full settings export/import.</li>
+          <li><span class="priority">Med</span><strong>Optimize on loop region</strong> — auto-tune selected passage only.</li>
+          <li><span class="priority">Med</span><strong>Loudness-matched A/B</strong> — fair bypass comparison.</li>
+          <li><span class="priority">Low</span><strong>Preset diff view</strong> — compare Speech vs Music sliders.</li>
+          <li><span class="priority">Low</span><strong>Offline/live parity test</strong> — automated pipeline validation.</li>
+        </ul>
+      </section>
+    </div>
+
+    <div class="compare-wrap">
+      <h2>Why this is not “just EQ”</h2>
+      <table class="compare">
+        <thead>
+          <tr>
+            <th>Capability</th>
+            <th>Phone EQ</th>
+            <th>CI companion app</th>
+            <th>This approach</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Harmonic regeneration</td>
+            <td class="dash">—</td>
+            <td class="dash">—</td>
+            <td class="check">✓</td>
+          </tr>
+          <tr>
+            <td>Frequency transposition</td>
+            <td class="dash">—</td>
+            <td class="dash">—</td>
+            <td class="check">✓</td>
+          </tr>
+          <tr>
+            <td>MAP / electrode-aware shaping</td>
+            <td class="dash">—</td>
+            <td>Partial</td>
+            <td class="check">✓</td>
+          </tr>
+          <tr>
+            <td>Vocoder-in-the-loop optimization</td>
+            <td class="dash">—</td>
+            <td class="dash">—</td>
+            <td class="check">✓</td>
+          </tr>
+          <tr>
+            <td>Music-specific mastering chain</td>
+            <td>Generic</td>
+            <td>Speech-first</td>
+            <td class="check">✓</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <footer>
+      <div class="cta">
+        <h2>Suggested next steps</h2>
+        <ul>
+          <li><strong>Live demo</strong> — browser reference app; Speech vs Music presets; bypass on/off.</li>
+          <li><strong>Listener study</strong> — stream processed audio to implant users vs baseline.</li>
+          <li><strong>Partnership</strong> — port DSP to native apps; MAP import; clinical validation.</li>
+        </ul>
+      </div>
+      <div class="disclaimer">
+        <p><strong>Status:</strong> Working proof-of-concept. Vocoder is an engineering surrogate — not a clinical claim.</p>
+        <p><strong>Deliverables:</strong> Reference web demo, technical paper, MAP template, DSP spec, roadmap.</p>
+        <p><strong>Deployment:</strong> Browser demo for evaluation; production as native module in manufacturer iOS/Android apps.</p>
+      </div>
+    </footer>
+  </div>
+</body>
+</html>
